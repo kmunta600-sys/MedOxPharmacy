@@ -51,8 +51,11 @@ app.get('/api/health', (req, res) => {
     res.json({ success: true, message: 'Server is running' });
 });
 
+console.log('🔍 Checking MONGODB_URI from env:', process.env.MONGODB_URI ? 'SET' : 'NOT SET');
 const mongoURI = process.env.MONGODB_URI || 'mongodb+srv://kmunta600_db_user:j3L6BhZ323b3mIK0@cluster0.m75px6q.mongodb.net/medox_pharmacy?retryWrites=true&w=majority&appName=Cluster0';
-console.log('🔍 Connecting to MongoDB...');
+console.log('🔍 Final URI:', mongoURI ? mongoURI.substring(0, 30) + '...' : 'EMPTY');
+console.log('🔍 URI starts with mongodb+srv://?', mongoURI ? mongoURI.startsWith('mongodb+srv://') : false);
+console.log('🔍 URI length:', mongoURI ? mongoURI.length : 0);
 mongoose.connect(mongoURI, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
@@ -77,4 +80,5 @@ app.use((err, req, res, next) => {
 });
 
 module.exports = app;
+
 
