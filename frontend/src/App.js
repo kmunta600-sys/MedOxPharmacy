@@ -1,48 +1,41 @@
-import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-
-import Landing from './pages/Landing';
+﻿import React from 'react';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import Login from './pages/Login';
-import ForgotPassword from './pages/ForgotPassword';
-import ResetPassword from './pages/ResetPassword';
 import Dashboard from './pages/Dashboard';
-import AddProduct from './pages/AddProduct';
-import ReceiveStock from './pages/ReceiveStock';
+import Products from './pages/AddProduct';
+import Stock from './pages/Stock';
 import DispenseStock from './pages/DispenseStock';
+import ReceiveStock from './pages/ReceiveStock';
 import StockAdjustment from './pages/StockAdjustment';
-import SearchProducts from './pages/SearchProducts';
-import Quarantine from './pages/Quarantine';
-import StockCard from './pages/StockCard';
 import Settings from './pages/Settings';
-import Activity from './pages/Activity';
-import Alerts from './pages/Alerts';
-import About from './pages/About';
+import Landing from './pages/Landing';
+import './index.css';
+
+// Protected route wrapper
+const ProtectedRoute = ({ children }) => {
+  const token = localStorage.getItem('token');
+  if (!token) {
+    return <Navigate to="/login" replace />;
+  }
+  return children;
+};
 
 function App() {
-    return (
-        <Router>
-            <Routes>
-                <Route path="/" element={<Landing />} />
-                <Route path="/login" element={<Login />} />
-                <Route path="/forgot-password" element={<ForgotPassword />} />
-                <Route path="/reset-password/:token" element={<ResetPassword />} />
-                <Route path="/dashboard" element={<Dashboard />} />
-                <Route path="/add-product" element={<AddProduct />} />
-                <Route path="/receive" element={<ReceiveStock />} />
-                <Route path="/dispense" element={<DispenseStock />} />
-                <Route path="/adjustment" element={<StockAdjustment />} />
-                <Route path="/stock-adjustment" element={<StockAdjustment />} />
-                <Route path="/search" element={<SearchProducts />} />
-                <Route path="/quarantine" element={<Quarantine />} />
-                <Route path="/stock-card" element={<StockCard />} />
-                <Route path="/stock-card/:productId" element={<StockCard />} />
-                <Route path="/settings" element={<Settings />} />
-                <Route path="/about" element={<About />} />
-                <Route path="/activity" element={<Activity />} />
-                <Route path="/alerts" element={<Alerts />} />
-            </Routes>
-        </Router>
-    );
+  return (
+    <Router>
+      <Routes>
+        <Route path="/" element={<Landing />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
+        <Route path="/products" element={<ProtectedRoute><Products /></ProtectedRoute>} />
+        <Route path="/stock" element={<ProtectedRoute><Stock /></ProtectedRoute>} />
+        <Route path="/dispense" element={<ProtectedRoute><DispenseStock /></ProtectedRoute>} />
+        <Route path="/receive" element={<ProtectedRoute><ReceiveStock /></ProtectedRoute>} />
+        <Route path="/adjust" element={<ProtectedRoute><StockAdjustment /></ProtectedRoute>} />
+        <Route path="/settings" element={<ProtectedRoute><Settings /></ProtectedRoute>} />
+      </Routes>
+    </Router>
+  );
 }
 
 export default App;

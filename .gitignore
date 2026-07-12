@@ -42,3 +42,5 @@ coverage/
 # Old files
 *_old/
 *.backup.*
+.vercel
+.env*.local

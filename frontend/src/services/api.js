@@ -1,7 +1,7 @@
 ﻿import axios from 'axios';
 
-// Use direct backend URL (this is what was working)
-const API_URL = 'http://localhost:5000/api';
+// Use the Render backend URL
+const API_URL = 'https://medox-api.onrender.com/api';
 
 const api = axios.create({
     baseURL: API_URL,
