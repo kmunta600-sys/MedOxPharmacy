@@ -1,0 +1,22 @@
+{
+  "name": "medox-pharmacy",
+  "version": "2.0.0",
+  "description": "Medox Pharmacy - Complete Inventory Management System",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "nodemon server.js"
+  },
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "cors": "^2.8.6",
+    "dotenv": "^16.6.1",
+    "express": "^4.22.2",
+    "express-validator": "^7.3.2",
+    "jsonwebtoken": "^9.0.3",
+    "mongoose": "^7.8.10"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.22"
+  }
+}

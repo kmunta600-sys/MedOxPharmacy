@@ -1,0 +1,1352 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>Medox Pharmacy - Smart Inventory</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --gold: #D69E2E;
+            --gold-light: #ECC94B;
+            --dark: #0A0F1E;
+            --white: #FFFFFF;
+            --text-muted: rgba(255,255,255,0.5);
+            --danger: #E53E3E;
+            --success: #48BB78;
+            --font: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+
+        html, body {
+            height: 100%;
+            font-family: var(--font);
+            background: var(--dark);
+            color: var(--white);
+            overflow: hidden;
+        }
+
+        /* Page System */
+        .page {
+            display: none !important;
+            height: 100vh;
+            width: 100vw;
+            position: fixed;
+            top: 0;
+            left: 0;
+            overflow: hidden;
+            flex-direction: column;
+            background: var(--dark);
+            z-index: 1;
+        }
+
+        .page.active {
+            display: flex !important;
+            z-index: 10;
+        }
+
+        /* Landing Page */
+        #landing {
+            background: var(--dark);
+            position: relative;
+        }
+
+        .bg-1 {
+            position: absolute;
+            top: -30%;
+            right: -20%;
+            width: 60%;
+            height: 70%;
+            background: radial-gradient(circle, rgba(214, 158, 46, 0.06) 0%, transparent 70%);
+            border-radius: 50%;
+            pointer-events: none;
+            animation: float1 25s ease-in-out infinite;
+        }
+
+        .bg-2 {
+            position: absolute;
+            bottom: -30%;
+            left: -20%;
+            width: 50%;
+            height: 60%;
+            background: radial-gradient(circle, rgba(43, 108, 176, 0.04) 0%, transparent 70%);
+            border-radius: 50%;
+            pointer-events: none;
+            animation: float2 30s ease-in-out infinite reverse;
+        }
+
+        @keyframes float1 {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            33% { transform: translate(50px, -40px) scale(1.05); }
+            66% { transform: translate(-40px, 40px) scale(0.95); }
+        }
+
+        @keyframes float2 {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            33% { transform: translate(-40px, 30px) scale(1.05); }
+            66% { transform: translate(40px, -30px) scale(0.95); }
+        }
+
+        .nav {
+            position: relative;
+            z-index: 10;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 48px;
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 100%;
+            flex-shrink: 0;
+        }
+
+        .nav .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+            color: var(--white);
+        }
+
+        .nav .brand .icon {
+            font-size: 28px;
+            color: var(--gold);
+        }
+
+        .nav .brand .name {
+            font-size: 22px;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+        }
+
+        .nav .brand .name span {
+            color: var(--gold);
+        }
+
+        .nav .btn-login {
+            padding: 10px 28px;
+            background: linear-gradient(135deg, var(--gold), var(--gold-light));
+            color: var(--white);
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            transition: 0.3s;
+            font-family: var(--font);
+        }
+
+        .nav .btn-login:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(214, 158, 46, 0.3);
+        }
+
+        .hero {
+            position: relative;
+            z-index: 5;
+            flex: 1;
+            display: flex;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 8px 48px 12px;
+            width: 100%;
+            gap: 50px;
+            min-height: 0;
+        }
+
+        .hero-left {
+            flex: 1;
+            max-width: 560px;
+        }
+
+        .hero-left h1 {
+            font-size: 38px;
+            font-weight: 900;
+            line-height: 1.05;
+            letter-spacing: -2px;
+            margin-bottom: 8px;
+        }
+
+        .hero-left h1 .highlight {
+            background: linear-gradient(135deg, var(--gold), var(--gold-light));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-left p {
+            font-size: 14px;
+            color: var(--text-muted);
+            line-height: 1.5;
+            max-width: 440px;
+            margin-bottom: 16px;
+        }
+
+        .hero-left .btn-group {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-bottom: 16px;
+        }
+
+        .hero-left .btn-group .btn {
+            padding: 8px 24px;
+            border: none;
+            border-radius: 8px;
+            font-family: var(--font);
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .hero-left .btn-group .btn-primary {
+            background: linear-gradient(135deg, var(--gold), var(--gold-light));
+            color: var(--white);
+            box-shadow: 0 4px 20px rgba(214, 158, 46, 0.2);
+        }
+
+        .hero-left .btn-group .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 40px rgba(214, 158, 46, 0.35);
+        }
+
+        .hero-left .btn-group .btn-secondary {
+            background: rgba(255,255,255,0.04);
+            color: var(--white);
+            border: 1px solid rgba(255,255,255,0.08);
+        }
+
+        .hero-left .btn-group .btn-secondary:hover {
+            background: rgba(255,255,255,0.08);
+            transform: translateY(-3px);
+        }
+
+        .hero-right {
+            flex: 1;
+            max-width: 480px;
+        }
+
+        .hero-right .info-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        .hero-right .info-grid .info-item {
+            background: rgba(255,255,255,0.02);
+            border: 1px solid rgba(255,255,255,0.04);
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            transition: 0.3s;
+        }
+
+        .hero-right .info-grid .info-item:hover {
+            background: rgba(255,255,255,0.04);
+            transform: translateY(-4px);
+        }
+
+        .hero-right .info-grid .info-item .icon {
+            font-size: 28px;
+            color: var(--gold);
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .hero-right .info-grid .info-item .title {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .hero-right .info-grid .info-item .desc {
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        .footer {
+            position: relative;
+            z-index: 10;
+            padding: 6px 48px;
+            border-top: 1px solid rgba(255,255,255,0.03);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 100%;
+            flex-wrap: wrap;
+            gap: 4px;
+            flex-shrink: 0;
+        }
+
+        .footer p {
+            font-size: 12px;
+            color: rgba(255,255,255,0.15);
+        }
+
+        .footer .creds {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .footer .creds .credit {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 12px;
+            color: rgba(255,255,255,0.2);
+        }
+
+        .footer .creds .credit i {
+            color: var(--gold);
+            font-size: 13px;
+        }
+
+        .footer .creds .credit .name {
+            font-weight: 600;
+            color: rgba(255,255,255,0.5);
+        }
+
+        .footer .creds .credit .role {
+            color: rgba(255,255,255,0.2);
+        }
+
+        .footer .creds .credit .role .highlight {
+            color: var(--gold);
+        }
+
+        /* Login Page */
+        #loginPage {
+            background: var(--dark);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .login-container {
+            max-width: 400px;
+            width: 100%;
+            padding: 32px 28px;
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.06);
+            border-radius: 16px;
+            backdrop-filter: blur(20px);
+        }
+
+        .login-container .back-btn {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            font-size: 13px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-bottom: 20px;
+            font-family: var(--font);
+        }
+
+        .login-container .back-btn:hover {
+            color: var(--white);
+        }
+
+        .login-container .logo {
+            text-align: center;
+            margin-bottom: 24px;
+        }
+
+        .login-container .logo i {
+            font-size: 44px;
+            color: var(--gold);
+            display: block;
+            margin-bottom: 4px;
+        }
+
+        .login-container .logo h2 {
+            font-size: 22px;
+            font-weight: 800;
+            color: var(--white);
+        }
+
+        .login-container .logo h2 span {
+            color: var(--gold);
+        }
+
+        .login-container .logo p {
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-top: 2px;
+        }
+
+        .login-container .form-group {
+            margin-bottom: 14px;
+        }
+
+        .login-container .form-group label {
+            display: block;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-muted);
+            margin-bottom: 4px;
+        }
+
+        .login-container .form-group .input-wrap {
+            display: flex;
+            align-items: center;
+            border: 1px solid rgba(255,255,255,0.06);
+            border-radius: 8px;
+            background: rgba(255,255,255,0.03);
+        }
+
+        .login-container .form-group .input-wrap i {
+            padding: 0 14px;
+            color: var(--text-muted);
+            font-size: 15px;
+        }
+
+        .login-container .form-group .input-wrap input {
+            flex: 1;
+            padding: 12px 14px 12px 0;
+            border: none;
+            background: transparent;
+            font-family: var(--font);
+            font-size: 14px;
+            color: var(--white);
+            outline: none;
+            width: 100%;
+        }
+
+        .login-container .form-options {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 12px;
+            color: var(--text-muted);
+            margin: 2px 0 18px;
+        }
+
+        .login-container .form-options label {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            cursor: pointer;
+        }
+
+        .login-container .form-options label input {
+            accent-color: var(--gold);
+            width: 14px;
+            height: 14px;
+            cursor: pointer;
+        }
+
+        .login-container .form-options a {
+            color: var(--text-muted);
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .login-container .form-options a:hover {
+            color: var(--gold);
+        }
+
+        .login-container .btn-login {
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: 8px;
+            background: linear-gradient(135deg, var(--gold), var(--gold-light));
+            color: var(--white);
+            font-family: var(--font);
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .login-container .btn-login:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(214, 158, 46, 0.35);
+        }
+
+        .login-container .demo-credentials {
+            margin-top: 16px;
+            padding: 10px 16px;
+            background: rgba(255,255,255,0.02);
+            border: 1px solid rgba(255,255,255,0.04);
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .login-container .demo-credentials .demo-label {
+            font-size: 10px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            margin-bottom: 3px;
+        }
+
+        .login-container .demo-credentials .demo-details {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        .login-container .demo-credentials .demo-details code {
+            color: var(--gold);
+            background: rgba(214, 158, 46, 0.06);
+            padding: 1px 8px;
+            border-radius: 4px;
+            font-size: 11px;
+            border: 1px solid rgba(214, 158, 46, 0.06);
+        }
+
+        .login-container .login-error {
+            display: none;
+            background: rgba(229, 62, 62, 0.08);
+            border: 1px solid rgba(229, 62, 62, 0.12);
+            color: #E53E3E;
+            padding: 10px 14px;
+            border-radius: 8px;
+            font-size: 12px;
+            margin-bottom: 14px;
+        }
+
+        .login-container .login-error.show {
+            display: block;
+        }
+
+        .login-container .login-success {
+            display: none;
+            background: rgba(72, 187, 120, 0.08);
+            border: 1px solid rgba(72, 187, 120, 0.12);
+            color: #48BB78;
+            padding: 10px 14px;
+            border-radius: 8px;
+            font-size: 13px;
+            margin-bottom: 14px;
+        }
+
+        .login-container .login-success.show {
+            display: block;
+        }
+
+        .login-container .footer-text {
+            margin-top: 20px;
+            padding-top: 16px;
+            border-top: 1px solid rgba(255,255,255,0.04);
+            text-align: center;
+            font-size: 10px;
+            color: var(--text-muted);
+            opacity: 0.3;
+        }
+
+        /* Dashboard Page */
+        #dashboardPage {
+            background: var(--dark);
+        }
+
+        .dashboard-header {
+            padding: 14px 28px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(255,255,255,0.04);
+            background: rgba(13, 18, 30, 0.4);
+            backdrop-filter: blur(12px);
+            flex-shrink: 0;
+        }
+
+        .dashboard-main {
+            flex: 1;
+            overflow: hidden;
+            padding: 16px 28px 70px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-bottom: 14px;
+        }
+
+        .stat-card {
+            background: rgba(255,255,255,0.02);
+            border: 1px solid rgba(255,255,255,0.04);
+            border-radius: 10px;
+            padding: 14px 16px;
+        }
+
+        .stat-card .stat-label {
+            font-size: 10px;
+            color: var(--text-muted);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+
+        .stat-card .stat-number {
+            font-size: 24px;
+            font-weight: 800;
+            margin-top: 2px;
+        }
+
+        .stat-card .stat-number.gold { color: var(--gold); }
+        .stat-card .stat-number.green { color: var(--success); }
+        .stat-card .stat-number.red { color: var(--danger); }
+
+        .two-col {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+            margin-bottom: 14px;
+        }
+
+        .section-title {
+            font-size: 12px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            color: var(--text-muted);
+        }
+
+        .section-title i {
+            color: var(--gold);
+            font-size: 11px;
+        }
+
+        .quick-actions {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 6px;
+        }
+
+        .quick-action {
+            background: rgba(255,255,255,0.02);
+            border: 1px solid rgba(255,255,255,0.04);
+            border-radius: 8px;
+            padding: 10px 12px;
+            cursor: pointer;
+            transition: 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .quick-action:hover {
+            background: rgba(255,255,255,0.04);
+            border-color: rgba(214, 158, 46, 0.08);
+        }
+
+        .quick-action i {
+            font-size: 14px;
+            color: var(--gold);
+            width: 24px;
+            text-align: center;
+        }
+
+        .quick-action .action-label {
+            font-size: 11px;
+            font-weight: 500;
+        }
+
+        .quick-action .action-desc {
+            font-size: 9px;
+            color: var(--text-muted);
+        }
+
+        .recent-transactions {
+            background: rgba(255,255,255,0.02);
+            border: 1px solid rgba(255,255,255,0.04);
+            border-radius: 8px;
+            overflow: hidden;
+            max-height: 110px;
+            overflow: hidden;
+        }
+
+        .alerts-container {
+            background: rgba(255,255,255,0.02);
+            border: 1px solid rgba(255,255,255,0.04);
+            border-radius: 8px;
+            padding: 10px 14px;
+            max-height: 80px;
+            overflow: hidden;
+        }
+
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(13, 18, 30, 0.95);
+            backdrop-filter: blur(20px);
+            border-top: 1px solid rgba(255,255,255,0.04);
+            display: flex;
+            justify-content: space-around;
+            padding: 6px 0 env(safe-area-inset-bottom, 6px) 0;
+            z-index: 100;
+        }
+
+        .bottom-nav .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1px;
+            padding: 4px 12px;
+            border: none;
+            background: none;
+            cursor: pointer;
+            color: var(--text-muted);
+            font-family: var(--font);
+            font-size: 9px;
+            font-weight: 500;
+            transition: 0.3s;
+            position: relative;
+            border-radius: 6px;
+        }
+
+        .bottom-nav .nav-item.active {
+            color: var(--gold);
+        }
+
+        .bottom-nav .nav-item i {
+            font-size: 18px;
+        }
+
+        .bottom-nav .nav-item .nav-badge {
+            position: absolute;
+            top: -2px;
+            right: 2px;
+            background: #E53E3E;
+            color: #fff;
+            font-size: 7px;
+            font-weight: 700;
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            display: none;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .bottom-nav .nav-item .nav-badge.show {
+            display: flex;
+        }
+
+        /* Spinner */
+        .spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 2px solid rgba(255,255,255,0.1);
+            border-top-color: var(--gold);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Responsive */
+        @media (max-width: 992px) {
+            .hero {
+                flex-direction: column;
+                padding: 8px 24px 16px;
+                gap: 30px;
+                min-height: auto;
+            }
+            .hero-left {
+                max-width: 100%;
+                text-align: center;
+            }
+            .hero-left p {
+                max-width: 100%;
+                margin-left: auto;
+                margin-right: auto;
+            }
+            .hero-left .btn-group {
+                justify-content: center;
+            }
+            .hero-left h1 {
+                font-size: 32px;
+            }
+            .hero-right {
+                max-width: 100%;
+                width: 100%;
+            }
+            .hero-right .info-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+            .nav {
+                padding: 10px 24px;
+            }
+            .footer {
+                padding: 8px 24px;
+                flex-direction: column;
+                text-align: center;
+            }
+            .footer .creds {
+                justify-content: center;
+            }
+        }
+
+        @media (max-width: 640px) {
+            .hero {
+                padding: 6px 16px 12px;
+                gap: 20px;
+            }
+            .hero-left h1 {
+                font-size: 26px;
+            }
+            .hero-left p {
+                font-size: 13px;
+            }
+            .hero-left .btn-group .btn {
+                width: 100%;
+                justify-content: center;
+            }
+            .hero-right .info-grid {
+                grid-template-columns: 1fr 1fr;
+                gap: 10px;
+            }
+            .hero-right .info-grid .info-item {
+                padding: 14px;
+            }
+            .hero-right .info-grid .info-item .icon {
+                font-size: 22px;
+            }
+            .nav {
+                padding: 8px 16px;
+            }
+            .nav .brand .name {
+                font-size: 18px;
+            }
+            .nav .btn-login {
+                padding: 6px 16px;
+                font-size: 12px;
+            }
+            .footer {
+                padding: 4px 16px;
+            }
+            .footer .creds {
+                flex-direction: column;
+                gap: 4px;
+                align-items: center;
+            }
+            .footer .creds .credit {
+                font-size: 11px;
+            }
+            .login-container {
+                padding: 24px 16px;
+                margin: 12px;
+            }
+            .dashboard-header {
+                padding: 10px 16px;
+            }
+            .dashboard-main {
+                padding: 12px 16px 60px;
+            }
+            .stats-grid {
+                grid-template-columns: 1fr 1fr 1fr;
+                gap: 6px;
+            }
+            .stat-card {
+                padding: 10px 12px;
+            }
+            .stat-card .stat-number {
+                font-size: 20px;
+            }
+            .two-col {
+                grid-template-columns: 1fr;
+                gap: 12px;
+            }
+            .quick-actions {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- LANDING PAGE -->
+    <div class="page active" id="landing">
+        <div class="bg-1"></div>
+        <div class="bg-2"></div>
+
+        <nav class="nav">
+            <a href="#" class="brand">
+                <span class="icon"><i class="fas fa-prescription-bottle-alt"></i></span>
+                <span class="name">Medox<span>Pharmacy</span></span>
+            </a>
+            <button class="btn-login" onclick="navigateTo('login')">
+                <i class="fas fa-sign-in-alt"></i> Login
+            </button>
+        </nav>
+
+        <div class="hero">
+            <div class="hero-left">
+                <h1>
+                    Electronic Pharmacy<br />
+                    <span class="highlight">Inventory</span>
+                </h1>
+                <p>
+                    Streamline your pharmacy operations with real-time inventory tracking, automated alerts, and powerful analytics.
+                </p>
+                <div class="btn-group">
+                    <button class="btn btn-primary" onclick="navigateTo('login')">
+                        <i class="fas fa-rocket"></i> Get Started
+                    </button>
+                    <button class="btn btn-secondary" onclick="showAbout()">
+                        <i class="fas fa-info-circle"></i> About
+                    </button>
+                </div>
+            </div>
+
+            <div class="hero-right">
+                <div class="info-grid">
+                    <div class="info-item">
+                        <span class="icon"><i class="fas fa-boxes"></i></span>
+                        <div class="title">Inventory Management</div>
+                        <div class="desc">Track all products in real-time</div>
+                    </div>
+                    <div class="info-item">
+                        <span class="icon"><i class="fas fa-clock"></i></span>
+                        <div class="title">Expiry Alerts</div>
+                        <div class="desc">Never miss an expiration date</div>
+                    </div>
+                    <div class="info-item">
+                        <span class="icon"><i class="fas fa-chart-bar"></i></span>
+                        <div class="title">Reports & Analytics</div>
+                        <div class="desc">Make data-driven decisions</div>
+                    </div>
+                    <div class="info-item">
+                        <span class="icon"><i class="fas fa-users"></i></span>
+                        <div class="title">Staff Management</div>
+                        <div class="desc">Manage your team efficiently</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>&copy; 2026 Medox Pharmacy. All rights reserved.</p>
+            <div class="creds">
+                <span class="credit">
+                    <i class="fas fa-user-md"></i>
+                    <span class="name">Jones Ezekiel Chikuni</span>
+                    <span class="role">• Pharmacist • Concept Creator</span>
+                </span>
+                <span class="credit">
+                    <i class="fas fa-code"></i>
+                    <span class="name">Kondwani Pax Munta</span>
+                    <span class="role">• Pharmacy Technician • <span class="highlight">Software Engineer</span></span>
+                </span>
+            </div>
+        </div>
+    </div>
+
+    <!-- LOGIN PAGE -->
+    <div class="page" id="loginPage">
+        <div class="login-container">
+            <button class="back-btn" onclick="navigateTo('landing')">
+                <i class="fas fa-arrow-left"></i> Back
+            </button>
+
+            <div class="logo">
+                <i class="fas fa-prescription-bottle-alt"></i>
+                <h2>Medox<span>Pharmacy</span></h2>
+                <p>Sign in to your account</p>
+            </div>
+
+            <div class="login-error" id="loginError">
+                <span id="loginErrorText">Invalid email or password.</span>
+            </div>
+
+            <div class="login-success" id="loginSuccess">
+                <span id="loginSuccessText">Login successful! Redirecting...</span>
+            </div>
+
+            <div id="loginLoading" style="display:none;text-align:center;margin-bottom:14px;">
+                <div class="spinner"></div>
+                <p style="color:var(--text-muted);font-size:12px;margin-top:8px;">Logging in...</p>
+            </div>
+
+            <div class="form-group">
+                <label for="loginEmail">Email Address</label>
+                <div class="input-wrap">
+                    <i class="fas fa-envelope"></i>
+                    <input type="email" id="loginEmail" placeholder="john@medox.com" value="demo@medox.com" />
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="loginPassword">Password</label>
+                <div class="input-wrap">
+                    <i class="fas fa-lock"></i>
+                    <input type="password" id="loginPassword" placeholder="••••••••" value="password123" />
+                </div>
+            </div>
+
+            <div class="form-options">
+                <label>
+                    <input type="checkbox" checked /> Remember me
+                </label>
+                <a href="#">Forgot password?</a>
+            </div>
+
+            <button class="btn-login" id="loginBtn" onclick="handleLogin()">
+                <i class="fas fa-sign-in-alt"></i> Sign In
+            </button>
+
+            <div class="demo-credentials">
+                <div class="demo-label">🔐 Demo Credentials</div>
+                <div class="demo-details">
+                    <span><i class="fas fa-envelope" style="color:var(--gold);font-size:10px;"></i> <code>demo@medox.com</code></span>
+                    <span style="color:var(--text-muted);opacity:0.3;">|</span>
+                    <span><i class="fas fa-key" style="color:var(--gold);font-size:10px;"></i> <code>password123</code></span>
+                </div>
+            </div>
+
+            <div class="footer-text">&copy; 2026 Medox Pharmacy. All rights reserved.</div>
+        </div>
+    </div>
+
+    <!-- DASHBOARD PAGE -->
+    <div class="page" id="dashboardPage">
+        <header class="dashboard-header">
+            <div style="display:flex;align-items:center;gap:12px;">
+                <div style="width:34px;height:34px;background:rgba(214,158,46,0.08);border-radius:8px;display:flex;align-items:center;justify-content:center;color:var(--gold);font-size:15px;">
+                    <i class="fas fa-prescription-bottle-alt"></i>
+                </div>
+                <span style="font-size:16px;font-weight:700;">Medox<span style="color:var(--gold);">Pharmacy</span></span>
+            </div>
+            <div style="display:flex;align-items:center;gap:14px;">
+                <span style="font-size:12px;color:var(--text-muted);" id="dashboardUser">Loading...</span>
+                <button onclick="logout()" style="background:none;border:none;color:var(--text-muted);cursor:pointer;font-size:16px;padding:4px 6px;transition:0.3s;border-radius:6px;">
+                    <i class="fas fa-sign-out-alt"></i>
+                </button>
+            </div>
+        </header>
+
+        <main class="dashboard-main">
+            <div style="margin-bottom:14px;">
+                <h1 style="font-size:20px;font-weight:700;letter-spacing:-0.3px;" id="welcomeMessage">Good Morning, 👋</h1>
+                <p style="color:var(--text-muted);font-size:12px;margin-top:1px;">Here's your pharmacy summary</p>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-label">Products</div>
+                    <div class="stat-number gold" id="totalProducts">—</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Low Stock</div>
+                    <div class="stat-number green" id="lowStock">—</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Alerts</div>
+                    <div class="stat-number red" id="criticalAlerts">—</div>
+                </div>
+            </div>
+
+            <div class="two-col">
+                <div>
+                    <div class="section-title"><i class="fas fa-bolt"></i> Quick Actions</div>
+                    <div class="quick-actions">
+                        <div class="quick-action" onclick="alert('📦 Receive Stock - Coming Soon!')">
+                            <i class="fas fa-arrow-down"></i>
+                            <div>
+                                <div class="action-label">Receive</div>
+                                <div class="action-desc">Incoming goods</div>
+                            </div>
+                        </div>
+                        <div class="quick-action" onclick="alert('📤 Issue Stock - Coming Soon!')">
+                            <i class="fas fa-arrow-up"></i>
+                            <div>
+                                <div class="action-label">Issue</div>
+                                <div class="action-desc">Dispense items</div>
+                            </div>
+                        </div>
+                        <div class="quick-action" onclick="alert('➕ Add Product - Coming Soon!')">
+                            <i class="fas fa-plus-circle"></i>
+                            <div>
+                                <div class="action-label">Add Product</div>
+                                <div class="action-desc">New item</div>
+                            </div>
+                        </div>
+                        <div class="quick-action" onclick="alert('🔍 Search - Coming Soon!')">
+                            <i class="fas fa-search"></i>
+                            <div>
+                                <div class="action-label">Search</div>
+                                <div class="action-desc">Find products</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <div class="section-title"><i class="fas fa-history"></i> Recent Activity</div>
+                    <div class="recent-transactions" id="recentTransactions">
+                        <div style="padding:12px;text-align:center;color:var(--text-muted);font-size:11px;">
+                            <i class="fas fa-spinner fa-spin" style="font-size:14px;display:block;margin-bottom:4px;"></i>
+                            Loading...
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div>
+                <div class="section-title"><i class="fas fa-bell"></i> Active Alerts</div>
+                <div class="alerts-container" id="alertsContainer">
+                    <div style="text-align:center;color:var(--text-muted);font-size:11px;">
+                        <i class="fas fa-spinner fa-spin" style="font-size:14px;display:block;margin-bottom:4px;"></i>
+                        Loading...
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <nav class="bottom-nav">
+            <button class="nav-item active" onclick="navigateTo('dashboard')">
+                <i class="fas fa-home"></i>
+                <span>Home</span>
+            </button>
+            <button class="nav-item" onclick="alert('📦 Stock - Coming Soon!')">
+                <i class="fas fa-boxes"></i>
+                <span>Stock</span>
+            </button>
+            <button class="nav-item" onclick="alert('🔔 Alerts - Coming Soon!')">
+                <i class="fas fa-bell"></i>
+                <span>Alerts</span>
+                <span class="nav-badge" id="alertBadge">0</span>
+            </button>
+            <button class="nav-item" onclick="alert('📊 Reports - Coming Soon!')">
+                <i class="fas fa-chart-bar"></i>
+                <span>Reports</span>
+            </button>
+            <button class="nav-item" onclick="alert('⚙️ Settings - Coming Soon!')">
+                <i class="fas fa-cog"></i>
+                <span>Settings</span>
+            </button>
+        </nav>
+    </div>
+
+    <!-- JAVASCRIPT -->
+    <script>
+        const API_URL = window.location.origin;
+
+        function navigateTo(pageId) {
+            console.log('🔀 Navigating to:', pageId);
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            const pageMap = { 'landing': 'landing', 'login': 'loginPage', 'dashboard': 'dashboardPage' };
+            const targetId = pageMap[pageId];
+            if (targetId) {
+                const target = document.getElementById(targetId);
+                if (target) {
+                    target.classList.add('active');
+                    console.log('✅ Showing:', targetId);
+                    if (pageId === 'dashboard') setTimeout(loadDashboardData, 200);
+                } else {
+                    document.getElementById('landing').classList.add('active');
+                }
+            } else {
+                document.getElementById('landing').classList.add('active');
+            }
+        }
+
+        function checkAuth() {
+            const token = localStorage.getItem('token');
+            const user = localStorage.getItem('user');
+            console.log('🔐 Auth - token:', token ? '✅' : '❌');
+            if (!token || !user) { navigateTo('login'); return false; }
+            return true;
+        }
+
+        async function loadDashboardData() {
+            console.log('📊 Loading dashboard...');
+            if (!checkAuth()) return;
+            const user = JSON.parse(localStorage.getItem('user'));
+            document.getElementById('dashboardUser').textContent = user.email;
+            const hour = new Date().getHours();
+            let greeting = hour < 12 ? 'Good Morning' : hour < 17 ? 'Good Afternoon' : 'Good Evening';
+            document.getElementById('welcomeMessage').textContent = greeting + ', ' + user.firstName;
+
+            try {
+                const token = localStorage.getItem('token');
+                console.log('🔑 Token:', token ? token.substring(0,30)+'...' : 'NO');
+                const response = await fetch(API_URL + '/api/products/stats', {
+                    headers: { 'Authorization': 'Bearer ' + token, 'Content-Type': 'application/json' }
+                });
+                console.log('📊 Status:', response.status);
+                if (response.status === 401) {
+                    localStorage.removeItem('token'); localStorage.removeItem('user');
+                    showError('Session expired. Please login again.');
+                    setTimeout(() => navigateTo('login'), 2000);
+                    return;
+                }
+                const data = await response.json();
+                console.log('📊 Data:', data);
+                if (data.success) {
+                    document.getElementById('totalProducts').textContent = data.data.totalProducts || 0;
+                    document.getElementById('lowStock').textContent = data.data.lowStock || 0;
+                    document.getElementById('criticalAlerts').textContent = data.data.criticalStock || 0;
+                    const totalAlerts = (data.data.criticalStock || 0) + (data.data.lowStock || 0);
+                    const badge = document.getElementById('alertBadge');
+                    if (badge) { 
+                        badge.textContent = totalAlerts; 
+                        badge.className = 'nav-badge' + (totalAlerts > 0 ? ' show' : ''); 
+                    }
+                    renderTransactions(data.data.recentTransactions || []);
+                    renderAlerts(data.data.alerts || { critical: [], low: [] });
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                showError('Network error. Please check your connection.');
+            }
+        }
+
+        function renderTransactions(transactions) {
+            const container = document.getElementById('recentTransactions');
+            if (!transactions || transactions.length === 0) {
+                container.innerHTML = '<div style="padding:10px 14px;text-align:center;color:var(--text-muted);font-size:11px;"><i class="fas fa-inbox" style="font-size:14px;display:block;margin-bottom:4px;"></i>No recent activity</div>';
+                return;
+            }
+            container.innerHTML = transactions.map(tx => {
+                const isReceived = tx.type === 'received';
+                const color = isReceived ? '#48BB78' : '#E53E3E';
+                const sign = isReceived ? '+' : '-';
+                const icon = isReceived ? 'fa-arrow-down' : 'fa-arrow-up';
+                const bg = isReceived ? 'rgba(72,187,120,0.12)' : 'rgba(229,62,62,0.12)';
+                return '<div style="display:flex;align-items:center;gap:10px;padding:6px 14px;border-bottom:1px solid rgba(255,255,255,0.03);"><div style="width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;flex-shrink:0;background:'+bg+';color:'+color+';"><i class="fas '+icon+'"></i></div><div style="flex:1;min-width:0;"><div style="font-size:11px;font-weight:500;">'+tx.product+'</div><div style="font-size:9px;color:var(--text-muted);">'+tx.date+'</div></div><div style="font-weight:600;font-size:12px;color:'+color+';">'+sign+tx.qty+'</div></div>';
+            }).join('');
+        }
+
+        function renderAlerts(alerts) {
+            const container = document.getElementById('alertsContainer');
+            const critical = alerts.critical || [];
+            const low = alerts.low || [];
+            if (critical.length === 0 && low.length === 0) {
+                container.innerHTML = '<div style="text-align:center;color:var(--text-muted);font-size:11px;padding:4px 0;"><i class="fas fa-check-circle" style="color:#48BB78;font-size:14px;display:block;margin-bottom:2px;"></i>All products are well stocked!</div>';
+                return;
+            }
+            let html = '';
+            critical.forEach(p => {
+                html += '<div style="display:flex;align-items:center;gap:8px;padding:4px 10px;margin-bottom:3px;background:rgba(229,62,62,0.04);border-radius:4px;border-left:3px solid #E53E3E;"><span style="width:5px;height:5px;border-radius:50%;background:#E53E3E;flex-shrink:0;"></span><div style="flex:1;font-size:11px;"><span style="font-weight:600;">'+p.name+' '+p.strength+'</span><span style="color:var(--text-muted);font-size:10px;"> • '+p.stock+' left</span></div><span style="font-size:8px;font-weight:600;padding:1px 8px;border-radius:20px;background:rgba(229,62,62,0.12);color:#E53E3E;">CRITICAL</span></div>';
+            });
+            low.forEach(p => {
+                html += '<div style="display:flex;align-items:center;gap:8px;padding:4px 10px;margin-bottom:3px;background:rgba(236,201,75,0.04);border-radius:4px;border-left:3px solid #ECC94B;"><span style="width:5px;height:5px;border-radius:50%;background:#ECC94B;flex-shrink:0;"></span><div style="flex:1;font-size:11px;"><span style="font-weight:600;">'+p.name+' '+p.strength+'</span><span style="color:var(--text-muted);font-size:10px;"> • '+p.stock+' left</span></div><span style="font-size:8px;font-weight:600;padding:1px 8px;border-radius:20px;background:rgba(236,201,75,0.12);color:#ECC94B;">LOW</span></div>';
+            });
+            container.innerHTML = html;
+        }
+
+        function showError(message) {
+            console.error('Error:', message);
+            document.getElementById('recentTransactions').innerHTML = '<div style="padding:12px 16px;text-align:center;color:var(--text-muted);font-size:11px;"><i class="fas fa-exclamation-circle" style="font-size:14px;display:block;margin-bottom:4px;color:#E53E3E;"></i>'+message+'</div>';
+            document.getElementById('alertsContainer').innerHTML = '<div style="text-align:center;color:var(--text-muted);font-size:11px;padding:6px 0;"><i class="fas fa-exclamation-circle" style="color:#E53E3E;font-size:14px;display:block;margin-bottom:4px;"></i>'+message+'</div>';
+        }
+
+        async function handleLogin() {
+            const email = document.getElementById('loginEmail').value.trim();
+            const password = document.getElementById('loginPassword').value.trim();
+            const errorBox = document.getElementById('loginError');
+            const errorText = document.getElementById('loginErrorText');
+            const successBox = document.getElementById('loginSuccess');
+            const loadingBox = document.getElementById('loginLoading');
+            const loginBtn = document.getElementById('loginBtn');
+
+            if (!email || !password) {
+                errorText.textContent = 'Please enter both email and password.';
+                errorBox.style.display = 'block';
+                errorBox.className = 'login-error show';
+                return;
+            }
+
+            loadingBox.style.display = 'block';
+            loginBtn.disabled = true;
+            loginBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Signing in...';
+            errorBox.style.display = 'none';
+            errorBox.className = 'login-error';
+            successBox.style.display = 'none';
+            successBox.className = 'login-success';
+
+            try {
+                const response = await fetch(API_URL + '/api/auth/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, password })
+                });
+                const data = await response.json();
+                if (data.success) {
+                    localStorage.setItem('token', data.data.token);
+                    localStorage.setItem('user', JSON.stringify(data.data.user));
+                    successBox.style.display = 'block';
+                    successBox.className = 'login-success show';
+                    document.getElementById('loginSuccessText').textContent = '✅ Login successful! Redirecting...';
+                    setTimeout(() => navigateTo('dashboard'), 1000);
+                } else {
+                    errorText.textContent = data.message || 'Invalid email or password.';
+                    errorBox.style.display = 'block';
+                    errorBox.className = 'login-error show';
+                }
+            } catch (error) {
+                errorText.textContent = 'Network error. Please check your connection.';
+                errorBox.style.display = 'block';
+                errorBox.className = 'login-error show';
+            } finally {
+                loadingBox.style.display = 'none';
+                loginBtn.disabled = false;
+                loginBtn.innerHTML = '<i class="fas fa-sign-in-alt"></i> Sign In';
+            }
+        }
+
+        function logout() {
+            if (confirm('Are you sure you want to logout?')) {
+                localStorage.removeItem('token');
+                localStorage.removeItem('user');
+                navigateTo('landing');
+            }
+        }
+
+        function showAbout() {
+            alert('💊 MEDOX PHARMACY\nPremium Inventory Management System\n\n👨⚕️ Concept: Jones Ezekiel Chikuni\n👨💻 Engineering: Kondwani Pax Munta\n\n© 2026 Medox Pharmacy.');
+        }
+
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') {
+                const loginPage = document.getElementById('loginPage');
+                if (loginPage && loginPage.classList.contains('active')) handleLogin();
+            }
+        });
+
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('💊 Medox Pharmacy v2.0');
+            const token = localStorage.getItem('token');
+            const user = localStorage.getItem('user');
+            if (token && user) {
+                console.log('👤 Already logged in as:', JSON.parse(user).email);
+                const landingPage = document.getElementById('landing');
+                if (landingPage && landingPage.classList.contains('active')) navigateTo('dashboard');
+            }
+        });
+    </script>
+
+</body>
+</html>

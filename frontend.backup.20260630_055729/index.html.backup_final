@@ -1,0 +1,1949 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>Medox Pharmacy</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --gold: #D69E2E;
+            --gold-light: #ECC94B;
+            --dark: #0A0F1E;
+            --dark-card: #111827;
+            --white: #FFFFFF;
+            --text-muted: rgba(255,255,255,0.4);
+            --text-light: rgba(255,255,255,0.7);
+            --danger: #EF4444;
+            --success: #10B981;
+            --warning: #F59E0B;
+            --font: 'Inter', sans-serif;
+        }
+        html, body { height: 100%; font-family: var(--font); background: var(--dark); color: var(--white); overflow: hidden; }
+        ::-webkit-scrollbar { display: none; }
+        * { scrollbar-width: none; }
+        
+        .page { display: none !important; height: 100vh; width: 100vw; position: fixed; top: 0; left: 0; overflow: hidden; flex-direction: column; background: var(--dark); z-index: 1; }
+        .page.active { display: flex !important; z-index: 10; }
+        
+        .dash-header {
+            padding: 14px 32px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(255,255,255,0.04);
+            background: rgba(13,18,30,0.4);
+            backdrop-filter: blur(12px);
+            flex-shrink: 0;
+        }
+        .dash-header .brand { display: flex; align-items: center; gap: 10px; }
+        .dash-header .brand .icon { width: 32px; height: 32px; background: rgba(214,158,46,0.08); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: var(--gold); font-size: 14px; }
+        .dash-header .brand .name { font-size: 16px; font-weight: 700; }
+        .dash-header .brand .name span { color: var(--gold); }
+        .dash-header .user-section { display: flex; align-items: center; gap: 14px; }
+        .dash-header .user-section .user-email { font-size: 12px; color: var(--text-muted); }
+        .dash-header .user-section .logout-btn { background: none; border: none; color: var(--text-muted); cursor: pointer; font-size: 16px; padding: 4px 6px; transition: 0.3s; border-radius: 6px; }
+        .dash-header .user-section .logout-btn:hover { color: var(--danger); }
+        
+        .dash-main { flex: 1; overflow-y: auto; padding: 20px 32px 70px; }
+        .dash-welcome h1 { font-size: 22px; font-weight: 700; }
+        .dash-welcome p { color: var(--text-muted); font-size: 13px; margin-top: 2px; }
+        
+        .dash-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin: 16px 0 20px; }
+        .dash-stat { background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.04); border-radius: 12px; padding: 16px 20px; }
+        .dash-stat .label { font-size: 11px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.3px; }
+        .dash-stat .value { font-size: 28px; font-weight: 800; margin-top: 2px; }
+        .dash-stat .value.gold { color: var(--gold); }
+        .dash-stat .value.green { color: var(--success); }
+        .dash-stat .value.red { color: var(--danger); }
+        
+        .dash-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+        .dash-section-title { font-size: 13px; font-weight: 600; margin-bottom: 10px; display: flex; align-items: center; gap: 6px; color: var(--text-muted); }
+        .dash-section-title i { color: var(--gold); font-size: 12px; }
+        
+        .dash-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+        .dash-action { background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.04); border-radius: 10px; padding: 12px 14px; cursor: pointer; transition: all 0.3s ease; display: flex; align-items: center; gap: 10px; }
+        .dash-action:hover { background: rgba(255,255,255,0.04); border-color: rgba(214,158,46,0.08); transform: translateY(-2px); }
+        .dash-action i { font-size: 16px; color: var(--gold); width: 28px; text-align: center; }
+        .dash-action .action-label { font-size: 12px; font-weight: 500; }
+        .dash-action .action-desc { font-size: 10px; color: var(--text-muted); }
+        
+        .dash-recent { background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.04); border-radius: 10px; overflow: hidden; max-height: 120px; overflow-y: auto; }
+        .dash-recent .empty { padding: 14px; text-align: center; color: var(--text-muted); font-size: 12px; }
+        .dash-alerts { background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.04); border-radius: 10px; padding: 10px 14px; max-height: 85px; overflow-y: auto; }
+        .dash-alerts .empty { text-align: center; color: var(--text-muted); font-size: 12px; padding: 4px 0; }
+        
+        .alert-item { display: flex; align-items: center; gap: 8px; padding: 4px 10px; margin-bottom: 3px; border-radius: 6px; font-size: 12px; }
+        .alert-item .dot { width: 5px; height: 5px; border-radius: 50%; flex-shrink: 0; }
+        .alert-item .dot.critical { background: var(--danger); }
+        .alert-item .dot.low { background: var(--warning); }
+        .alert-item .text { flex: 1; }
+        .alert-item .text .name { font-weight: 600; }
+        .alert-item .badge { font-size: 8px; font-weight: 600; padding: 1px 8px; border-radius: 20px; }
+        .alert-item .badge.critical { background: rgba(239,68,68,0.12); color: var(--danger); }
+        .alert-item .badge.low { background: rgba(245,158,11,0.12); color: var(--warning); }
+        
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(13,18,30,0.95);
+            backdrop-filter: blur(20px);
+            border-top: 1px solid rgba(255,255,255,0.04);
+            display: flex;
+            justify-content: space-around;
+            padding: 6px 0 env(safe-area-inset-bottom, 6px) 0;
+            z-index: 100;
+        }
+        .bottom-nav .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1px;
+            padding: 4px 14px;
+            border: none;
+            background: none;
+            cursor: pointer;
+            color: var(--text-muted);
+            font-family: var(--font);
+            font-size: 9px;
+            font-weight: 500;
+            transition: 0.3s;
+            position: relative;
+            border-radius: 6px;
+        }
+        .bottom-nav .nav-item.active { color: var(--gold); }
+        .bottom-nav .nav-item i { font-size: 18px; }
+        
+        .login-container { max-width: 400px; width: 100%; padding: 40px 36px; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.06); border-radius: 20px; margin: auto; }
+        .login-container .logo { text-align: center; margin-bottom: 32px; }
+        .login-container .logo i { font-size: 48px; color: var(--gold); display: block; margin-bottom: 8px; }
+        .login-container .logo h2 { font-size: 24px; font-weight: 800; color: var(--white); }
+        .login-container .logo h2 span { color: var(--gold); }
+        .login-container .form-group { margin-bottom: 16px; }
+        .login-container .form-group label { display: block; font-size: 12px; font-weight: 600; color: var(--text-muted); margin-bottom: 6px; }
+        .login-container .form-group .input-wrap { display: flex; align-items: center; border: 1px solid rgba(255,255,255,0.06); border-radius: 10px; background: rgba(255,255,255,0.03); }
+        .login-container .form-group .input-wrap:focus-within { border-color: rgba(214,158,46,0.3); }
+        .login-container .form-group .input-wrap i { padding: 0 14px; color: var(--text-muted); font-size: 15px; }
+        .login-container .form-group .input-wrap input { flex: 1; padding: 12px 14px 12px 0; border: none; background: transparent; font-family: var(--font); font-size: 14px; color: var(--white); outline: none; }
+        .login-container .btn-login { width: 100%; padding: 14px; border: none; border-radius: 10px; background: linear-gradient(135deg, var(--gold), var(--gold-light)); color: var(--white); font-family: var(--font); font-size: 16px; font-weight: 700; cursor: pointer; transition: all 0.3s ease; }
+        .login-container .btn-login:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(214,158,46,0.35); }
+        .login-container .demo-credentials { margin-top: 20px; padding: 12px 16px; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.04); border-radius: 10px; text-align: center; }
+        .login-container .demo-credentials code { color: var(--gold); background: rgba(214,158,46,0.06); padding: 2px 12px; border-radius: 4px; font-size: 12px; }
+        .login-error { display: none; background: rgba(239,68,68,0.08); border: 1px solid rgba(239,68,68,0.12); color: var(--danger); padding: 10px 14px; border-radius: 8px; font-size: 13px; margin-bottom: 16px; }
+        .login-error.show { display: block; }
+        
+        .btn-gold { padding: 12px 20px; background: linear-gradient(135deg, var(--gold), var(--gold-light)); color: var(--white); border: none; border-radius: 8px; font-family: var(--font); font-size: 14px; font-weight: 600; cursor: pointer; transition: 0.3s; box-shadow: 0 4px 20px rgba(214,158,46,0.2); }
+        .btn-gold:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(214,158,46,0.35); }
+        .btn-secondary { padding: 12px 20px; background: rgba(255,255,255,0.04); color: var(--text-muted); border: 1px solid rgba(255,255,255,0.06); border-radius: 8px; font-family: var(--font); font-size: 14px; font-weight: 500; cursor: pointer; transition: 0.3s; }
+        .btn-secondary:hover { background: rgba(255,255,255,0.08); }
+        
+        .receive-container, .issue-container { max-width: 1200px; margin: 0 auto; width: 100%; flex: 1; display: flex; flex-direction: column; }
+        .receive-form, .issue-form { background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.04); border-radius: 14px; padding: 24px 28px; flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+        .receive-grid, .issue-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; flex: 1; }
+        .receive-grid .col, .issue-grid .col { display: flex; flex-direction: column; gap: 12px; }
+        .receive-grid label, .issue-grid label { display: block; font-size: 11px; font-weight: 600; color: var(--text-muted); margin-bottom: 4px; }
+        .receive-grid input, .receive-grid select, .issue-grid input, .issue-grid select { width: 100%; padding: 10px 14px; font-size: 14px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06); border-radius: 8px; color: var(--white); font-family: var(--font); outline: none; transition: 0.3s; }
+        .receive-grid select option, .issue-grid select option { background: #1A2332; color: #FFFFFF; }
+        .receive-grid .info-box, .issue-grid .info-box { background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.04); border-radius: 8px; padding: 12px 16px; }
+        .receive-grid .info-box .row, .issue-grid .info-box .row { display: flex; justify-content: space-between; font-size: 12px; }
+        .receive-grid .info-box .row .label, .issue-grid .info-box .row .label { color: var(--text-muted); }
+        .receive-grid .info-box .row .value, .issue-grid .info-box .row .value { font-weight: 600; color: var(--gold); }
+        
+        .btn-row { display: flex; gap: 12px; margin-top: auto; padding-top: 12px; border-top: 1px solid rgba(255,255,255,0.04); }
+        .btn-row .flex-1 { flex: 1; }
+        
+        .issue-row { display: grid; grid-template-columns: 2fr 1fr 1fr 40px; gap: 8px; padding: 4px 10px; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.03); }
+        .issue-row input, .issue-row select { width: 100%; padding: 8px 12px; font-size: 13px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06); border-radius: 6px; color: var(--white); font-family: var(--font); outline: none; transition: 0.3s; }
+        .issue-row select { display: none; }
+        .issue-available-stock { font-size: 13px; color: var(--text-muted); }
+        
+        .ward-tag { display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px; background: rgba(214,158,46,0.06); border: 1px solid rgba(214,158,46,0.08); border-radius: 6px; font-size: 12px; color: var(--white); }
+        .ward-tag i { color: var(--gold); font-size: 10px; }
+        .ward-tag .remove-ward { background: none; border: none; color: var(--text-muted); cursor: pointer; font-size: 11px; padding: 0 2px; }
+        .ward-tag .remove-ward:hover { color: var(--danger); }
+        
+        .ward-management { margin-bottom: 12px; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.04); border-radius: 8px; padding: 12px 16px; flex-shrink: 0; }
+        .ward-management-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
+        .ward-management-title { font-size: 12px; font-weight: 600; color: var(--text-muted); }
+        .ward-management-title i { color: var(--gold); }
+        .ward-tags-container { display: flex; flex-wrap: wrap; gap: 4px; }
+        
+        .search-container { max-width: 1100px; margin: 0 auto; width: 100%; flex: 1; display: flex; flex-direction: column; }
+        .search-box { display: flex; gap: 12px; margin-bottom: 16px; flex-shrink: 0; }
+        .search-wrapper { flex: 1; position: relative; }
+        .search-wrapper i { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: var(--text-muted); }
+        .search-wrapper input { width: 100%; padding: 14px 16px 14px 48px; font-size: 16px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06); border-radius: 10px; color: var(--white); font-family: var(--font); outline: none; transition: 0.3s; }
+        .filter-btns { display: flex; gap: 8px; margin-bottom: 14px; flex-wrap: wrap; flex-shrink: 0; align-items: center; }
+        .filter-btn { padding: 5px 16px; border: 1px solid rgba(255,255,255,0.06); border-radius: 20px; background: rgba(255,255,255,0.02); color: var(--text-muted); font-size: 12px; cursor: pointer; font-family: var(--font); transition: 0.3s; }
+        .filter-btn.active { background: rgba(214,158,46,0.1); border-color: rgba(214,158,46,0.15); color: var(--gold); }
+        .filter-btn:hover { background: rgba(255,255,255,0.05); }
+        .search-results { background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.04); border-radius: 12px; flex: 1; overflow: hidden; display: flex; flex-direction: column; }
+        .search-header { display: grid; grid-template-columns: 2fr 0.8fr 0.8fr 0.7fr 0.7fr 0.7fr 0.9fr 0.5fr; gap: 6px; padding: 10px 14px; background: rgba(255,255,255,0.02); border-bottom: 1px solid rgba(255,255,255,0.04); font-size: 10px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.3px; flex-shrink: 0; }
+        .search-body { flex: 1; overflow-y: auto; padding: 4px 0; }
+        .search-row { display: grid; grid-template-columns: 2fr 0.8fr 0.8fr 0.7fr 0.7fr 0.7fr 0.9fr 0.5fr; gap: 6px; padding: 8px 14px; border-bottom: 1px solid rgba(255,255,255,0.03); align-items: center; cursor: pointer; font-size: 13px; transition: 0.3s; }
+        .search-row:hover { background: rgba(255,255,255,0.04); }
+        .search-empty { text-align: center; padding: 60px 20px; color: var(--text-muted); font-size: 14px; }
+        .search-empty i { font-size: 48px; display: block; margin-bottom: 16px; opacity: 0.2; }
+        
+        .add-product-container { max-width: 1200px; margin: 0 auto; width: 100%; flex: 1; display: flex; flex-direction: column; }
+        .add-product-form { background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.04); border-radius: 14px; padding: 24px 28px; flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+        .add-product-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; flex: 1; }
+        .add-product-grid .col { display: flex; flex-direction: column; gap: 12px; }
+        .add-product-grid label { display: block; font-size: 11px; font-weight: 600; color: var(--text-muted); margin-bottom: 4px; }
+        .add-product-grid input, .add-product-grid select { width: 100%; padding: 10px 14px; font-size: 14px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06); border-radius: 8px; color: var(--white); font-family: var(--font); outline: none; transition: 0.3s; }
+        .add-product-grid select option { background: #1A2332; color: #FFFFFF; }
+        
+        .status-ok { color: #10B981; }
+        .status-low { color: #F59E0B; }
+        .status-critical { color: #EF4444; }
+        .status-out { color: #6B7280; }
+        
+        /* Stock Card Styles - FIXED SCROLLING */
+        .stock-card-container { max-width: 100%; margin: 0; width: 100%; flex: 1; display: flex; flex-direction: column; padding: 0 10px; min-height: 0; }
+        .stock-card-search { background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.04); border-radius: 14px; padding: 16px 20px; margin-bottom: 12px; flex-shrink: 0; }
+        .stock-card-grid { display: grid; grid-template-columns: 2fr 1fr auto; gap: 12px; align-items: end; }
+        .stock-card-grid label { display: block; font-size: 13px; font-weight: 600; color: var(--text-muted); margin-bottom: 4px; }
+        .stock-card-search-input input { width: 100%; padding: 12px 16px; font-size: 16px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06); border-radius: 8px; color: var(--white); font-family: var(--font); outline: none; transition: 0.3s; }
+        .stock-card-dropdown { display: none; position: absolute; top: 100%; left: 0; right: 0; background: #1A2332; border: 1px solid rgba(255,255,255,0.06); border-radius: 8px; margin-top: 4px; max-height: 250px; overflow-y: auto; z-index: 1000; }
+        .stock-card-dropdown-item { padding: 10px 16px; cursor: pointer; border-bottom: 1px solid rgba(255,255,255,0.03); transition: 0.3s; font-size: 15px; }
+        .stock-card-dropdown-item:hover { background: rgba(214,158,46,0.05); }
+        .stock-card-dropdown-item .name { font-weight: 500; color: var(--white); }
+        .stock-card-dropdown-item .detail { font-size: 13px; color: var(--text-muted); }
+        .stock-card-header { display: none; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.04); border-radius: 14px; padding: 20px 24px; margin-bottom: 12px; flex-shrink: 0; }
+        .stock-card-header-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr 1fr; gap: 16px; }
+        .stock-card-header-grid .label { font-size: 13px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; }
+        .stock-card-header-grid .value { font-size: 20px; font-weight: 600; color: var(--white); }
+        .stock-card-header-grid .value.gold { color: var(--gold); }
+        .stock-card-subheader { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr 1fr; gap: 16px; margin-top: 12px; padding-top: 12px; border-top: 1px solid rgba(255,255,255,0.04); }
+        .stock-card-subheader .label { font-size: 13px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; }
+        .stock-card-subheader .value { font-size: 18px; font-weight: 600; color: var(--white); }
+        .stock-card-subheader .value.gold { color: var(--gold); }
+        
+        .stock-card-transactions {
+            display: none;
+            flex: 1;
+            background: rgba(255,255,255,0.02);
+            border: 1px solid rgba(255,255,255,0.04);
+            border-radius: 14px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            min-height: 0;
+            height: 100%;
+        }
+        .stock-card-transactions-header {
+            display: grid;
+            grid-template-columns: 0.9fr 1.2fr 1.5fr 1fr 1fr 0.8fr 0.8fr 0.8fr 1fr 0.8fr 1.2fr 1fr 1fr;
+            gap: 6px;
+            padding: 12px 16px;
+            background: rgba(255,255,255,0.02);
+            border-bottom: 2px solid rgba(214,158,46,0.1);
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+            flex-shrink: 0;
+        }
+        .stock-card-transactions-header span { font-size: 12px !important; font-weight: 700 !important; }
+        .stock-card-transactions-list {
+            flex: 1 1 auto;
+            overflow-y: auto !important;
+            padding: 4px 0;
+            min-height: 0;
+            max-height: 100%;
+        }
+        /* SCROLLBAR VISIBLE */
+        .stock-card-transactions-list::-webkit-scrollbar {
+            width: 10px;
+            display: block !important;
+        }
+        .stock-card-transactions-list::-webkit-scrollbar-track {
+            background: rgba(255,255,255,0.05);
+            border-radius: 5px;
+        }
+        .stock-card-transactions-list::-webkit-scrollbar-thumb {
+            background: rgba(214,158,46,0.4);
+            border-radius: 5px;
+        }
+        .stock-card-transactions-list::-webkit-scrollbar-thumb:hover {
+            background: rgba(214,158,46,0.6);
+        }
+        .stock-card-transactions-list {
+            scrollbar-width: thin;
+            scrollbar-color: rgba(214,158,46,0.4) rgba(255,255,255,0.05);
+        }
+        .stock-card-transaction-item {
+            display: grid;
+            grid-template-columns: 0.9fr 1.2fr 1.5fr 1fr 1fr 0.8fr 0.8fr 0.8fr 1fr 0.8fr 1.2fr 1fr 1fr;
+            gap: 6px;
+            padding: 10px 16px;
+            border-bottom: 1px solid rgba(255,255,255,0.03);
+            align-items: center;
+            font-size: 15px !important;
+            transition: 0.3s;
+        }
+        .stock-card-transaction-item .date { color: var(--text-muted); font-size: 13px !important; }
+        .stock-card-transaction-item .received { color: #10B981; font-weight: 700 !important; font-size: 15px !important; }
+        .stock-card-transaction-item .issued { color: #EF4444; font-weight: 700 !important; font-size: 15px !important; }
+        .stock-card-transaction-item .balance { color: var(--gold); font-weight: 800 !important; font-size: 16px !important; }
+        .stock-card-transaction-item div, .stock-card-transaction-item span { font-size: 14px !important; }
+        .stock-card-totals {
+            display: grid;
+            grid-template-columns: 0.9fr 1.2fr 1.5fr 1fr 1fr 0.8fr 0.8fr 0.8fr 1fr 0.8fr 1.2fr 1fr 1fr;
+            gap: 6px;
+            padding: 12px 16px;
+            background: rgba(255,255,255,0.02);
+            border-top: 2px solid rgba(214,158,46,0.1);
+            font-size: 16px;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+        .stock-card-totals .received { color: #10B981; font-size: 16px !important; font-weight: 700 !important; }
+        .stock-card-totals .issued { color: #EF4444; font-size: 16px !important; font-weight: 700 !important; }
+        .stock-card-totals .balance { color: var(--gold); font-size: 16px !important; font-weight: 700 !important; }
+        .stock-card-empty { flex: 1; display: flex; align-items: center; justify-content: center; color: var(--text-muted); opacity: 0.5; flex-direction: column; }
+        .stock-card-empty i { font-size: 80px; margin-bottom: 20px; opacity: 0.3; }
+        .stock-card-empty p { font-size: 22px; }
+        .stock-card-empty .sub { font-size: 16px; margin-top: 4px; }
+        #stockCardContent { flex: 1; display: flex; flex-direction: column; overflow: hidden; min-height: 0; }
+        
+        @media (max-width: 768px) {
+            .stock-card-header-grid, .stock-card-subheader { grid-template-columns: 1fr 1fr; }
+            .stock-card-transactions-header, .stock-card-transaction-item, .stock-card-totals {
+                grid-template-columns: 0.7fr 0.7fr 0.7fr 0.6fr 0.6fr 0.5fr 0.5fr 0.5fr 0.6fr 0.5fr 0.7fr 0.6fr 0.6fr;
+                font-size: 10px;
+                overflow-x: auto;
+                padding: 8px 10px;
+                gap: 4px;
+            }
+            .stock-card-transaction-item { font-size: 11px !important; padding: 6px 10px; }
+        }
+    </style>
+<link rel="stylesheet" href="css/styles.css"></head>
+<body>
+
+<!-- LANDING PAGE -->
+<div class="page active" id="landing">
+    <div style="display:flex;flex-direction:column;height:100vh;align-items:center;justify-content:center;padding:20px;text-align:center;">
+        <div style="font-size:64px;color:var(--gold);margin-bottom:16px;"><i class="fas fa-prescription-bottle-alt"></i></div>
+        <h1 style="font-size:48px;font-weight:900;">Medox<span style="color:var(--gold);">Pharmacy</span></h1>
+        <p style="color:var(--text-muted);font-size:18px;max-width:400px;margin:12px auto 32px;">Smart Inventory Management System</p>
+        <button onclick="navigateTo('login')" class="btn-gold" style="padding:14px 40px;font-size:16px;"><i class="fas fa-sign-in-alt"></i> Login</button>
+        <div style="margin-top:40px;color:var(--text-muted);font-size:12px;opacity:0.5;">© 2026 Medox Pharmacy</div>
+    </div>
+</div>
+
+<!-- LOGIN PAGE -->
+<div class="page" id="loginPage">
+    <div style="display:flex;align-items:center;justify-content:center;height:100vh;padding:20px;">
+        <div class="login-container">
+            <div class="logo">
+                <i class="fas fa-prescription-bottle-alt"></i>
+                <h2>Medox<span>Pharmacy</span></h2>
+                <p style="color:var(--text-muted);font-size:14px;margin-top:4px;">Sign in to your account</p>
+            </div>
+            <div class="login-error" id="loginError"><span id="loginErrorText">Invalid email or password.</span></div>
+            <div class="form-group">
+                <label>Email Address</label>
+                <div class="input-wrap">
+                    <i class="fas fa-envelope"></i>
+                    <input type="email" id="loginEmail" value="demo@medox.com" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label>Password</label>
+                <div class="input-wrap">
+                    <i class="fas fa-lock"></i>
+                    <input type="password" id="loginPassword" value="password123" />
+                </div>
+            </div>
+            <button class="btn-login" onclick="handleLogin()"><i class="fas fa-sign-in-alt"></i> Sign In</button>
+            <div class="demo-credentials">
+                <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:4px;">Demo Credentials</div>
+                <div><code>demo@medox.com</code> <span style="color:var(--text-muted);opacity:0.3;">|</span> <code>password123</code></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- DASHBOARD PAGE -->
+<div class="page" id="dashboardPage">
+    <header class="dash-header">
+        <div class="brand"><div class="icon"><i class="fas fa-prescription-bottle-alt"></i></div><span class="name">Medox<span>Pharmacy</span></span></div>
+        <div class="user-section">
+            <span class="user-email" id="dashboardUser">Loading...</span>
+            <button class="logout-btn" onclick="logout()"><i class="fas fa-sign-out-alt"></i></button>
+        </div>
+    </header>
+    <main class="dash-main">
+        <div class="dash-welcome"><h1 id="welcomeMessage">Good Morning, 👋</h1><p>Here's your pharmacy summary</p></div>
+        <div class="dash-stats">
+            <div class="dash-stat"><div class="label">Products</div><div class="value gold" id="totalProducts">—</div></div>
+            <div class="dash-stat"><div class="label">Low Stock</div><div class="value green" id="lowStock">—</div></div>
+            <div class="dash-stat"><div class="label">Alerts</div><div class="value red" id="criticalAlerts">—</div></div>
+        </div>
+        <div class="dash-grid">
+            <div>
+                <div class="dash-section-title"><i class="fas fa-bolt"></i> Quick Actions</div>
+                <div class="dash-actions">
+                    <div class="dash-action" onclick="navigateTo('receiveStock')"><i class="fas fa-arrow-down"></i><div><div class="action-label">Receive</div><div class="action-desc">Incoming goods</div></div></div>
+                    <div class="dash-action" onclick="navigateTo('issueStock')"><i class="fas fa-arrow-up"></i><div><div class="action-label">Issue</div><div class="action-desc">Dispense items</div></div></div>
+                    <div class="dash-action" onclick="navigateTo('addProduct')"><i class="fas fa-plus-circle"></i><div><div class="action-label">Add Product</div><div class="action-desc">New item</div></div></div>
+                    <div class="dash-action" onclick="navigateTo('search')"><i class="fas fa-search"></i><div><div class="action-label">Search</div><div class="action-desc">Find products</div></div></div>
+                    <div class="dash-action" onclick="navigateTo('stockCard')"><i class="fas fa-address-card"></i><div><div class="action-label">Stock Card</div><div class="action-desc">View transaction history</div></div></div>
+                </div>
+            </div>
+            <div>
+                <div class="dash-section-title"><i class="fas fa-history"></i> Recent Activity</div>
+                <div class="dash-recent" id="recentTransactions"><div class="empty"><i class="fas fa-spinner fa-spin"></i> Loading...</div></div>
+            </div>
+        </div>
+        <div style="margin-top:16px;">
+            <div class="dash-section-title"><i class="fas fa-bell"></i> Active Alerts</div>
+            <div class="dash-alerts" id="alertsContainer"><div class="empty"><i class="fas fa-spinner fa-spin"></i> Loading...</div></div>
+        </div>
+    </main>
+    <nav class="bottom-nav">
+        <button class="nav-item active" onclick="navigateTo('dashboard')"><i class="fas fa-home"></i><span>Home</span></button>
+        <button class="nav-item" onclick="navigateTo('receiveStock')"><i class="fas fa-arrow-down"></i><span>Receive</span></button>
+        <button class="nav-item" onclick="navigateTo('issueStock')"><i class="fas fa-arrow-up"></i><span>Issue</span></button>
+        <button class="nav-item" onclick="navigateTo('search')"><i class="fas fa-search"></i><span>Search</span></button>
+        <button class="nav-item" onclick="navigateTo('addProduct')"><i class="fas fa-plus-circle"></i><span>Add</span></button>
+        <button class="nav-item" onclick="navigateTo('stockCard')"><i class="fas fa-address-card"></i><span>Stock Card</span></button>
+    </nav>
+</div>
+
+<!-- RECEIVE STOCK PAGE -->
+<div class="page" id="receiveStockPage">
+    <header class="dash-header">
+        <div class="brand"><div class="icon"><i class="fas fa-arrow-down" style="color:var(--gold);"></i></div><span class="name">Receive<span style="color:var(--gold);">Stock</span></span></div>
+        <div class="user-section">
+            <button class="logout-btn" onclick="navigateTo('dashboard')" style="font-size:13px;display:flex;align-items:center;gap:6px;"><i class="fas fa-arrow-left"></i> Back</button>
+        </div>
+    </header>
+    <main class="dash-main">
+        <div class="receive-container">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-shrink:0;">
+                <div><h1 style="font-size:22px;font-weight:800;">Receive Stock</h1><p style="color:var(--text-muted);font-size:13px;">Add stock to existing products</p></div>
+            </div>
+            <div class="receive-form">
+                <div class="receive-grid">
+                    <div class="col">
+                        <div style="font-size:13px;font-weight:600;color:var(--gold);"><i class="fas fa-search"></i> Select Product</div>
+                        <div><label>Search Product</label><input type="text" id="receiveSearch" placeholder="Type product name..." oninput="searchProductsForReceive(this.value)" /></div>
+                        <div><label>Select Product <span style="color:#EF4444;">*</span></label>
+                            <select id="receiveProduct"><option value="">Loading products...</option></select>
+                        </div>
+                        <div class="info-box">
+                            <div class="row"><span class="label">Current Stock:</span><span class="value" id="receiveCurrentStock">0</span></div>
+                            <div class="row" style="margin-top:4px;"><span class="label">Product Code:</span><span class="value" id="receiveProductCode">—</span></div>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div style="font-size:13px;font-weight:600;color:var(--gold);"><i class="fas fa-boxes"></i> Stock Details</div>
+                        <div><label>Quantity Received <span style="color:#EF4444;">*</span></label><input type="number" id="receiveQty" placeholder="0" min="1" /></div>
+                        <div><label>Batch Number <span style="color:#EF4444;">*</span></label><input type="text" id="receiveBatch" placeholder="e.g. B-2026-001" /></div>
+                        <div><label>Expiry Date <span style="color:#EF4444;">*</span></label><input type="date" id="receiveExpiry" /></div>
+                    </div>
+                    <div class="col">
+                        <div style="font-size:13px;font-weight:600;color:var(--gold);"><i class="fas fa-info-circle"></i> Additional Info</div>
+                        <div><label>D. Note / RIV Number</label><input type="text" id="receiveDNote" placeholder="e.g. DN-2026-001" /></div>
+                        <div><label>Supplier / From</label><input type="text" id="receiveSupplier" placeholder="e.g. MediSupply Ltd" /></div>
+                        <div><label>Remarks</label><input type="text" id="receiveRemarks" placeholder="Any notes..." /></div>
+                        <div class="btn-row">
+                            <button onclick="submitReceiveStock()" class="btn-gold flex-1"><i class="fas fa-arrow-down"></i> Receive Stock</button>
+                            <button onclick="clearReceiveForm()" class="btn-secondary"><i class="fas fa-undo"></i> Clear</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    <nav class="bottom-nav">
+        <button class="nav-item" onclick="navigateTo('dashboard')"><i class="fas fa-home"></i><span>Home</span></button>
+        <button class="nav-item active" onclick="navigateTo('receiveStock')"><i class="fas fa-arrow-down" style="color:var(--gold);"></i><span>Receive</span></button>
+        <button class="nav-item" onclick="navigateTo('issueStock')"><i class="fas fa-arrow-up"></i><span>Issue</span></button>
+        <button class="nav-item" onclick="navigateTo('search')"><i class="fas fa-search"></i><span>Search</span></button>
+        <button class="nav-item" onclick="navigateTo('addProduct')"><i class="fas fa-plus-circle"></i><span>Add</span></button>
+        <button class="nav-item" onclick="navigateTo('stockCard')"><i class="fas fa-address-card"></i><span>Stock Card</span></button>
+    </nav>
+</div>
+
+<!-- ISSUE STOCK PAGE -->
+<div class="page" id="issueStockPage">
+    <header class="dash-header">
+        <div class="brand"><div class="icon"><i class="fas fa-arrow-up" style="color:var(--gold);"></i></div><span class="name">Issue<span style="color:var(--gold);">Stock</span></span></div>
+        <div class="user-section">
+            <button class="logout-btn" onclick="navigateTo('dashboard')" style="font-size:13px;display:flex;align-items:center;gap:6px;"><i class="fas fa-arrow-left"></i> Back</button>
+        </div>
+    </header>
+    <main class="dash-main">
+        <div class="issue-container">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;flex-shrink:0;">
+                <div><h1 style="font-size:22px;font-weight:800;">Issue Stock</h1><p style="color:var(--text-muted);font-size:13px;">Dispense multiple items to the same destination</p></div>
+            </div>
+            <div class="ward-management">
+                <div class="ward-management-header">
+                    <span class="ward-management-title"><i class="fas fa-hospital"></i> Ward Management</span>
+                    <button onclick="showAddWardModal()" style="padding:2px 10px;background:rgba(214,158,46,0.1);border:1px solid rgba(214,158,46,0.1);border-radius:4px;color:var(--gold);font-size:11px;cursor:pointer;font-family:var(--font);">
+                        <i class="fas fa-plus"></i> Add Ward
+                    </button>
+                </div>
+                <div class="ward-tags-container" id="wardTags"></div>
+            </div>
+            <div class="issue-form">
+                <div class="issue-grid">
+                    <div class="col">
+                        <div style="font-size:13px;font-weight:600;color:var(--gold);"><i class="fas fa-map-marker-alt"></i> Destination</div>
+                        <div><label>Issue To <span style="color:#EF4444;">*</span></label>
+                            <select id="issueTo"><option value="">Select...</option></select>
+                        </div>
+                        <div><label>Patient/Customer Name</label><input type="text" id="issuePatient" placeholder="e.g. John Doe" /></div>
+                    </div>
+                    <div class="col">
+                        <div style="font-size:13px;font-weight:600;color:var(--gold);"><i class="fas fa-file-prescription"></i> Reference</div>
+                        <div><label>Reference/Prescription</label><input type="text" id="issueReference" placeholder="e.g. RX-2026-001" /></div>
+                        <div><label>Issued By</label><input type="text" id="issueOfficer" placeholder="Auto-filled" readonly /></div>
+                    </div>
+                    <div class="col">
+                        <div style="font-size:13px;font-weight:600;color:var(--gold);"><i class="fas fa-list"></i> Items</div>
+                        <div style="flex:1;display:flex;flex-direction:column;">
+                            <div style="display:flex;justify-content:space-between;margin-bottom:8px;">
+                                <span style="font-size:12px;color:var(--text-muted);">Items to Issue</span>
+                                <button onclick="addIssueRow()" style="padding:4px 12px;background:rgba(214,158,46,0.1);border:1px solid rgba(214,158,46,0.1);border-radius:6px;color:var(--gold);font-size:12px;cursor:pointer;font-family:var(--font);">
+                                    <i class="fas fa-plus"></i> Add Item
+                                </button>
+                            </div>
+                            <div style="display:grid;grid-template-columns:2fr 1fr 1fr 30px;gap:6px;padding:6px 8px;background:rgba(255,255,255,0.02);border-radius:4px;font-size:10px;color:var(--text-muted);font-weight:600;flex-shrink:0;">
+                                <span>Product</span><span>Qty</span><span>Stock</span><span></span>
+                            </div>
+                            <div id="issueItemsContainer" style="flex:1;overflow-y:auto;padding:4px 0;">
+                                <div class="issue-row">
+                                    <div style="position:relative;">
+                                        <input type="text" class="issue-search" placeholder="Search product..." oninput="searchIssueProduct(this)" />
+                                        <select class="issue-product-select"><option value="">Select product...</option></select>
+                                        <input type="hidden" class="issue-product-id" />
+                                    </div>
+                                    <div><input type="number" class="issue-qty" placeholder="0" min="1" onchange="checkRowStock(this)" /></div>
+                                    <div><span class="issue-available-stock">0</span></div>
+                                    <div><button onclick="removeIssueRow(this)" style="background:none;border:none;color:var(--text-muted);cursor:pointer;font-size:14px;padding:4px;"><i class="fas fa-times"></i></button></div>
+                                </div>
+                            </div>
+                            <div class="btn-row" style="margin-top:8px;">
+                                <button onclick="submitIssueMultiple()" class="btn-gold flex-1"><i class="fas fa-arrow-up"></i> Issue All Items</button>
+                                <button onclick="clearIssueForm()" class="btn-secondary"><i class="fas fa-undo"></i> Clear All</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    <nav class="bottom-nav">
+        <button class="nav-item" onclick="navigateTo('dashboard')"><i class="fas fa-home"></i><span>Home</span></button>
+        <button class="nav-item" onclick="navigateTo('receiveStock')"><i class="fas fa-arrow-down"></i><span>Receive</span></button>
+        <button class="nav-item active" onclick="navigateTo('issueStock')"><i class="fas fa-arrow-up" style="color:var(--gold);"></i><span>Issue</span></button>
+        <button class="nav-item" onclick="navigateTo('search')"><i class="fas fa-search"></i><span>Search</span></button>
+        <button class="nav-item" onclick="navigateTo('addProduct')"><i class="fas fa-plus-circle"></i><span>Add</span></button>
+        <button class="nav-item" onclick="navigateTo('stockCard')"><i class="fas fa-address-card"></i><span>Stock Card</span></button>
+    </nav>
+</div>
+
+<!-- SEARCH PAGE -->
+<div class="page" id="searchPage">
+    <header class="dash-header">
+        <div class="brand"><div class="icon"><i class="fas fa-search" style="color:var(--gold);"></i></div><span class="name">Search<span style="color:var(--gold);">Products</span></span></div>
+        <div class="user-section">
+            <button class="logout-btn" onclick="navigateTo('dashboard')" style="font-size:13px;display:flex;align-items:center;gap:6px;"><i class="fas fa-arrow-left"></i> Back</button>
+        </div>
+    </header>
+    <main class="dash-main">
+        <div class="search-container">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-shrink:0;flex-wrap:wrap;gap:8px;">
+                <div><h1 style="font-size:22px;font-weight:800;">Find Products</h1><p style="color:var(--text-muted);font-size:13px;">Search by name, code, category</p></div>
+                <div id="resultsCount" style="font-size:13px;color:var(--text-muted);"><span id="resultCountText">Loading...</span></div>
+            </div>
+            <div class="search-box">
+                <div class="search-wrapper"><i class="fas fa-search"></i><input type="text" id="searchQuery" placeholder="Search by product name, code, or category..." oninput="performSearch()" /></div>
+                <button onclick="performSearch()" class="btn-gold"><i class="fas fa-search"></i> Search</button>
+                <button onclick="clearSearch()" class="btn-secondary"><i class="fas fa-times"></i> Clear</button>
+            </div>
+            <div class="filter-btns">
+                <span style="font-size:12px;color:var(--text-muted);font-weight:500;margin-right:4px;">Quick Views:</span>
+                <button onclick="filterProducts('all')" class="filter-btn active" data-filter="all"><i class="fas fa-list"></i> All</button>
+                <button onclick="filterProducts('low')" class="filter-btn" data-filter="low"><i class="fas fa-exclamation-triangle"></i> Low Stock</button>
+                <button onclick="filterProducts('critical')" class="filter-btn" data-filter="critical"><i class="fas fa-circle" style="font-size:8px;"></i> Critical</button>
+                <button onclick="filterProducts('instock')" class="filter-btn" data-filter="instock"><i class="fas fa-check"></i> In Stock</button>
+                <button onclick="filterProducts('outofstock')" class="filter-btn" data-filter="outofstock"><i class="fas fa-times"></i> Out of Stock</button>
+                <button onclick="filterProducts('expiring')" class="filter-btn" data-filter="expiring"><i class="fas fa-clock"></i> Expiring Soon</button>
+            </div>
+            <div class="search-results">
+                <div class="search-header"><span>Product</span><span>Code</span><span>Batch</span><span>Expiry</span><span>Qty</span><span>Price</span><span>Status</span><span style="text-align:center;">Action</span></div>
+                <div class="search-body" id="searchResults">
+                    <div class="search-empty"><i class="fas fa-search"></i><p>Search for products</p></div>
+                </div>
+            </div>
+        </div>
+    </main>
+    <nav class="bottom-nav">
+        <button class="nav-item" onclick="navigateTo('dashboard')"><i class="fas fa-home"></i><span>Home</span></button>
+        <button class="nav-item" onclick="navigateTo('receiveStock')"><i class="fas fa-arrow-down"></i><span>Receive</span></button>
+        <button class="nav-item" onclick="navigateTo('issueStock')"><i class="fas fa-arrow-up"></i><span>Issue</span></button>
+        <button class="nav-item active" onclick="navigateTo('search')"><i class="fas fa-search" style="color:var(--gold);"></i><span>Search</span></button>
+        <button class="nav-item" onclick="navigateTo('addProduct')"><i class="fas fa-plus-circle"></i><span>Add</span></button>
+        <button class="nav-item" onclick="navigateTo('stockCard')"><i class="fas fa-address-card"></i><span>Stock Card</span></button>
+    </nav>
+</div>
+
+<!-- ADD PRODUCT PAGE -->
+<div class="page" id="addProductPage">
+    <header class="dash-header">
+        <div class="brand"><div class="icon"><i class="fas fa-plus-circle" style="color:var(--gold);"></i></div><span class="name">Add<span style="color:var(--gold);">Product</span></span></div>
+        <div class="user-section">
+            <button class="logout-btn" onclick="navigateTo('dashboard')" style="font-size:13px;display:flex;align-items:center;gap:6px;"><i class="fas fa-arrow-left"></i> Back</button>
+        </div>
+    </header>
+    <main class="dash-main">
+        <div class="add-product-container">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-shrink:0;">
+                <div><h1 style="font-size:22px;font-weight:800;">Add New Product</h1><p style="color:var(--text-muted);font-size:13px;">Add a new product to inventory</p></div>
+            </div>
+            <div class="add-product-form">
+                <div class="add-product-grid">
+                    <div class="col">
+                        <div style="font-size:13px;font-weight:600;color:var(--gold);"><i class="fas fa-tag"></i> Product Details</div>
+                        <div><label>Product Name <span style="color:#EF4444;">*</span></label><input type="text" id="prodName" placeholder="e.g. Paracetamol" /></div>
+                        <div><label>Strength <span style="color:#EF4444;">*</span></label><input type="text" id="prodStrength" placeholder="e.g. 500mg" /></div>
+                        <div><label>Category <span style="color:#EF4444;">*</span></label>
+                            <select id="prodCategory"><option value="">Select...</option><option value="POM">POM</option><option value="GSL">GSL</option><option value="P">P</option><option value="Other">Other</option></select>
+                        </div>
+                        <div><label>Dosage Form <span style="color:#EF4444;">*</span></label>
+                            <select id="prodDosage"><option value="">Select...</option><option value="Tablet">Tablet</option><option value="Capsule">Capsule</option><option value="Syrup">Syrup</option><option value="Other">Other</option></select>
+                        </div>
+                        <div><label>Unit of Issue <span style="color:#EF4444;">*</span></label>
+                            <select id="prodUnit"><option value="">Select...</option><option value="Strip">Strip</option><option value="Bottle">Bottle</option><option value="Vial">Vial</option><option value="Other">Other</option></select>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div style="font-size:13px;font-weight:600;color:var(--gold);"><i class="fas fa-boxes"></i> Stock Information</div>
+                        <div><label>D. Note / RIV Number</label><input type="text" id="prodDNote" placeholder="e.g. DN-2026-001" /></div>
+                        <div><label>Batch Number</label><input type="text" id="prodBatch" placeholder="e.g. B-2026-001" /></div>
+                        <div><label>Quantity Received</label><input type="number" id="prodQtyReceived" placeholder="0" value="0" /></div>
+                        <div><label>Quantity on Hand</label><input type="number" id="prodQtyOnHand" placeholder="0" value="0" /></div>
+                        <div><label>Expiry Date</label><input type="date" id="prodExpiry" /></div>
+                        <div><label>Supplier / From</label><input type="text" id="prodSupplier" placeholder="e.g. MediSupply Ltd" /></div>
+                    </div>
+                    <div class="col">
+                        <div style="font-size:13px;font-weight:600;color:var(--gold);"><i class="fas fa-money-bill-wave"></i> Pricing</div>
+                        <div><label>Unit Cost (MK)</label><input type="number" id="prodCost" placeholder="0.00" step="0.01" /></div>
+                        <div><label>Selling Price (MK)</label><input type="number" id="prodPrice" placeholder="0.00" step="0.01" /></div>
+                        <div><label>Minimum Stock</label><input type="number" id="prodMin" placeholder="50" value="50" /></div>
+                        <div><label>Maximum Stock</label><input type="number" id="prodMax" placeholder="500" value="500" /></div>
+                        <div class="btn-row">
+                            <button onclick="submitProduct()" class="btn-gold flex-1"><i class="fas fa-save"></i> Add Product</button>
+                            <button onclick="clearProductForm()" class="btn-secondary"><i class="fas fa-undo"></i> Clear</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    <nav class="bottom-nav">
+        <button class="nav-item" onclick="navigateTo('dashboard')"><i class="fas fa-home"></i><span>Home</span></button>
+        <button class="nav-item" onclick="navigateTo('receiveStock')"><i class="fas fa-arrow-down"></i><span>Receive</span></button>
+        <button class="nav-item" onclick="navigateTo('issueStock')"><i class="fas fa-arrow-up"></i><span>Issue</span></button>
+        <button class="nav-item" onclick="navigateTo('search')"><i class="fas fa-search"></i><span>Search</span></button>
+        <button class="nav-item active" onclick="navigateTo('addProduct')"><i class="fas fa-plus-circle" style="color:var(--gold);"></i><span>Add</span></button>
+        <button class="nav-item" onclick="navigateTo('stockCard')"><i class="fas fa-address-card"></i><span>Stock Card</span></button>
+    </nav>
+</div>
+
+<!-- STOCK CARD PAGE -->
+<div class="page" id="stockCardPage">
+    <header class="dash-header">
+        <div class="brand"><div class="icon"><i class="fas fa-address-card" style="color:var(--gold);"></i></div><span class="name">Stock<span style="color:var(--gold);">Card</span></span></div>
+        <div class="user-section">
+            <button class="logout-btn" onclick="navigateTo('dashboard')" style="font-size:13px;display:flex;align-items:center;gap:6px;"><i class="fas fa-arrow-left"></i> Back</button>
+            <button onclick="printStockCard()" style="padding:6px 16px;background:rgba(214,158,46,0.1);border:1px solid rgba(214,158,46,0.1);border-radius:6px;color:var(--gold);font-size:12px;cursor:pointer;font-family:var(--font);">
+                <i class="fas fa-print"></i> Print
+            </button>
+        </div>
+    </header>
+
+    <main style="flex:1;overflow:hidden;padding:16px 20px 70px;background:var(--dark);display:flex;flex-direction:column;">
+        <div style="max-width:100%;margin:0;width:100%;flex:1;display:flex;flex-direction:column;">
+
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;flex-shrink:0;">
+                <div>
+                    <h1 style="font-size:22px;font-weight:800;letter-spacing:-0.5px;">📋 Electronic Stock Card</h1>
+                    <p style="color:var(--text-muted);font-size:13px;margin-top:2px;">Complete transaction history with all details</p>
+                </div>
+            </div>
+
+            <!-- Product Selection -->
+            <div style="background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.04);border-radius:14px;padding:16px 20px;margin-bottom:12px;flex-shrink:0;">
+                <div style="display:grid;grid-template-columns:2fr 1fr auto;gap:12px;align-items:end;">
+                    <div>
+                        <label style="display:block;font-size:13px;font-weight:600;color:var(--text-muted);margin-bottom:4px;">Search Product <span style="color:#EF4444;">*</span></label>
+                        <div style="position:relative;">
+                            <input type="text" id="stockCardSearch" placeholder="Type product name or code..." style="width:100%;padding:12px 16px;font-size:16px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);border-radius:8px;color:var(--white);font-family:var(--font);outline:none;transition:0.3s;" oninput="searchStockCardProducts(this.value)" />
+                            <div id="stockCardDropdown" style="display:none;position:absolute;top:100%;left:0;right:0;background:#1A2332;border:1px solid rgba(255,255,255,0.06);border-radius:8px;margin-top:4px;max-height:250px;overflow-y:auto;z-index:1000;">
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <label style="display:block;font-size:13px;font-weight:600;color:var(--text-muted);margin-bottom:4px;">Date Range</label>
+                        <div style="display:flex;gap:8px;">
+                            <input type="date" id="stockCardDateFrom" style="flex:1;padding:10px 14px;font-size:13px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);border-radius:8px;color:var(--white);font-family:var(--font);outline:none;" />
+                            <input type="date" id="stockCardDateTo" style="flex:1;padding:10px 14px;font-size:13px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);border-radius:8px;color:var(--white);font-family:var(--font);outline:none;" />
+                        </div>
+                    </div>
+                    <div style="display:flex;gap:6px;">
+                        <button onclick="viewStockCard()" style="padding:10px 24px;background:linear-gradient(135deg,var(--gold),var(--gold-light));color:var(--white);border:none;border-radius:8px;font-family:var(--font);font-size:14px;font-weight:600;cursor:pointer;transition:0.3s;box-shadow:0 4px 20px rgba(214,158,46,0.2);white-space:nowrap;">
+                            <i class="fas fa-search"></i> View Card
+                        </button>
+                        <button onclick="clearStockCard()" style="padding:10px 16px;background:rgba(255,255,255,0.04);color:var(--text-muted);border:1px solid rgba(255,255,255,0.06);border-radius:8px;font-family:var(--font);font-size:14px;cursor:pointer;transition:0.3s;">
+                            <i class="fas fa-undo"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Stock Card Content -->
+            <div id="stockCardContent" style="flex:1;display:flex;flex-direction:column;overflow:hidden;min-height:0;">
+
+                <!-- Product Header -->
+                <div id="stockCardHeader" style="display:none;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.04);border-radius:14px;padding:20px 24px;margin-bottom:12px;flex-shrink:0;">
+                    <div style="display:grid;grid-template-columns:2fr 1fr 1fr 1fr 1fr;gap:16px;">
+                        <div>
+                            <div style="font-size:13px;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.5px;">Facility Name</div>
+                            <div style="font-size:20px;font-weight:700;color:var(--gold);">MedOx Pharmacy</div>
+                        </div>
+                        <div>
+                            <div style="font-size:13px;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.5px;">Product Name</div>
+                            <div style="font-size:20px;font-weight:600;color:var(--white);" id="stockCardProductName">-</div>
+                        </div>
+                        <div>
+                            <div style="font-size:13px;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.5px;">Strength</div>
+                            <div style="font-size:20px;font-weight:600;color:var(--white);" id="stockCardStrength">-</div>
+                        </div>
+                        <div>
+                            <div style="font-size:13px;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.5px;">Dosage Form</div>
+                            <div style="font-size:20px;font-weight:600;color:var(--white);" id="stockCardDosage">-</div>
+                        </div>
+                        <div>
+                            <div style="font-size:13px;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.5px;">Unit of Issue</div>
+                            <div style="font-size:20px;font-weight:600;color:var(--white);" id="stockCardUnit">-</div>
+                        </div>
+                    </div>
+                    <div style="display:grid;grid-template-columns:2fr 1fr 1fr 1fr 1fr;gap:16px;margin-top:12px;padding-top:12px;border-top:1px solid rgba(255,255,255,0.04);">
+                        <div>
+                            <div style="font-size:13px;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.5px;">Product Code</div>
+                            <div style="font-size:18px;font-weight:600;color:var(--white);" id="stockCardCode">-</div>
+                        </div>
+                        <div>
+                            <div style="font-size:13px;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.5px;">Category</div>
+                            <div style="font-size:18px;font-weight:600;color:var(--white);" id="stockCardCategory">-</div>
+                        </div>
+                        <div>
+                            <div style="font-size:13px;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.5px;">Current Stock</div>
+                            <div style="font-size:22px;font-weight:800;color:var(--gold);" id="stockCardCurrentStock">0</div>
+                        </div>
+                        <div>
+                            <div style="font-size:13px;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.5px;">Min Stock</div>
+                            <div style="font-size:18px;font-weight:600;color:var(--white);" id="stockCardMinStock">-</div>
+                        </div>
+                        <div>
+                            <div style="font-size:13px;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.5px;">Max Stock</div>
+                            <div style="font-size:18px;font-weight:600;color:var(--white);" id="stockCardMaxStock">-</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Transactions Table -->
+                <div id="stockCardTransactions" style="display:none;flex:1;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.04);border-radius:14px;overflow:hidden;display:flex;flex-direction:column;min-height:0;">
+
+                    <!-- Table Header -->
+                    <div class="stock-card-transactions-header">
+                        <span>Date</span>
+                        <span>D. Note / RIV</span>
+                        <span>Issued To / Received From</span>
+                        <span>Qty Received</span>
+                        <span>Batch No.</span>
+                        <span>Expiry</span>
+                        <span>Qty Issued</span>
+                        <span>Losses</span>
+                        <span>+/- Adj</span>
+                        <span>Qty On Hand</span>
+                        <span>Remarks</span>
+                        <span>Officer</span>
+                        <span>Signature</span>
+                    </div>
+
+                    <!-- Table Body -->
+                    <div id="stockCardTransactionList" style="flex:1 1 auto;overflow-y:auto !important;padding:4px 0;min-height:0;max-height:100%;">
+                        <div style="text-align:center;padding:60px 20px;color:var(--text-muted);font-size:14px;">
+                            <i class="fas fa-address-card" style="font-size:48px;display:block;margin-bottom:16px;opacity:0.3;"></i>
+                            <p>Search and select a product to view its stock card</p>
+                        </div>
+                    </div>
+
+                    <!-- Table Footer -->
+                    <div class="stock-card-totals">
+                        <span class="label">TOTALS</span>
+                        <span></span>
+                        <span></span>
+                        <span class="received" id="stockCardTotalReceived">0</span>
+                        <span></span>
+                        <span></span>
+                        <span class="issued" id="stockCardTotalIssued">0</span>
+                        <span id="stockCardTotalLosses" style="color:#EF4444;">0</span>
+                        <span id="stockCardTotalAdjustment" style="color:#F59E0B;">0</span>
+                        <span class="balance" id="stockCardTotalBalance">0</span>
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </div>
+                </div>
+
+                <!-- Empty State -->
+                <div id="stockCardEmpty" style="flex:1;display:flex;align-items:center;justify-content:center;color:var(--text-muted);opacity:0.5;flex-direction:column;">
+                    <i class="fas fa-address-card" style="font-size:80px;margin-bottom:20px;opacity:0.3;"></i>
+                    <p style="font-size:22px;">Search for a product to view its stock card</p>
+                    <p style="font-size:16px;margin-top:4px;opacity:0.6;">Enter a product name or code above</p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <nav class="bottom-nav">
+        <button class="nav-item" onclick="navigateTo('dashboard')"><i class="fas fa-home"></i><span>Home</span></button>
+        <button class="nav-item" onclick="navigateTo('receiveStock')"><i class="fas fa-arrow-down"></i><span>Receive</span></button>
+        <button class="nav-item" onclick="navigateTo('issueStock')"><i class="fas fa-arrow-up"></i><span>Issue</span></button>
+        <button class="nav-item" onclick="navigateTo('search')"><i class="fas fa-search"></i><span>Search</span></button>
+        <button class="nav-item" onclick="navigateTo('addProduct')"><i class="fas fa-plus-circle"></i><span>Add</span></button>
+        <button class="nav-item active" onclick="navigateTo('stockCard')"><i class="fas fa-address-card" style="color:var(--gold);"></i><span>Stock Card</span></button>
+    </nav>
+</div>
+
+<script>
+// ============================================================
+// API URL
+// ============================================================
+const API_URL = window.location.origin;
+
+// ============================================================
+// NAVIGATION
+// ============================================================
+function navigateTo(pageId) {
+    console.log('Navigating to:', pageId);
+    document.querySelectorAll('.page').forEach(function(p) { p.classList.remove('active'); });
+    
+    var pageMap = {
+        'landing': 'landing',
+        'login': 'loginPage',
+        'dashboard': 'dashboardPage',
+        'receiveStock': 'receiveStockPage',
+        'issueStock': 'issueStockPage',
+        'search': 'searchPage',
+        'addProduct': 'addProductPage',
+        'stockCard': 'stockCardPage'
+    };
+    
+    var targetId = pageMap[pageId];
+    if (targetId) {
+        var target = document.getElementById(targetId);
+        if (target) {
+            target.classList.add('active');
+            console.log('Showing:', targetId);
+            if (pageId === 'dashboard') setTimeout(loadDashboardData, 300);
+            if (pageId === 'search') setTimeout(loadProductsForSearch, 300);
+            if (pageId === 'receiveStock') setTimeout(loadReceiveProducts, 300);
+            if (pageId === 'issueStock') setTimeout(function() { loadWards(); loadIssueProducts(); clearIssueForm(); }, 300);
+        }
+    }
+}
+window.navigateTo = navigateTo;
+
+// ============================================================
+// LOGIN / LOGOUT
+// ============================================================
+function handleLogin() {
+    var email = document.getElementById('loginEmail').value.trim();
+    var password = document.getElementById('loginPassword').value.trim();
+    var errorBox = document.getElementById('loginError');
+    
+    if (!email || !password) {
+        errorBox.className = 'login-error show';
+        document.getElementById('loginErrorText').textContent = 'Please enter both email and password.';
+        return;
+    }
+    errorBox.className = 'login-error';
+    
+    fetch(API_URL + '/api/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: email, password: password })
+    })
+    .then(function(response) { return response.json(); })
+    .then(function(data) {
+        if (data.success) {
+            localStorage.setItem('token', data.data.token);
+            localStorage.setItem('user', JSON.stringify(data.data.user));
+            navigateTo('dashboard');
+        } else {
+            errorBox.className = 'login-error show';
+            document.getElementById('loginErrorText').textContent = data.message || 'Invalid credentials.';
+        }
+    })
+    .catch(function(error) {
+        errorBox.className = 'login-error show';
+        document.getElementById('loginErrorText').textContent = 'Network error. Please try again.';
+    });
+}
+window.handleLogin = handleLogin;
+
+function logout() {
+    if (confirm('Are you sure you want to logout?')) {
+        localStorage.removeItem('token');
+        localStorage.removeItem('user');
+        navigateTo('landing');
+    }
+}
+
+// ============================================================
+// DASHBOARD
+// ============================================================
+function loadDashboardData() {
+    var token = localStorage.getItem('token');
+    if (!token) { navigateTo('login'); return; }
+    
+    try {
+        var user = JSON.parse(localStorage.getItem('user'));
+        document.getElementById('dashboardUser').textContent = user.email || 'User';
+        var hour = new Date().getHours();
+        var greeting = hour < 12 ? 'Good Morning' : hour < 17 ? 'Good Afternoon' : 'Good Evening';
+        document.getElementById('welcomeMessage').textContent = greeting + ', ' + (user.firstName || 'User');
+    } catch(e) {}
+    
+    fetch(API_URL + '/api/products/stats', { headers: { 'Authorization': 'Bearer ' + token } })
+    .then(function(response) {
+        if (response.status === 401) { logout(); return; }
+        return response.json();
+    })
+    .then(function(data) {
+        if (data && data.success) {
+            document.getElementById('totalProducts').textContent = data.data.totalProducts || 0;
+            document.getElementById('lowStock').textContent = data.data.lowStock || 0;
+            document.getElementById('criticalAlerts').textContent = data.data.criticalStock || 0;
+            renderTransactions(data.data.recentTransactions || []);
+            renderAlerts(data.data.alerts || { critical: [], low: [] });
+        }
+    })
+    .catch(function(error) { console.error('Dashboard error:', error); });
+}
+
+function renderTransactions(transactions) {
+    var container = document.getElementById('recentTransactions');
+    if (!transactions || transactions.length === 0) {
+        container.innerHTML = '<div class="empty"><i class="fas fa-inbox"></i>No recent activity</div>';
+        return;
+    }
+    var html = '';
+    transactions.forEach(function(tx) {
+        var isReceived = tx.type === 'received';
+        var color = isReceived ? '#10B981' : '#EF4444';
+        var sign = isReceived ? '+' : '-';
+        var icon = isReceived ? 'fa-arrow-down' : 'fa-arrow-up';
+        html += '<div style="display:flex;align-items:center;gap:10px;padding:8px 14px;border-bottom:1px solid rgba(255,255,255,0.03);">';
+        html += '<div style="width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;flex-shrink:0;background:' + (isReceived ? 'rgba(16,185,129,0.08)' : 'rgba(239,68,68,0.08)') + ';color:' + color + ';"><i class="fas ' + icon + '"></i></div>';
+        html += '<div style="flex:1;"><div style="font-size:12px;font-weight:500;">' + (tx.product || 'Unknown') + '</div><div style="font-size:10px;color:var(--text-muted);">' + (tx.date || '') + '</div></div>';
+        html += '<div style="font-weight:600;font-size:13px;color:' + color + ';">' + sign + (tx.qty || 0) + '</div>';
+        html += '</div>';
+    });
+    container.innerHTML = html;
+}
+
+function renderAlerts(alerts) {
+    var container = document.getElementById('alertsContainer');
+    var critical = alerts.critical || [];
+    var low = alerts.low || [];
+    if (critical.length === 0 && low.length === 0) {
+        container.innerHTML = '<div class="empty"><i class="fas fa-check-circle" style="color:#10B981;"></i>All products are well stocked!</div>';
+        return;
+    }
+    var html = '';
+    critical.forEach(function(p) {
+        html += '<div class="alert-item"><span class="dot critical"></span><div class="text"><span class="name">' + (p.name || '') + ' ' + (p.strength || '') + '</span> <span class="stock">• ' + (p.quantityOnHand || 0) + ' left</span></div><span class="badge critical">CRITICAL</span></div>';
+    });
+    low.forEach(function(p) {
+        html += '<div class="alert-item"><span class="dot low"></span><div class="text"><span class="name">' + (p.name || '') + ' ' + (p.strength || '') + '</span> <span class="stock">• ' + (p.quantityOnHand || 0) + ' left</span></div><span class="badge low">LOW</span></div>';
+    });
+    container.innerHTML = html;
+}
+
+// ============================================================
+// WARD MANAGEMENT
+// ============================================================
+var wards = [];
+
+function loadWards() {
+    try {
+        var saved = localStorage.getItem('pharmacyWards');
+        if (saved) {
+            wards = JSON.parse(saved);
+        } else {
+            wards = ['Ward 1', 'Ward 2', 'Ward 3', 'Customer', 'Pharmacy', 'Other'];
+            saveWards();
+        }
+        renderWards();
+        updateWardDropdown();
+    } catch(e) {
+        wards = ['Ward 1', 'Ward 2', 'Ward 3', 'Customer', 'Pharmacy', 'Other'];
+        saveWards();
+        renderWards();
+        updateWardDropdown();
+    }
+}
+
+function saveWards() {
+    try { localStorage.setItem('pharmacyWards', JSON.stringify(wards)); } catch(e) {}
+}
+
+function renderWards() {
+    var container = document.getElementById('wardTags');
+    if (!container) return;
+    if (wards.length === 0) {
+        container.innerHTML = '<span style="font-size:12px;color:var(--text-muted);opacity:0.5;">No wards added.</span>';
+        return;
+    }
+    var html = '';
+    wards.forEach(function(ward, index) {
+        html += '<span class="ward-tag"><i class="fas fa-hospital"></i><span>' + ward + '</span><button class="remove-ward" onclick="removeWard(' + index + ')"><i class="fas fa-times"></i></button></span>';
+    });
+    container.innerHTML = html;
+}
+
+function updateWardDropdown() {
+    var select = document.getElementById('issueTo');
+    if (!select) return;
+    var currentValue = select.value;
+    select.innerHTML = '<option value="">Select...</option>';
+    wards.forEach(function(ward) {
+        var option = document.createElement('option');
+        option.value = ward;
+        option.textContent = ward;
+        select.appendChild(option);
+    });
+    var separator = document.createElement('option');
+    separator.disabled = true;
+    separator.textContent = '──────────';
+    select.appendChild(separator);
+    var manualOption = document.createElement('option');
+    manualOption.value = '__manual__';
+    manualOption.textContent = '✏️ Enter manually...';
+    manualOption.style.color = 'var(--gold)';
+    select.appendChild(manualOption);
+    if (currentValue) select.value = currentValue;
+}
+
+function showAddWardModal() {
+    var wardName = prompt('Enter new ward name:', '');
+    if (wardName && wardName.trim()) {
+        wardName = wardName.trim();
+        if (wards.indexOf(wardName) === -1) {
+            wards.push(wardName);
+            saveWards();
+            renderWards();
+            updateWardDropdown();
+            document.getElementById('issueTo').value = wardName;
+        } else {
+            alert('⚠️ Ward "' + wardName + '" already exists!');
+        }
+    }
+}
+
+function removeWard(index) {
+    if (wards.length <= 1) { alert('⚠️ You need at least one ward option.'); return; }
+    var wardName = wards[index];
+    if (confirm('Remove ward "' + wardName + '"?')) {
+        wards.splice(index, 1);
+        saveWards();
+        renderWards();
+        updateWardDropdown();
+        var select = document.getElementById('issueTo');
+        if (select && select.value === wardName) select.value = '';
+    }
+}
+
+// ============================================================
+// RECEIVE STOCK
+// ============================================================
+var productsCache = [];
+
+function loadReceiveProducts() {
+    var token = localStorage.getItem('token');
+    if (!token) return;
+    fetch(API_URL + '/api/products', { headers: { 'Authorization': 'Bearer ' + token } })
+    .then(function(response) { return response.json(); })
+    .then(function(data) {
+        if (data && data.success) {
+            productsCache = data.data;
+            populateReceiveDropdown(productsCache);
+        }
+    })
+    .catch(function(error) { console.error('Error loading products:', error); });
+}
+
+function populateReceiveDropdown(products) {
+    var select = document.getElementById('receiveProduct');
+    if (!select) return;
+    select.innerHTML = '<option value="">Select a product...</option>';
+    if (!products || products.length === 0) { select.innerHTML = '<option value="">No products available</option>'; return; }
+    products.forEach(function(p) {
+        var option = document.createElement('option');
+        option.value = p._id;
+        option.textContent = p.name + ' ' + (p.strength || '') + ' | Stock: ' + (p.quantityOnHand || 0) + ' | Code: ' + (p.code || 'N/A');
+        select.appendChild(option);
+    });
+}
+
+function searchProductsForReceive(query) {
+    var select = document.getElementById('receiveProduct');
+    if (!select) return;
+    var searchTerm = query.toLowerCase().trim();
+    if (!searchTerm) { populateReceiveDropdown(productsCache); return; }
+    var filtered = productsCache.filter(function(p) {
+        var name = (p.name || '').toLowerCase();
+        var strength = (p.strength || '').toLowerCase();
+        var code = (p.code || '').toLowerCase();
+        return name.includes(searchTerm) || strength.includes(searchTerm) || code.includes(searchTerm);
+    });
+    populateReceiveDropdown(filtered);
+    if (filtered.length === 1) {
+        select.value = filtered[0]._id;
+        updateReceiveProductInfo(filtered[0]);
+    }
+}
+
+function updateReceiveProductInfo(product) {
+    document.getElementById('receiveCurrentStock').textContent = product.quantityOnHand || 0;
+    document.getElementById('receiveProductCode').textContent = product.code || '—';
+}
+
+function submitReceiveStock() {
+    var productId = document.getElementById('receiveProduct').value;
+    var qty = parseInt(document.getElementById('receiveQty').value);
+    var batch = document.getElementById('receiveBatch').value.trim();
+    var expiry = document.getElementById('receiveExpiry').value;
+    var dNote = document.getElementById('receiveDNote').value.trim();
+    var supplier = document.getElementById('receiveSupplier').value.trim();
+    var remarks = document.getElementById('receiveRemarks').value.trim();
+
+    if (!productId) { alert('Please select a product.'); return; }
+    if (!qty || qty <= 0) { alert('Please enter a valid quantity.'); return; }
+    if (!batch) { alert('Please enter a batch number.'); return; }
+    if (!expiry) { alert('Please select an expiry date.'); return; }
+
+    var token = localStorage.getItem('token');
+    if (!token) { alert('Please login first.'); return; }
+
+    var product = productsCache.find(function(p) { return p._id === productId; });
+    if (!product) { alert('Product not found.'); return; }
+
+    var newStock = (product.quantityOnHand || 0) + qty;
+    var btn = document.querySelector('#receiveStockPage .btn-gold');
+    if (btn) { btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...'; btn.disabled = true; }
+
+    fetch(API_URL + '/api/products/' + productId, {
+        method: 'PUT',
+        headers: { 'Authorization': 'Bearer ' + token, 'Content-Type': 'application/json' },
+        body: JSON.stringify({ quantityReceived: qty, quantityOnHand: newStock, batchNumber: batch, expiryDate: expiry, dNote: dNote, supplier: supplier, remarks: remarks })
+    })
+    .then(function(response) { return response.json(); })
+    .then(function(data) {
+        if (data.success) {
+            alert('✅ Stock received successfully!\n\nProduct: ' + data.data.name + ' ' + (data.data.strength || '') + '\nNew Stock: ' + data.data.quantityOnHand + ' units\nBatch: ' + data.data.batchNumber);
+            clearReceiveForm();
+            loadReceiveProducts();
+            if (document.getElementById('dashboardPage').classList.contains('active')) loadDashboardData();
+        } else {
+            alert('❌ Error: ' + (data.message || 'Unknown error'));
+        }
+    })
+    .catch(function(error) { alert('❌ Network error: ' + error.message); })
+    .finally(function() {
+        var btn = document.querySelector('#receiveStockPage .btn-gold');
+        if (btn) { btn.innerHTML = '<i class="fas fa-arrow-down"></i> Receive Stock'; btn.disabled = false; }
+    });
+}
+
+function clearReceiveForm() {
+    document.getElementById('receiveQty').value = '';
+    document.getElementById('receiveBatch').value = '';
+    document.getElementById('receiveExpiry').value = '';
+    document.getElementById('receiveDNote').value = '';
+    document.getElementById('receiveSupplier').value = '';
+    document.getElementById('receiveRemarks').value = '';
+    document.getElementById('receiveProduct').value = '';
+    document.getElementById('receiveCurrentStock').textContent = '0';
+    document.getElementById('receiveProductCode').textContent = '—';
+    document.getElementById('receiveSearch').value = '';
+    loadReceiveProducts();
+}
+
+// ============================================================
+// ISSUE STOCK
+// ============================================================
+var issueProductsCache = [];
+
+function loadIssueProducts() {
+    var token = localStorage.getItem('token');
+    if (!token) return;
+    fetch(API_URL + '/api/products', { headers: { 'Authorization': 'Bearer ' + token } })
+    .then(function(response) { return response.json(); })
+    .then(function(data) {
+        if (data && data.success) {
+            issueProductsCache = data.data;
+            document.querySelectorAll('.issue-product-select').forEach(function(select) {
+                populateIssueDropdown(select);
+            });
+        }
+    })
+    .catch(function(error) { console.error('Error loading products:', error); });
+}
+
+function populateIssueDropdown(select) {
+    if (!select) return;
+    select.innerHTML = '<option value="">Select product...</option>';
+    issueProductsCache.forEach(function(p) {
+        var option = document.createElement('option');
+        option.value = p._id;
+        option.textContent = p.name + ' ' + (p.strength || '') + ' | Stock: ' + (p.quantityOnHand || 0);
+        option.dataset.stock = p.quantityOnHand || 0;
+        select.appendChild(option);
+    });
+}
+
+function searchIssueProduct(input) {
+    var row = input.closest('.issue-row');
+    var select = row.querySelector('.issue-product-select');
+    var searchTerm = input.value.toLowerCase().trim();
+    
+    if (!searchTerm) {
+        select.style.display = 'none';
+        populateIssueDropdown(select);
+        return;
+    }
+    
+    var filtered = issueProductsCache.filter(function(p) {
+        var name = (p.name || '').toLowerCase();
+        var strength = (p.strength || '').toLowerCase();
+        var code = (p.code || '').toLowerCase();
+        return name.includes(searchTerm) || strength.includes(searchTerm) || code.includes(searchTerm);
+    });
+    
+    select.style.display = 'block';
+    select.innerHTML = '<option value="">Select product...</option>';
+    filtered.forEach(function(p) {
+        var option = document.createElement('option');
+        option.value = p._id;
+        option.textContent = p.name + ' ' + (p.strength || '') + ' | Stock: ' + (p.quantityOnHand || 0);
+        option.dataset.stock = p.quantityOnHand || 0;
+        select.appendChild(option);
+    });
+    
+    var newSelect = select.cloneNode(true);
+    select.parentNode.replaceChild(newSelect, select);
+    
+    newSelect.addEventListener('change', function() {
+        var selectedOption = this.options[this.selectedIndex];
+        if (selectedOption && selectedOption.value) {
+            var row = this.closest('.issue-row');
+            var searchInput = row.querySelector('.issue-search');
+            var stockSpan = row.querySelector('.issue-available-stock');
+            var qtyInput = row.querySelector('.issue-qty');
+            var productId = row.querySelector('.issue-product-id');
+            
+            searchInput.value = selectedOption.textContent;
+            var stock = parseInt(selectedOption.dataset.stock) || 0;
+            stockSpan.textContent = stock;
+            productId.value = selectedOption.value;
+            this.style.display = 'none';
+            qtyInput.disabled = false;
+            qtyInput.value = '';
+            qtyInput.focus();
+        }
+    });
+}
+
+function addIssueRow() {
+    var container = document.getElementById('issueItemsContainer');
+    if (!container) return;
+    var newRow = document.createElement('div');
+    newRow.className = 'issue-row';
+    newRow.style.cssText = 'display:grid;grid-template-columns:2fr 1fr 1fr 40px;gap:8px;padding:4px 10px;align-items:center;border-bottom:1px solid rgba(255,255,255,0.03);';
+    newRow.innerHTML = `
+        <div style="position:relative;">
+            <input type="text" class="issue-search" placeholder="Search product..." style="width:100%;padding:8px 12px;font-size:13px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);border-radius:6px;color:var(--white);font-family:var(--font);outline:none;" oninput="searchIssueProduct(this)" />
+            <select class="issue-product-select" style="width:100%;padding:8px 12px;font-size:13px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);border-radius:6px;color:var(--white);font-family:var(--font);outline:none;margin-top:4px;display:none;">
+                <option value="">Select product...</option>
+            </select>
+            <input type="hidden" class="issue-product-id" />
+        </div>
+        <div>
+            <input type="number" class="issue-qty" placeholder="0" min="1" style="width:100%;padding:8px 12px;font-size:13px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);border-radius:6px;color:var(--white);font-family:var(--font);outline:none;" onchange="checkRowStock(this)" />
+        </div>
+        <div>
+            <span class="issue-available-stock" style="font-size:13px;color:var(--text-muted);">0</span>
+        </div>
+        <div style="text-align:center;">
+            <button onclick="removeIssueRow(this)" style="background:none;border:none;color:var(--text-muted);cursor:pointer;font-size:16px;padding:4px 8px;">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+    `;
+    container.appendChild(newRow);
+    var newSelect = newRow.querySelector('.issue-product-select');
+    populateIssueDropdown(newSelect);
+    newSelect.addEventListener('change', function() {
+        var selectedOption = this.options[this.selectedIndex];
+        if (selectedOption && selectedOption.value) {
+            var row = this.closest('.issue-row');
+            var searchInput = row.querySelector('.issue-search');
+            var stockSpan = row.querySelector('.issue-available-stock');
+            var qtyInput = row.querySelector('.issue-qty');
+            var productId = row.querySelector('.issue-product-id');
+            searchInput.value = selectedOption.textContent;
+            var stock = parseInt(selectedOption.dataset.stock) || 0;
+            stockSpan.textContent = stock;
+            productId.value = selectedOption.value;
+            this.style.display = 'none';
+            qtyInput.disabled = false;
+            qtyInput.value = '';
+            qtyInput.focus();
+        }
+    });
+    setTimeout(function() { newRow.querySelector('.issue-search').focus(); }, 100);
+}
+
+function removeIssueRow(btn) {
+    var rows = document.querySelectorAll('.issue-row');
+    if (rows.length <= 1) { alert('You need at least one item row.'); return; }
+    btn.closest('.issue-row').remove();
+}
+
+function checkRowStock(input) {
+    var row = input.closest('.issue-row');
+    var stockSpan = row.querySelector('.issue-available-stock');
+    var available = parseInt(stockSpan.textContent) || 0;
+    var qty = parseInt(input.value) || 0;
+    if (qty > available) {
+        input.style.borderColor = '#EF4444';
+        alert('⚠️ Quantity exceeds available stock (' + available + ' units)');
+    } else {
+        input.style.borderColor = 'rgba(255,255,255,0.06)';
+    }
+}
+
+function submitIssueMultiple() {
+    var rows = document.querySelectorAll('.issue-row');
+    var items = [];
+    var token = localStorage.getItem('token');
+    if (!token) { alert('Please login first.'); return; }
+    
+    var issueTo = document.getElementById('issueTo').value;
+    if (!issueTo) { alert('Please select a destination.'); return; }
+    
+    var patient = document.getElementById('issuePatient').value.trim();
+    var reference = document.getElementById('issueReference').value.trim();
+    var officer = document.getElementById('issueOfficer').value.trim() || 'Pharmacist';
+    
+    var hasError = false;
+    var errorMessages = [];
+    
+    rows.forEach(function(row, index) {
+        var productId = row.querySelector('.issue-product-id').value;
+        var qtyInput = row.querySelector('.issue-qty');
+        var qty = parseInt(qtyInput.value) || 0;
+        var searchInput = row.querySelector('.issue-search');
+        var productName = searchInput ? searchInput.value : 'Row ' + (index + 1);
+        var stockSpan = row.querySelector('.issue-available-stock');
+        var availableStock = parseInt(stockSpan.textContent) || 0;
+        
+        if (!productId && !qty && !searchInput.value) { return; }
+        if (!productId) {
+            hasError = true;
+            errorMessages.push('Row ' + (index + 1) + ': No product selected');
+            searchInput.style.borderColor = '#EF4444';
+            return;
+        }
+        if (!qty || qty <= 0) {
+            hasError = true;
+            errorMessages.push(productName + ': Please enter a valid quantity');
+            qtyInput.style.borderColor = '#EF4444';
+            return;
+        }
+        if (qty > availableStock) {
+            hasError = true;
+            errorMessages.push(productName + ': Quantity exceeds stock (' + availableStock + ' units)');
+            qtyInput.style.borderColor = '#EF4444';
+            return;
+        }
+        items.push({ productId: productId, qty: qty, productName: productName, row: row, newStock: availableStock - qty });
+    });
+    
+    if (hasError) { alert('⚠️ Please fix:\n\n' + errorMessages.join('\n')); return; }
+    if (items.length === 0) { alert('Please add at least one item.'); return; }
+    
+    var confirmMsg = '📋 Confirm Issue\n\n';
+    confirmMsg += 'Destination: ' + issueTo + '\n';
+    if (patient) confirmMsg += 'Patient: ' + patient + '\n';
+    if (reference) confirmMsg += 'Reference: ' + reference + '\n\n';
+    confirmMsg += 'Items:\n';
+    items.forEach(function(item) { confirmMsg += '  • ' + item.productName + ' → ' + item.qty + ' units\n'; });
+    confirmMsg += '\nProceed?';
+    if (!confirm(confirmMsg)) return;
+    
+    var btn = document.querySelector('#issueStockPage .btn-gold');
+    if (btn) { btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...'; btn.disabled = true; }
+    
+    var completed = 0;
+    var errors = [];
+    var successItems = [];
+    
+    items.forEach(function(item) {
+        var product = issueProductsCache.find(function(p) { return p._id === item.productId; });
+        if (!product) { errors.push(item.productName + ': Product not found'); completed++; return; }
+        var newStock = (product.quantityOnHand || 0) - item.qty;
+        fetch(API_URL + '/api/products/' + item.productId, {
+            method: 'PUT',
+            headers: { 'Authorization': 'Bearer ' + token, 'Content-Type': 'application/json' },
+            body: JSON.stringify({ quantityOnHand: newStock, remarks: 'Issued to ' + issueTo + (patient ? ' - ' + patient : '') + (reference ? ' - Ref: ' + reference : '') + ' by ' + officer })
+        })
+        .then(function(response) { return response.json(); })
+        .then(function(data) {
+            completed++;
+            if (data.success) {
+                successItems.push({ name: item.productName, qty: item.qty, newStock: newStock });
+                var row = item.row;
+                if (row) {
+                    row.querySelector('.issue-available-stock').textContent = newStock;
+                    row.querySelector('.issue-qty').disabled = true;
+                    var searchInput = row.querySelector('.issue-search');
+                    searchInput.value = '✅ ' + item.productName + ' (' + item.qty + ' units)';
+                    searchInput.style.color = '#10B981';
+                    searchInput.disabled = true;
+                    var select = row.querySelector('.issue-product-select');
+                    if (select) select.style.display = 'none';
+                }
+            } else { errors.push(item.productName + ': ' + (data.message || 'Unknown error')); }
+            if (completed === items.length) {
+                var btn = document.querySelector('#issueStockPage .btn-gold');
+                if (btn) { btn.innerHTML = '<i class="fas fa-arrow-up"></i> Issue All Items'; btn.disabled = false; }
+                if (errors.length === 0) {
+                    var msg = '✅ ISSUE COMPLETED!\n\n';
+                    msg += 'Destination: ' + issueTo + '\n';
+                    if (patient) msg += 'Patient: ' + patient + '\n';
+                    msg += '\n📦 Items Issued:\n';
+                    var totalUnits = 0;
+                    successItems.forEach(function(item) {
+                        msg += '  • ' + item.name + ': ' + item.qty + ' units (Remaining: ' + item.newStock + ')\n';
+                        totalUnits += item.qty;
+                    });
+                    msg += '\nTotal Items: ' + successItems.length + '\n';
+                    msg += 'Total Units: ' + totalUnits;
+                    alert(msg);
+                    setTimeout(function() {
+                        clearIssueForm();
+                        if (document.getElementById('dashboardPage').classList.contains('active')) { loadDashboardData(); }
+                        loadIssueProducts();
+                    }, 1000);
+                } else { alert('⚠️ Errors:\n' + errors.join('\n')); }
+            }
+        })
+        .catch(function(error) {
+            completed++;
+            errors.push(item.productName + ': Network error');
+            if (completed === items.length) {
+                var btn = document.querySelector('#issueStockPage .btn-gold');
+                if (btn) { btn.innerHTML = '<i class="fas fa-arrow-up"></i> Issue All Items'; btn.disabled = false; }
+                alert('⚠️ Errors:\n' + errors.join('\n'));
+            }
+        });
+    });
+}
+
+function clearIssueForm() {
+    document.getElementById('issueTo').value = '';
+    document.getElementById('issuePatient').value = '';
+    document.getElementById('issueReference').value = '';
+    try {
+        var user = JSON.parse(localStorage.getItem('user'));
+        document.getElementById('issueOfficer').value = (user.firstName || '') + ' ' + (user.lastName || '') || 'Pharmacist';
+    } catch(e) {}
+    var container = document.getElementById('issueItemsContainer');
+    container.innerHTML = '';
+    var row = document.createElement('div');
+    row.className = 'issue-row';
+    row.style.cssText = 'display:grid;grid-template-columns:2fr 1fr 1fr 40px;gap:8px;padding:4px 10px;align-items:center;border-bottom:1px solid rgba(255,255,255,0.03);';
+    row.innerHTML = `
+        <div style="position:relative;">
+            <input type="text" class="issue-search" placeholder="Search product..." style="width:100%;padding:8px 12px;font-size:13px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);border-radius:6px;color:var(--white);font-family:var(--font);outline:none;" oninput="searchIssueProduct(this)" />
+            <select class="issue-product-select" style="width:100%;padding:8px 12px;font-size:13px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);border-radius:6px;color:var(--white);font-family:var(--font);outline:none;margin-top:4px;display:none;">
+                <option value="">Select product...</option>
+            </select>
+            <input type="hidden" class="issue-product-id" />
+        </div>
+        <div>
+            <input type="number" class="issue-qty" placeholder="0" min="1" style="width:100%;padding:8px 12px;font-size:13px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);border-radius:6px;color:var(--white);font-family:var(--font);outline:none;" onchange="checkRowStock(this)" />
+        </div>
+        <div>
+            <span class="issue-available-stock" style="font-size:13px;color:var(--text-muted);">0</span>
+        </div>
+        <div style="text-align:center;">
+            <button onclick="removeIssueRow(this)" style="background:none;border:none;color:var(--text-muted);cursor:pointer;font-size:16px;padding:4px 8px;">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+    `;
+    container.appendChild(row);
+    var select = row.querySelector('.issue-product-select');
+    populateIssueDropdown(select);
+    select.addEventListener('change', function() {
+        var selectedOption = this.options[this.selectedIndex];
+        if (selectedOption && selectedOption.value) {
+            var row = this.closest('.issue-row');
+            var searchInput = row.querySelector('.issue-search');
+            var stockSpan = row.querySelector('.issue-available-stock');
+            var qtyInput = row.querySelector('.issue-qty');
+            var productId = row.querySelector('.issue-product-id');
+            searchInput.value = selectedOption.textContent;
+            var stock = parseInt(selectedOption.dataset.stock) || 0;
+            stockSpan.textContent = stock;
+            productId.value = selectedOption.value;
+            this.style.display = 'none';
+            qtyInput.disabled = false;
+            qtyInput.value = '';
+            qtyInput.focus();
+        }
+    });
+    loadWards();
+    loadIssueProducts();
+}
+
+// ============================================================
+// SEARCH
+// ============================================================
+var allProducts = [];
+
+function loadProductsForSearch() {
+    var token = localStorage.getItem('token');
+    if (!token) return;
+    fetch(API_URL + '/api/products', { headers: { 'Authorization': 'Bearer ' + token } })
+    .then(function(response) { return response.json(); })
+    .then(function(data) {
+        if (data && data.success) {
+            allProducts = data.data;
+            document.getElementById('resultCountText').textContent = allProducts.length + ' products found';
+            renderSearchResults(allProducts);
+        }
+    })
+    .catch(function(error) { console.error('Error loading products:', error); });
+}
+
+function performSearch() {
+    var query = document.getElementById('searchQuery').value.toLowerCase().trim();
+    if (!query) { renderSearchResults(allProducts); document.getElementById('resultCountText').textContent = allProducts.length + ' products found'; return; }
+    var filtered = allProducts.filter(function(p) {
+        var name = (p.name || '').toLowerCase();
+        var strength = (p.strength || '').toLowerCase();
+        var code = (p.code || '').toLowerCase();
+        var category = (p.category || '').toLowerCase();
+        return name.includes(query) || strength.includes(query) || code.includes(query) || category.includes(query);
+    });
+    document.getElementById('resultCountText').textContent = filtered.length + ' products found for "' + query + '"';
+    renderSearchResults(filtered);
+}
+
+function filterProducts(type) {
+    document.querySelectorAll('.filter-btn').forEach(function(b) { b.classList.remove('active'); });
+    var btn = document.querySelector('.filter-btn[data-filter="' + type + '"]');
+    if (btn) btn.classList.add('active');
+    var results = [];
+    var today = new Date();
+    var thirtyDays = new Date(today.getTime() + 30 * 24 * 60 * 60 * 1000);
+    switch(type) {
+        case 'all': results = allProducts; break;
+        case 'low': results = allProducts.filter(function(p) { var s = p.quantityOnHand || 0; return s > 0 && s <= (p.minStock || 50); }); break;
+        case 'critical': results = allProducts.filter(function(p) { var s = p.quantityOnHand || 0; return s > 0 && s < 10; }); break;
+        case 'instock': results = allProducts.filter(function(p) { return (p.quantityOnHand || 0) > 0; }); break;
+        case 'outofstock': results = allProducts.filter(function(p) { return (p.quantityOnHand || 0) === 0; }); break;
+        case 'expiring': results = allProducts.filter(function(p) {
+            if (!p.expiryDate) return false;
+            var expiry = new Date(p.expiryDate);
+            return expiry > today && expiry <= thirtyDays && (p.quantityOnHand || 0) > 0;
+        }); break;
+        default: results = allProducts;
+    }
+    document.getElementById('resultCountText').textContent = results.length + ' products found';
+    renderSearchResults(results);
+}
+
+function renderSearchResults(products) {
+    var container = document.getElementById('searchResults');
+    if (!products || products.length === 0) {
+        container.innerHTML = '<div class="search-empty"><i class="fas fa-search"></i><p>No products found</p></div>';
+        return;
+    }
+    var html = '';
+    products.forEach(function(p) {
+        var stock = p.quantityOnHand || 0;
+        var status = '';
+        var statusClass = '';
+        if (stock <= 0) { status = 'OUT'; statusClass = 'status-out'; }
+        else if (stock < 10) { status = 'CRITICAL'; statusClass = 'status-critical'; }
+        else if (stock <= (p.minStock || 50)) { status = 'LOW'; statusClass = 'status-low'; }
+        else { status = 'OK'; statusClass = 'status-ok'; }
+        html += '<div class="search-row" onclick="alert(\'Product: ' + p.name + ' ' + (p.strength || '') + '\nStock: ' + stock + '\nCode: ' + (p.code || 'N/A') + '\nExpiry: ' + (p.expiryDate ? new Date(p.expiryDate).toLocaleDateString() : 'N/A') + '\nPrice: MK ' + (p.sellingPrice || 0) + '\')">';
+        html += '<div><div style="font-weight:500;font-size:14px;">' + p.name + ' ' + (p.strength || '') + '</div><div style="font-size:10px;color:var(--text-muted);">' + (p.dosageForm || '') + ' • ' + (p.unitOfIssue || '') + '</div></div>';
+        html += '<div style="font-size:12px;color:var(--text-muted);">' + (p.code || '—') + '</div>';
+        html += '<div style="font-size:12px;color:var(--text-muted);">' + (p.batchNumber || '—') + '</div>';
+        html += '<div style="font-size:12px;color:var(--text-muted);">' + (p.expiryDate ? new Date(p.expiryDate).toLocaleDateString() : '—') + '</div>';
+        html += '<div style="font-size:15px;font-weight:700;color:' + (stock > 0 ? 'var(--gold)' : '#EF4444') + ';">' + stock + '</div>';
+        html += '<div style="font-size:13px;color:var(--text-muted);">' + (p.sellingPrice || 0) + '</div>';
+        html += '<div><span class="' + statusClass + '" style="font-size:10px;font-weight:600;padding:2px 10px;border-radius:20px;background:' + statusClass.replace('status-', '') + '15;">' + status + '</span></div>';
+        html += '<div style="text-align:center;color:var(--text-muted);font-size:11px;"><i class="fas fa-chevron-right"></i></div>';
+        html += '</div>';
+    });
+    container.innerHTML = html;
+}
+
+function clearSearch() {
+    document.getElementById('searchQuery').value = '';
+    document.getElementById('resultCountText').textContent = allProducts.length + ' products found';
+    renderSearchResults(allProducts);
+}
+
+// ============================================================
+// ADD PRODUCT
+// ============================================================
+function submitProduct() {
+    var name = document.getElementById('prodName').value.trim();
+    var strength = document.getElementById('prodStrength').value.trim();
+    var category = document.getElementById('prodCategory').value;
+    var dosageForm = document.getElementById('prodDosage').value;
+    var unitOfIssue = document.getElementById('prodUnit').value;
+    var dNote = document.getElementById('prodDNote').value.trim();
+    var batch = document.getElementById('prodBatch').value.trim();
+    var qtyReceived = parseInt(document.getElementById('prodQtyReceived').value) || 0;
+    var qtyOnHand = parseInt(document.getElementById('prodQtyOnHand').value) || 0;
+    var expiry = document.getElementById('prodExpiry').value;
+    var supplier = document.getElementById('prodSupplier').value.trim();
+    var minStock = parseInt(document.getElementById('prodMin').value) || 50;
+    var maxStock = parseInt(document.getElementById('prodMax').value) || 500;
+    var unitCost = parseFloat(document.getElementById('prodCost').value) || 0;
+    var sellingPrice = parseFloat(document.getElementById('prodPrice').value) || 0;
+
+    if (!name || !strength || !category || !dosageForm || !unitOfIssue) {
+        alert('Please fill in all required fields.');
+        return;
+    }
+
+    var token = localStorage.getItem('token');
+    if (!token) { alert('Please login first.'); return; }
+
+    var btn = document.querySelector('#addProductPage .btn-gold');
+    if (btn) { btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...'; btn.disabled = true; }
+
+    fetch(API_URL + '/api/products', {
+        method: 'POST',
+        headers: { 'Authorization': 'Bearer ' + token, 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, strength, category, dosageForm, unitOfIssue, dNote, batchNumber: batch, quantityReceived: qtyReceived, quantityOnHand: qtyOnHand, expiryDate: expiry, supplier, minStock, maxStock, unitCost, sellingPrice })
+    })
+    .then(function(response) { return response.json(); })
+    .then(function(data) {
+        if (data.success) {
+            alert('✅ Product added successfully!\n\n' + data.data.name + ' ' + data.data.strength + '\nCode: ' + data.data.code);
+            clearProductForm();
+        } else {
+            alert('❌ Error: ' + (data.message || 'Unknown error'));
+        }
+    })
+    .catch(function(error) { alert('❌ Network error: ' + error.message); })
+    .finally(function() {
+        var btn = document.querySelector('#addProductPage .btn-gold');
+        if (btn) { btn.innerHTML = '<i class="fas fa-save"></i> Add Product'; btn.disabled = false; }
+    });
+}
+
+function clearProductForm() {
+    document.getElementById('prodName').value = '';
+    document.getElementById('prodStrength').value = '';
+    document.getElementById('prodCategory').value = '';
+    document.getElementById('prodDosage').value = '';
+    document.getElementById('prodUnit').value = '';
+    document.getElementById('prodDNote').value = '';
+    document.getElementById('prodBatch').value = '';
+    document.getElementById('prodQtyReceived').value = '0';
+    document.getElementById('prodQtyOnHand').value = '0';
+    document.getElementById('prodExpiry').value = '';
+    document.getElementById('prodSupplier').value = '';
+    document.getElementById('prodMin').value = '50';
+    document.getElementById('prodMax').value = '500';
+    document.getElementById('prodCost').value = '';
+    document.getElementById('prodPrice').value = '';
+}
+
+// ============================================================
+// STOCK CARD - COMPLETE
+// ============================================================
+var stockCardProducts = [];
+var selectedStockCardProduct = null;
+
+function searchStockCardProducts(query) {
+    var dropdown = document.getElementById('stockCardDropdown');
+    if (!dropdown) return;
+    var searchTerm = query.toLowerCase().trim();
+    
+    if (!searchTerm) {
+        dropdown.style.display = 'none';
+        return;
+    }
+    
+    var token = localStorage.getItem('token');
+    if (!token) return;
+    
+    fetch(API_URL + '/api/products', {
+        headers: { 'Authorization': 'Bearer ' + token }
+    })
+    .then(function(response) { return response.json(); })
+    .then(function(data) {
+        if (data && data.success) {
+            stockCardProducts = data.data;
+            var filtered = stockCardProducts.filter(function(p) {
+                var name = (p.name || '').toLowerCase();
+                var strength = (p.strength || '').toLowerCase();
+                var code = (p.code || '').toLowerCase();
+                return name.includes(searchTerm) || strength.includes(searchTerm) || code.includes(searchTerm);
+            });
+            
+            if (filtered.length === 0) {
+                dropdown.innerHTML = '<div style="padding:10px 14px;color:var(--text-muted);">No products found</div>';
+                dropdown.style.display = 'block';
+                return;
+            }
+            
+            var html = '';
+            filtered.forEach(function(p) {
+                html += '<div style="padding:10px 16px;cursor:pointer;border-bottom:1px solid rgba(255,255,255,0.03);font-size:15px;" onclick="selectStockCardProduct(\'' + p._id + '\')" onmouseover="this.style.background=\'rgba(214,158,46,0.05)\'" onmouseout="this.style.background=\'transparent\'">';
+                html += '<div style="font-weight:500;color:var(--white);">' + p.name + ' ' + (p.strength || '') + '</div>';
+                html += '<div style="font-size:13px;color:var(--text-muted);">Code: ' + (p.code || 'N/A') + ' | Stock: ' + (p.quantityOnHand || 0) + ' units</div>';
+                html += '</div>';
+            });
+            dropdown.innerHTML = html;
+            dropdown.style.display = 'block';
+        }
+    })
+    .catch(function(error) {
+        console.error('Error searching products:', error);
+    });
+}
+
+function selectStockCardProduct(productId) {
+    var product = stockCardProducts.find(function(p) { return p._id === productId; });
+    if (product) {
+        selectedStockCardProduct = product;
+        document.getElementById('stockCardSearch').value = product.name + ' ' + (product.strength || '');
+        document.getElementById('stockCardDropdown').style.display = 'none';
+        viewStockCard();
+    }
+}
+
+function viewStockCard() {
+    var product = selectedStockCardProduct;
+    if (!product) {
+        var searchValue = document.getElementById('stockCardSearch').value.trim();
+        if (searchValue) {
+            var found = stockCardProducts.find(function(p) {
+                var fullName = p.name + ' ' + (p.strength || '');
+                return fullName === searchValue || p.name.toLowerCase() === searchValue.toLowerCase();
+            });
+            if (found) {
+                product = found;
+                selectedStockCardProduct = found;
+            }
+        }
+    }
+    
+    if (!product) {
+        alert('Please search and select a product first.');
+        return;
+    }
+    
+    var token = localStorage.getItem('token');
+    if (!token) {
+        alert('Please login first.');
+        return;
+    }
+    
+    document.getElementById('stockCardHeader').style.display = 'block';
+    document.getElementById('stockCardTransactions').style.display = 'flex';
+    document.getElementById('stockCardEmpty').style.display = 'none';
+    document.getElementById('stockCardTransactionList').innerHTML = '<div style="text-align:center;padding:40px;color:var(--text-muted);"><i class="fas fa-spinner fa-spin"></i> Loading transactions...</div>';
+    
+    document.getElementById('stockCardProductName').textContent = product.name || '-';
+    document.getElementById('stockCardStrength').textContent = product.strength || '-';
+    document.getElementById('stockCardDosage').textContent = product.dosageForm || '-';
+    document.getElementById('stockCardUnit').textContent = product.unitOfIssue || '-';
+    document.getElementById('stockCardCode').textContent = product.code || '-';
+    document.getElementById('stockCardCategory').textContent = product.category || '-';
+    document.getElementById('stockCardCurrentStock').textContent = product.quantityOnHand || 0;
+    document.getElementById('stockCardMinStock').textContent = product.minStock || '-';
+    document.getElementById('stockCardMaxStock').textContent = product.maxStock || '-';
+    
+    fetch(API_URL + '/api/transactions?productId=' + product._id, {
+        headers: { 'Authorization': 'Bearer ' + token }
+    })
+    .then(function(response) { return response.json(); })
+    .then(function(data) {
+        if (data && data.success) {
+            renderStockCardTransactions(data.data || []);
+        } else {
+            document.getElementById('stockCardTransactionList').innerHTML = '<div style="text-align:center;padding:40px;color:var(--text-muted);">No transactions found</div>';
+        }
+    })
+    .catch(function(error) {
+        console.error('Error loading transactions:', error);
+        document.getElementById('stockCardTransactionList').innerHTML = '<div style="text-align:center;padding:40px;color:#EF4444;">Error loading transactions</div>';
+    });
+}
+
+function renderStockCardTransactions(transactions) {
+    var container = document.getElementById('stockCardTransactionList');
+    var totalReceived = 0;
+    var totalIssued = 0;
+    var totalLosses = 0;
+    var totalAdjustment = 0;
+    var balance = 0;
+    
+    if (!transactions || transactions.length === 0) {
+        container.innerHTML = '<div style="text-align:center;padding:40px;color:var(--text-muted);">No transactions found</div>';
+        return;
+    }
+    
+    transactions.sort(function(a, b) {
+        return new Date(b.createdAt) - new Date(a.createdAt);
+    });
+    
+    var html = '';
+    transactions.forEach(function(tx) {
+        var date = tx.createdAt ? new Date(tx.createdAt).toLocaleDateString() : 'N/A';
+        var dNote = tx.dNote || tx.reference || '-';
+        var fromTo = tx.from || tx.to || '-';
+        var quantity = tx.quantity || 0;
+        var batch = tx.batchNumber || '-';
+        var expiry = tx.expiryDate ? new Date(tx.expiryDate).toLocaleDateString() : '-';
+        var remarks = tx.remarks || '-';
+        var officer = tx.officer || '-';
+        var signature = tx.signature || '-';
+        var type = tx.type || 'unknown';
+        
+        var qtyReceived = type === 'received' ? quantity : 0;
+        var qtyIssued = type === 'issued' ? quantity : 0;
+        var losses = 0;
+        var adjustment = 0;
+        
+        if (type === 'received') {
+            balance += quantity;
+            totalReceived += quantity;
+        } else if (type === 'issued') {
+            balance -= quantity;
+            totalIssued += quantity;
+        }
+        
+        html += '<div class="stock-card-transaction-item">';
+        html += '<div class="date">' + date + '</div>';
+        html += '<div style="color:var(--text-muted);font-size:9px;">' + dNote + '</div>';
+        html += '<div style="color:var(--text-muted);font-size:9px;">' + fromTo + '</div>';
+        html += '<div class="received">' + (qtyReceived > 0 ? qtyReceived : '-') + '</div>';
+        html += '<div style="color:var(--text-muted);font-size:9px;">' + batch + '</div>';
+        html += '<div style="color:var(--text-muted);font-size:9px;">' + expiry + '</div>';
+        html += '<div class="issued">' + (qtyIssued > 0 ? qtyIssued : '-') + '</div>';
+        html += '<div style="color:#EF4444;font-size:10px;">' + (losses > 0 ? losses : '-') + '</div>';
+        html += '<div style="color:#F59E0B;font-size:10px;">' + (adjustment !== 0 ? adjustment : '-') + '</div>';
+        html += '<div class="balance">' + balance + '</div>';
+        html += '<div style="color:var(--text-muted);font-size:8px;">' + remarks + '</div>';
+        html += '<div style="color:var(--text-muted);font-size:9px;">' + officer + '</div>';
+        html += '<div style="color:var(--text-muted);font-size:9px;">' + signature + '</div>';
+        html += '</div>';
+    });
+    
+    container.innerHTML = html;
+    
+    document.getElementById('stockCardTotalReceived').textContent = totalReceived;
+    document.getElementById('stockCardTotalIssued').textContent = totalIssued;
+    document.getElementById('stockCardTotalLosses').textContent = totalLosses;
+    document.getElementById('stockCardTotalAdjustment').textContent = totalAdjustment;
+    document.getElementById('stockCardTotalBalance').textContent = balance;
+}
+
+function clearStockCard() {
+    document.getElementById('stockCardSearch').value = '';
+    document.getElementById('stockCardDropdown').style.display = 'none';
+    document.getElementById('stockCardHeader').style.display = 'none';
+    document.getElementById('stockCardTransactions').style.display = 'none';
+    document.getElementById('stockCardEmpty').style.display = 'flex';
+    selectedStockCardProduct = null;
+}
+
+function printStockCard() {
+    window.print();
+}
+
+document.addEventListener('click', function(e) {
+    var dropdown = document.getElementById('stockCardDropdown');
+    var search = document.getElementById('stockCardSearch');
+    if (dropdown && search) {
+        if (!dropdown.contains(e.target) && e.target !== search) {
+            dropdown.style.display = 'none';
+        }
+    }
+});
+
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') {
+        var search = document.getElementById('stockCardSearch');
+        if (search && document.activeElement === search) {
+            viewStockCard();
+        }
+    }
+});
+
+console.log('✅ Complete Stock Card functions loaded!');
+
+// ============================================================
+// INIT
+// ============================================================
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('💊 MedOx Pharmacy v2.0');
+    var token = localStorage.getItem('token');
+    var user = localStorage.getItem('user');
+    if (token && user) {
+        var landingPage = document.getElementById('landing');
+        if (landingPage && landingPage.classList.contains('active')) {
+            navigateTo('dashboard');
+        }
+    }
+});
+
+console.log('✅ All functions loaded!');
+</script>
+<script src="js/app.js"></script></body>
+</html>
+

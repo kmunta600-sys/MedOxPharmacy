@@ -1,0 +1,51 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>Medox Pharmacy - Add Product</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link rel="stylesheet" href="css/styles.css" />
+    <style>
+        /* Ensure page is visible by default */
+        .page { display: flex !important; position: relative; height: 100vh; width: 100%; }
+        /* Hide any other pages (they shouldn't exist but just in case) */
+        .page:not(.active) { display: none !important; }
+        /* Override fixed positioning for standalone pages */
+        .page { position: relative; }
+    </style>
+</head>
+<body>
+    <!-- Add Product Page -->
+    <header class="dash-header">
+        <div class="brand"><div class="icon"><i class="fas fa-plus-circle" style="color:var(--gold);"></i>
+
+    <script src="js/app.js"></script>
+    <script>
+        // Ensure this page is active when loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            // Mark this page as active
+            var page = document.querySelector('.page');
+            if (page) page.classList.add('active');
+            
+            // If this is the dashboard, load data
+            if ('addProductPage' === 'dashboardPage' || 'addProductPage' === 'dashboard') {
+                setTimeout(loadDashboardData, 300);
+            }
+            if ('addProductPage' === 'receiveStockPage' || 'addProductPage' === 'receiveStock') {
+                setTimeout(loadReceiveProducts, 300);
+            }
+            if ('addProductPage' === 'issueStockPage' || 'addProductPage' === 'issueStock') {
+                setTimeout(function() { loadWards(); loadIssueProducts(); clearIssueForm(); }, 300);
+            }
+            if ('addProductPage' === 'searchPage' || 'addProductPage' === 'search') {
+                setTimeout(loadProductsForSearch, 300);
+            }
+            if ('addProductPage' === 'stockCardPage' || 'addProductPage' === 'stockCard') {
+                // Stock card loads on demand
+            }
+        });
+    </script>
+</body>
+</html>

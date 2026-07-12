@@ -1,0 +1,268 @@
+﻿
+
+<script>
+// ============================================================
+// API URL
+// ============================================================
+const API_URL = window.location.origin;
+
+// ============================================================
+// NAVIGATION
+// ============================================================
+function navigateTo(pageId) {
+    console.log('Navigating to:', pageId);
+
+    // Hide all pages
+    document.querySelectorAll('.page').forEach(function(p) {
+        p.classList.remove('active');
+    });
+
+    // Page map
+    var pageMap = {
+        'landing': 'landing',
+        'login': 'loginPage',
+        'dashboard': 'dashboardPage',
+        'addProduct': 'addProductPage',
+        'receiveStock': 'receiveStockPage',
+        'issueStock': 'issueStockPage',
+        'search': 'searchPage'
+    };
+
+    var targetId = pageMap[pageId];
+    if (targetId) {
+        var target = document.getElementById(targetId);
+        if (target) {
+            target.classList.add('active');
+            console.log('Showing:', targetId);
+            // Load data for specific pages
+            if (pageId === 'dashboard') {
+                setTimeout(loadDashboardData, 300);
+            }
+            if (pageId === 'search') {
+                setTimeout(loadProducts, 300);
+            }
+            if (pageId === 'receiveStock') {
+                setTimeout(loadReceiveProducts, 300);
+            }
+        }
+    }
+}
+
+// ============================================================
+// RECEIVE STOCK FUNCTIONS
+// ============================================================
+var productsCache = [];
+
+function loadReceiveProducts() {
+    var token = localStorage.getItem('token');
+    if (!token) {
+        console.log('No token found, redirecting to login');
+        return;
+    }
+
+    fetch(API_URL + '/api/products', {
+        headers: { 'Authorization': 'Bearer ' + token }
+    })
+    .then(function(response) {
+        if (response.status === 401) {
+            localStorage.removeItem('token');
+            navigateTo('login');
+            return;
+        }
+        return response.json();
+    })
+    .then(function(data) {
+        if (data && data.success) {
+            productsCache = data.data;
+            populateReceiveDropdown(productsCache);
+        }
+    })
+    .catch(function(error) {
+        console.error('Error loading products for receive:', error);
+    });
+}
+
+function populateReceiveDropdown(products) {
+    var select = document.getElementById('receiveProduct');
+    if (!select) return;
+
+    select.innerHTML = '<option value="">Select a product...</option>';
+    products.forEach(function(p) {
+        var option = document.createElement('option');
+        option.value = p._id;
+        var stockText = p.quantityOnHand || 0;
+        var codeText = p.code || 'N/A';
+        option.textContent = p.name + ' ' + (p.strength || '') + ' | Stock: ' + stockText + ' | Code: ' + codeText;
+        select.appendChild(option);
+    });
+}
+
+function searchProductsForReceive(query) {
+    var select = document.getElementById('receiveProduct');
+    if (!select) return;
+
+    var searchTerm = query.toLowerCase().trim();
+    var filtered = productsCache.filter(function(p) {
+        var name = (p.name || '').toLowerCase();
+        var strength = (p.strength || '').toLowerCase();
+        var code = (p.code || '').toLowerCase();
+        var category = (p.category || '').toLowerCase();
+        return name.includes(searchTerm) || strength.includes(searchTerm) ||
+               code.includes(searchTerm) || category.includes(searchTerm);
+    });
+
+    populateReceiveDropdown(filtered);
+    if (filtered.length === 1) {
+        select.value = filtered[0]._id;
+        updateReceiveProductInfo(filtered[0]);
+    }
+}
+
+function updateReceiveProductInfo(product) {
+    var stockEl = document.getElementById('receiveCurrentStock');
+    var codeEl = document.getElementById('receiveProductCode');
+    if (stockEl) stockEl.textContent = product.quantityOnHand || 0;
+    if (codeEl) codeEl.textContent = product.code || '—';
+}
+
+function submitReceiveStock() {
+    var productId = document.getElementById('receiveProduct').value;
+    var qty = parseInt(document.getElementById('receiveQty').value);
+    var batch = document.getElementById('receiveBatch').value.trim();
+    var expiry = document.getElementById('receiveExpiry').value;
+    var dNote = document.getElementById('receiveDNote').value.trim();
+    var supplier = document.getElementById('receiveSupplier').value.trim();
+    var remarks = document.getElementById('receiveRemarks').value.trim();
+
+    if (!productId) {
+        alert('Please select a product.');
+        return;
+    }
+    if (!qty || qty <= 0) {
+        alert('Please enter a valid quantity.');
+        return;
+    }
+    if (!batch) {
+        alert('Please enter a batch number.');
+        return;
+    }
+    if (!expiry) {
+        alert('Please select an expiry date.');
+        return;
+    }
+
+    var token = localStorage.getItem('token');
+    if (!token) {
+        alert('Please login first.');
+        navigateTo('login');
+        return;
+    }
+
+    var product = productsCache.find(function(p) { return p._id === productId; });
+    if (!product) {
+        alert('Product not found.');
+        return;
+    }
+
+    var newStock = (product.quantityOnHand || 0) + qty;
+
+    var btn = document.querySelector('#receiveStockPage button[onclick="submitReceiveStock()"]');
+    if (btn) {
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
+        btn.disabled = true;
+    }
+
+    fetch(API_URL + '/api/products/' + productId, {
+        method: 'PUT',
+        headers: {
+            'Authorization': 'Bearer ' + token,
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            quantityReceived: qty,
+            quantityOnHand: newStock,
+            batchNumber: batch,
+            expiryDate: expiry,
+            dNote: dNote,
+            supplier: supplier,
+            remarks: remarks
+        })
+    })
+    .then(function(response) { return response.json(); })
+    .then(function(data) {
+        if (data.success) {
+            alert('✅ Stock received successfully!\\n\\n' +
+                  'Product: ' + data.data.name + ' ' + (data.data.strength || '') + '\\n' +
+                  'New Stock: ' + data.data.quantityOnHand + ' units\\n' +
+                  'Batch: ' + data.data.batchNumber + '\\n' +
+                  'Expiry: ' + new Date(data.data.expiryDate).toLocaleDateString());
+            clearReceiveForm();
+            loadReceiveProducts();
+            var dashPage = document.getElementById('dashboardPage');
+            if (dashPage && dashPage.classList.contains('active')) {
+                loadDashboardData();
+            }
+        } else {
+            alert('❌ Error: ' + (data.message || 'Unknown error'));
+        }
+    })
+    .catch(function(error) {
+        alert('❌ Network error: ' + error.message);
+    })
+    .finally(function() {
+        var btn = document.querySelector('#receiveStockPage button[onclick="submitReceiveStock()"]');
+        if (btn) {
+            btn.innerHTML = '<i class="fas fa-arrow-down"></i> Receive Stock';
+            btn.disabled = false;
+        }
+    });
+}
+
+function clearReceiveForm() {
+    document.getElementById('receiveQty').value = '';
+    document.getElementById('receiveBatch').value = '';
+    document.getElementById('receiveExpiry').value = '';
+    document.getElementById('receiveDNote').value = '';
+    document.getElementById('receiveSupplier').value = '';
+    document.getElementById('receiveRemarks').value = '';
+    document.getElementById('receiveProduct').value = '';
+    document.getElementById('receiveCurrentStock').textContent = '0';
+    document.getElementById('receiveProductCode').textContent = '—';
+    document.getElementById('receiveSearch').value = '';
+    loadReceiveProducts();
+}
+
+// Add event listener for product selection
+document.addEventListener('DOMContentLoaded', function() {
+    var receiveSelect = document.getElementById('receiveProduct');
+    if (receiveSelect) {
+        receiveSelect.addEventListener('change', function() {
+            var selectedId = this.value;
+            if (selectedId) {
+                var product = productsCache.find(function(p) { return p._id === selectedId; });
+                if (product) {
+                    updateReceiveProductInfo(product);
+                }
+            } else {
+                var stockEl = document.getElementById('receiveCurrentStock');
+                var codeEl = document.getElementById('receiveProductCode');
+                if (stockEl) stockEl.textContent = '0';
+                if (codeEl) codeEl.textContent = '—';
+            }
+        });
+    }
+    
+    // Check if already logged in
+    var token = localStorage.getItem('token');
+    var user = localStorage.getItem('user');
+    if (token && user) {
+        var landingPage = document.getElementById('landing');
+        if (landingPage && landingPage.classList.contains('active')) {
+            navigateTo('dashboard');
+        }
+    }
+});
+
+console.log('✅ MedOx Pharmacy v2.0 - Receive Stock functions loaded');
+</script>
+

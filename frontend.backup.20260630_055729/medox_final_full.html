@@ -1,0 +1,3388 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>Medox Pharmacy - Full System</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    
+    <style>
+        /* ============================================================
+           ALL STYLES FROM YOUR ORIGINAL PAGES
+           ============================================================ */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #0A1628;
+            --primary-light: #1A365D;
+            --accent: #2B6CB0;
+            --accent-light: #4299E1;
+            --gold: #D69E2E;
+            --gold-light: #ECC94B;
+            --white: #FFFFFF;
+            --bg: #0D1A2D;
+            --card-bg: rgba(255,255,255,0.04);
+            --border: rgba(255,255,255,0.06);
+            --text: #FFFFFF;
+            --text-muted: rgba(255,255,255,0.4);
+            --danger: #E53E3E;
+            --success: #48BB78;
+            --warning: #ECC94B;
+            --info: #4299E1;
+            --radius: 12px;
+            --radius-lg: 20px;
+            --transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            --font: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+
+        html, body {
+            height: 100%;
+            overflow: hidden;
+        }
+
+        body {
+            font-family: var(--font);
+            background: var(--primary);
+            color: var(--white);
+            overflow: hidden;
+            line-height: 1.6;
+        }
+
+        ::-webkit-scrollbar {
+            display: none;
+        }
+
+        /* ============================================================
+           PAGE SYSTEM - FIXED NAVIGATION
+        ============================================================ */
+        .page {
+            display: none !important;
+            height: 100vh;
+            width: 100vw;
+            position: fixed;
+            top: 0;
+            left: 0;
+            overflow: hidden;
+            flex-direction: column;
+            background: var(--bg);
+            z-index: 1;
+        }
+
+        .page.active {
+            display: flex !important;
+            z-index: 10;
+        }
+
+        /* ============================================================
+           BUTTONS
+        ============================================================ */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: 14px 32px;
+            border: none;
+            border-radius: var(--radius);
+            font-family: var(--font);
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            text-decoration: none;
+            white-space: nowrap;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: var(--white);
+        }
+        .btn-primary:hover {
+            background: var(--primary-light);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(10, 22, 40, 0.3);
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: var(--white);
+            border: 2px solid rgba(255,255,255,0.2);
+        }
+        .btn-outline:hover {
+            background: rgba(255,255,255,0.05);
+            border-color: var(--white);
+            transform: translateY(-2px);
+        }
+
+        .btn-gold {
+            background: var(--gold);
+            color: var(--white);
+        }
+        .btn-gold:hover {
+            background: var(--gold-light);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(214, 158, 46, 0.35);
+        }
+
+        /* ============================================================
+           LANDING PAGE
+        ============================================================ */
+        #landing {
+            background: var(--primary);
+            position: relative;
+            overflow: hidden;
+        }
+
+        #landing .aura-1 {
+            position: absolute;
+            top: -20%;
+            right: -10%;
+            width: 60%;
+            height: 80%;
+            background: radial-gradient(circle, rgba(43, 108, 176, 0.12) 0%, transparent 70%);
+            border-radius: 50%;
+            pointer-events: none;
+            animation: floatAura 20s ease-in-out infinite;
+        }
+
+        #landing .aura-2 {
+            position: absolute;
+            bottom: -30%;
+            left: -10%;
+            width: 50%;
+            height: 70%;
+            background: radial-gradient(circle, rgba(214, 158, 46, 0.06) 0%, transparent 70%);
+            border-radius: 50%;
+            pointer-events: none;
+            animation: floatAura 25s ease-in-out infinite reverse;
+        }
+
+        @keyframes floatAura {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            33% { transform: translate(30px, -30px) scale(1.05); }
+            66% { transform: translate(-20px, 20px) scale(0.95); }
+        }
+
+        #landing .content {
+            position: relative;
+            z-index: 2;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px 32px;
+            width: 100%;
+            height: 100%;
+        }
+
+        .landing-nav {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 0;
+            flex-shrink: 0;
+        }
+
+        .landing-nav .brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .landing-nav .brand .logo-icon {
+            width: 38px;
+            height: 38px;
+            background: rgba(255,255,255,0.06);
+            border-radius: var(--radius);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            color: var(--gold);
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .landing-nav .brand .logo-text {
+            font-size: 18px;
+            font-weight: 800;
+            color: var(--white);
+            letter-spacing: -0.5px;
+        }
+
+        .landing-nav .brand .logo-text span {
+            color: var(--gold);
+        }
+
+        .landing-nav .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 28px;
+        }
+
+        .landing-nav .nav-links a {
+            color: rgba(255,255,255,0.5);
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 500;
+            transition: var(--transition);
+            cursor: pointer;
+        }
+        .landing-nav .nav-links a:hover {
+            color: var(--white);
+        }
+
+        .hero {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            gap: 50px;
+            min-height: 0;
+            padding: 10px 0;
+        }
+
+        .hero-content {
+            flex: 1;
+            max-width: 520px;
+        }
+
+        .hero-content .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(214, 158, 46, 0.12);
+            border: 1px solid rgba(214, 158, 46, 0.15);
+            color: var(--gold);
+            padding: 4px 14px;
+            border-radius: 30px;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 16px;
+        }
+
+        .hero-content .badge i {
+            font-size: 9px;
+        }
+
+        .hero-content h1 {
+            font-size: 44px;
+            font-weight: 900;
+            color: var(--white);
+            line-height: 1.1;
+            letter-spacing: -1.5px;
+            margin-bottom: 12px;
+        }
+
+        .hero-content h1 .highlight {
+            background: linear-gradient(135deg, var(--gold), var(--gold-light));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-content p {
+            font-size: 15px;
+            color: rgba(255,255,255,0.5);
+            line-height: 1.7;
+            max-width: 420px;
+            margin-bottom: 24px;
+        }
+
+        .hero-content .hero-buttons {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .hero-content .trust-badge {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            margin-top: 24px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .hero-content .trust-badge .item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: rgba(255,255,255,0.35);
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .hero-content .trust-badge .item i {
+            color: var(--gold);
+            font-size: 13px;
+        }
+
+        .hero-visual {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            max-width: 440px;
+        }
+
+        .hero-visual .aura-glow {
+            position: absolute;
+            width: 120%;
+            height: 120%;
+            top: -10%;
+            left: -10%;
+            background: radial-gradient(circle at 50% 50%, rgba(214, 158, 46, 0.08) 0%, transparent 60%);
+            border-radius: 50%;
+            animation: pulseGlow 4s ease-in-out infinite;
+            pointer-events: none;
+        }
+
+        @keyframes pulseGlow {
+            0%, 100% { transform: scale(1); opacity: 0.5; }
+            50% { transform: scale(1.1); opacity: 1; }
+        }
+
+        .hero-visual .visual-card {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.06);
+            border-radius: var(--radius-lg);
+            padding: 28px 32px;
+            width: 100%;
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+
+        .visual-card .shimmer {
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(
+                45deg,
+                transparent 40%,
+                rgba(255,255,255,0.02) 50%,
+                transparent 60%
+            );
+            animation: shimmerMove 8s ease-in-out infinite;
+            pointer-events: none;
+        }
+
+        @keyframes shimmerMove {
+            0% { transform: translateX(-100%) rotate(45deg); }
+            100% { transform: translateX(100%) rotate(45deg); }
+        }
+
+        .visual-card .card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .visual-card .card-header .dots {
+            display: flex;
+            gap: 6px;
+        }
+        .visual-card .card-header .dots span {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            display: block;
+        }
+        .visual-card .card-header .dots span:nth-child(1) { background: #E53E3E; }
+        .visual-card .card-header .dots span:nth-child(2) { background: #ECC94B; }
+        .visual-card .card-header .dots span:nth-child(3) { background: #48BB78; }
+
+        .visual-card .card-header .badge-text {
+            color: rgba(255,255,255,0.2);
+            font-size: 11px;
+            font-weight: 500;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .visual-card .stat-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 16px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .visual-card .stat-row .stat-box {
+            background: rgba(255,255,255,0.03);
+            border-radius: var(--radius);
+            padding: 14px 18px;
+            border: 1px solid rgba(255,255,255,0.04);
+            position: relative;
+            overflow: hidden;
+            transition: all 0.4s ease;
+        }
+
+        .visual-card .stat-row .stat-box:hover {
+            background: rgba(255,255,255,0.06);
+        }
+
+        .visual-card .stat-row .stat-box .number {
+            font-size: 28px;
+            font-weight: 900;
+            color: var(--white);
+            letter-spacing: -0.5px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .visual-card .stat-row .stat-box .number .trend {
+            font-size: 12px;
+            font-weight: 600;
+            opacity: 0.7;
+        }
+        .visual-card .stat-row .stat-box .number .trend.up { color: #48BB78; }
+        .visual-card .stat-row .stat-box .number .trend.down { color: #E53E3E; }
+
+        .visual-card .stat-row .stat-box .number.gold { 
+            background: linear-gradient(135deg, var(--gold), var(--gold-light));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .visual-card .stat-row .stat-box .number.green { color: #48BB78; }
+        .visual-card .stat-row .stat-box .label {
+            font-size: 11px;
+            color: rgba(255,255,255,0.35);
+            font-weight: 500;
+            margin-top: 2px;
+            letter-spacing: 0.3px;
+        }
+
+        .visual-card .stat-row .stat-box .pulse-ring {
+            position: absolute;
+            top: 50%;
+            right: 12px;
+            transform: translateY(-50%);
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #48BB78;
+            animation: pulseDot 2s ease-in-out infinite;
+        }
+
+        .visual-card .stat-row .stat-box .pulse-ring.gold {
+            background: var(--gold);
+        }
+
+        @keyframes pulseDot {
+            0%, 100% { transform: translateY(-50%) scale(1); opacity: 1; }
+            50% { transform: translateY(-50%) scale(1.6); opacity: 0.4; }
+        }
+
+        .visual-card .recent-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 14px;
+            background: rgba(255,255,255,0.02);
+            border-radius: var(--radius);
+            border: 1px solid rgba(255,255,255,0.03);
+            position: relative;
+            z-index: 1;
+            transition: all 0.3s ease;
+            cursor: default;
+        }
+
+        .visual-card .recent-row:first-of-type {
+            margin-bottom: 8px;
+        }
+
+        .visual-card .recent-row:hover {
+            background: rgba(255,255,255,0.05);
+            border-color: rgba(255,255,255,0.08);
+            transform: translateX(4px);
+        }
+
+        .visual-card .recent-row .icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            flex-shrink: 0;
+        }
+
+        .visual-card .recent-row .icon.in {
+            background: rgba(72, 187, 120, 0.12);
+            color: #48BB78;
+        }
+        .visual-card .recent-row .icon.out {
+            background: rgba(229, 62, 62, 0.12);
+            color: #E53E3E;
+        }
+        .visual-card .recent-row .icon.alert {
+            background: rgba(214, 158, 46, 0.12);
+            color: var(--gold);
+        }
+
+        .visual-card .recent-row .info {
+            flex: 1;
+            min-width: 0;
+        }
+        .visual-card .recent-row .info .title {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--white);
+        }
+        .visual-card .recent-row .info .desc {
+            font-size: 11px;
+            color: rgba(255,255,255,0.3);
+        }
+        .visual-card .recent-row .amount {
+            font-weight: 700;
+            font-size: 14px;
+            flex-shrink: 0;
+        }
+        .visual-card .recent-row .amount.positive {
+            color: #48BB78;
+        }
+        .visual-card .recent-row .amount.negative {
+            color: #E53E3E;
+        }
+        .visual-card .recent-row .amount.warning {
+            color: var(--gold);
+        }
+
+        .visual-card .recent-row .progress-bar {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            height: 2px;
+            background: linear-gradient(90deg, var(--gold), var(--gold-light));
+            width: 0%;
+            animation: progressAnim 3s ease-in-out infinite;
+        }
+
+        @keyframes progressAnim {
+            0% { width: 0%; opacity: 0; }
+            50% { width: 100%; opacity: 1; }
+            100% { width: 0%; opacity: 0; }
+        }
+
+        .landing-footer {
+            padding: 14px 0 12px;
+            border-top: 1px solid rgba(255,255,255,0.06);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            flex-shrink: 0;
+        }
+
+        .landing-footer p {
+            color: rgba(255,255,255,0.25);
+            font-size: 12px;
+            font-weight: 400;
+        }
+
+        .landing-footer .footer-credits {
+            display: flex;
+            gap: 24px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .landing-footer .footer-credits .credit-block {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 14px;
+            background: rgba(255,255,255,0.04);
+            border-radius: 8px;
+            border: 1px solid rgba(255,255,255,0.04);
+            transition: all 0.3s ease;
+        }
+
+        .landing-footer .footer-credits .credit-block:hover {
+            background: rgba(255,255,255,0.07);
+            border-color: rgba(214, 158, 46, 0.15);
+        }
+
+        .landing-footer .footer-credits .credit-block i {
+            font-size: 14px;
+            color: var(--gold);
+            width: 20px;
+            text-align: center;
+        }
+
+        .landing-footer .footer-credits .credit-block .credit-info {
+            display: flex;
+            flex-direction: column;
+            line-height: 1.3;
+        }
+
+        .landing-footer .footer-credits .credit-block .credit-info .name {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--white);
+            letter-spacing: 0.2px;
+        }
+
+        .landing-footer .footer-credits .credit-block .credit-info .title {
+            font-size: 10px;
+            color: rgba(255,255,255,0.35);
+            font-weight: 400;
+            letter-spacing: 0.3px;
+        }
+
+        .landing-footer .footer-credits .credit-block .credit-info .title .highlight-title {
+            color: var(--gold);
+            font-weight: 500;
+        }
+
+        /* ============================================================
+           LOGIN PAGE
+        ============================================================ */
+        #loginPage {
+            background: var(--bg);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        #loginPage .login-card {
+            max-width: 400px;
+            width: 100%;
+            padding: 40px 36px 32px;
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.06);
+            border-radius: var(--radius-lg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            box-shadow: 0 30px 80px rgba(0,0,0,0.4);
+            position: relative;
+        }
+
+        #loginPage .login-card .shimmer {
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(
+                45deg,
+                transparent 40%,
+                rgba(255,255,255,0.02) 50%,
+                transparent 60%
+            );
+            animation: shimmerMove 10s ease-in-out infinite;
+            pointer-events: none;
+            border-radius: var(--radius-lg);
+        }
+
+        #loginPage .login-card .back-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            color: rgba(255,255,255,0.25);
+            text-decoration: none;
+            font-size: 12px;
+            font-weight: 500;
+            transition: var(--transition);
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-family: var(--font);
+            padding: 0;
+            margin-bottom: 16px;
+        }
+
+        #loginPage .login-card .back-btn:hover {
+            color: var(--gold);
+            transform: translateX(-2px);
+        }
+
+        #loginPage .login-card .logo {
+            text-align: center;
+            margin-bottom: 24px;
+        }
+
+        #loginPage .login-card .logo .icon {
+            font-size: 44px;
+            color: var(--gold);
+            display: block;
+            margin-bottom: 4px;
+        }
+
+        #loginPage .login-card .logo h2 {
+            font-size: 22px;
+            font-weight: 800;
+            color: var(--white);
+            letter-spacing: -0.5px;
+        }
+
+        #loginPage .login-card .logo h2 span {
+            color: var(--gold);
+        }
+
+        #loginPage .login-card .logo p {
+            font-size: 13px;
+            color: rgba(255,255,255,0.25);
+            margin-top: 2px;
+        }
+
+        #loginPage .login-card .form-group {
+            margin-bottom: 14px;
+        }
+
+        #loginPage .login-card .form-group label {
+            display: block;
+            font-size: 12px;
+            font-weight: 600;
+            color: rgba(255,255,255,0.5);
+            margin-bottom: 4px;
+            letter-spacing: 0.3px;
+        }
+
+        #loginPage .login-card .form-group .input-wrap {
+            position: relative;
+            display: flex;
+            align-items: center;
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: var(--radius);
+            transition: var(--transition);
+            background: rgba(255,255,255,0.03);
+        }
+
+        #loginPage .login-card .form-group .input-wrap:focus-within {
+            border-color: var(--gold);
+            box-shadow: 0 0 0 4px rgba(214, 158, 46, 0.08);
+            background: rgba(255,255,255,0.05);
+        }
+
+        #loginPage .login-card .form-group .input-wrap i {
+            padding: 0 14px;
+            color: rgba(255,255,255,0.2);
+            font-size: 15px;
+        }
+
+        #loginPage .login-card .form-group .input-wrap input {
+            flex: 1;
+            padding: 12px 14px 12px 0;
+            border: none;
+            background: transparent;
+            font-family: var(--font);
+            font-size: 14px;
+            color: var(--white);
+            outline: none;
+            width: 100%;
+        }
+
+        #loginPage .login-card .form-group .input-wrap input::placeholder {
+            color: rgba(255,255,255,0.15);
+        }
+
+        #loginPage .login-card .login-error {
+            background: rgba(229, 62, 62, 0.08);
+            border: 1px solid rgba(229, 62, 62, 0.12);
+            color: #E53E3E;
+            padding: 10px 14px;
+            border-radius: var(--radius);
+            font-size: 12px;
+            margin-bottom: 14px;
+            display: none;
+            align-items: center;
+            gap: 8px;
+        }
+
+        #loginPage .login-card .login-error.show {
+            display: flex;
+        }
+
+        #loginPage .login-card .form-options {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 12px;
+            color: rgba(255,255,255,0.3);
+            margin: 2px 0 18px;
+        }
+
+        #loginPage .login-card .form-options label {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            cursor: pointer;
+        }
+
+        #loginPage .login-card .form-options label input[type="checkbox"] {
+            accent-color: var(--gold);
+            width: 14px;
+            height: 14px;
+            cursor: pointer;
+        }
+
+        #loginPage .login-card .form-options a {
+            color: rgba(255,255,255,0.3);
+            text-decoration: none;
+            font-weight: 500;
+            transition: var(--transition);
+            font-size: 12px;
+            cursor: pointer;
+        }
+        #loginPage .login-card .form-options a:hover {
+            color: var(--gold);
+        }
+
+        #loginPage .login-card .btn-login {
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: var(--radius);
+            font-family: var(--font);
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: var(--transition);
+            background: linear-gradient(135deg, var(--gold), var(--gold-light));
+            color: var(--white);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        #loginPage .login-card .btn-login:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(214, 158, 46, 0.35);
+        }
+
+        #loginPage .login-card .demo-credentials {
+            margin-top: 16px;
+            padding: 10px 16px;
+            background: rgba(255,255,255,0.02);
+            border: 1px solid rgba(255,255,255,0.04);
+            border-radius: var(--radius);
+            text-align: center;
+        }
+
+        #loginPage .login-card .demo-credentials .demo-label {
+            font-size: 10px;
+            color: rgba(255,255,255,0.15);
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            margin-bottom: 3px;
+        }
+
+        #loginPage .login-card .demo-credentials .demo-details {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        #loginPage .login-card .demo-credentials .demo-details .demo-item {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 12px;
+            color: rgba(255,255,255,0.3);
+        }
+
+        #loginPage .login-card .demo-credentials .demo-details .demo-item i {
+            font-size: 10px;
+            color: var(--gold);
+        }
+
+        #loginPage .login-card .demo-credentials .demo-details code {
+            color: var(--gold);
+            font-family: var(--font);
+            font-weight: 600;
+            background: rgba(214, 158, 46, 0.06);
+            padding: 1px 8px;
+            border-radius: 4px;
+            font-size: 11px;
+            border: 1px solid rgba(214, 158, 46, 0.06);
+        }
+
+        #loginPage .login-card .login-footer {
+            margin-top: 20px;
+            padding-top: 16px;
+            border-top: 1px solid rgba(255,255,255,0.04);
+            text-align: center;
+        }
+
+        #loginPage .login-card .login-footer .footer-copy {
+            font-size: 10px;
+            color: rgba(255,255,255,0.08);
+        }
+
+        /* ============================================================
+           DASHBOARD
+        ============================================================ */
+        .dashboard-header {
+            position: relative;
+            z-index: 2;
+            padding: 16px 32px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-shrink: 0;
+            border-bottom: 1px solid var(--border);
+            background: rgba(13, 26, 45, 0.3);
+            backdrop-filter: blur(10px);
+        }
+
+        .dashboard-header .brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .dashboard-header .brand .logo-icon {
+            width: 36px;
+            height: 36px;
+            background: rgba(255,255,255,0.06);
+            border-radius: var(--radius);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            color: var(--gold);
+            border: 1px solid var(--border);
+        }
+
+        .dashboard-header .brand .logo-text {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--white);
+        }
+
+        .dashboard-header .brand .logo-text span {
+            color: var(--gold);
+        }
+
+        .dashboard-header .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .dashboard-header .header-actions .user-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .dashboard-header .header-actions .user-info .avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: rgba(214, 158, 46, 0.15);
+            border: 1px solid rgba(214, 158, 46, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            color: var(--gold);
+        }
+
+        .dashboard-header .header-actions .user-info .name {
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text);
+        }
+
+        .dashboard-header .header-actions .user-info .role {
+            font-size: 11px;
+            color: var(--text-muted);
+        }
+
+        .dashboard-header .header-actions .logout-btn {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            font-size: 16px;
+            transition: var(--transition);
+            padding: 6px;
+            margin-left: 4px;
+        }
+
+        .dashboard-header .header-actions .logout-btn:hover {
+            color: var(--danger);
+        }
+
+        .dashboard-main {
+            position: relative;
+            z-index: 2;
+            flex: 1;
+            overflow-y: auto;
+            padding: 24px 32px 80px;
+        }
+
+        .greeting {
+            margin-bottom: 28px;
+        }
+
+        .greeting h1 {
+            font-size: 26px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
+
+        .greeting p {
+            color: var(--text-muted);
+            font-size: 14px;
+            margin-top: 2px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+            margin-bottom: 28px;
+        }
+
+        .stat-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 20px 24px;
+            transition: var(--transition);
+        }
+
+        .stat-card:hover {
+            background: rgba(255,255,255,0.06);
+            transform: translateY(-2px);
+        }
+
+        .stat-card .stat-label {
+            font-size: 12px;
+            color: var(--text-muted);
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .stat-card .stat-number {
+            font-size: 32px;
+            font-weight: 800;
+            margin-top: 4px;
+            letter-spacing: -0.5px;
+        }
+
+        .stat-card .stat-number.gold { color: var(--gold); }
+        .stat-card .stat-number.green { color: var(--success); }
+        .stat-card .stat-number.red { color: var(--danger); }
+
+        .stat-card .stat-change {
+            font-size: 12px;
+            font-weight: 500;
+            margin-top: 6px;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .stat-card .stat-change.up { color: var(--success); }
+        .stat-card .stat-change.down { color: var(--danger); }
+
+        .two-col {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 28px;
+        }
+
+        .section-title {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .section-title i {
+            color: var(--gold);
+            font-size: 14px;
+        }
+
+        .alert-compact {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 16px 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 8px;
+            transition: var(--transition);
+            cursor: pointer;
+            border-left: 3px solid var(--info);
+        }
+
+        .alert-compact:last-child { margin-bottom: 0; }
+        .alert-compact:hover {
+            background: rgba(255,255,255,0.06);
+            transform: translateX(4px);
+        }
+        .alert-compact.critical { border-left-color: var(--danger); }
+        .alert-compact.warning { border-left-color: var(--warning); }
+
+        .alert-compact .alert-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+        .alert-compact .alert-dot.critical { background: var(--danger); }
+        .alert-compact .alert-dot.warning { background: var(--warning); }
+
+        .alert-compact .alert-text {
+            flex: 1;
+            font-size: 13px;
+        }
+        .alert-compact .alert-text .highlight { font-weight: 600; }
+        .alert-compact .alert-text .muted {
+            color: var(--text-muted);
+            font-size: 12px;
+        }
+
+        .alert-compact .alert-badge {
+            font-size: 10px;
+            font-weight: 600;
+            padding: 2px 12px;
+            border-radius: 20px;
+            flex-shrink: 0;
+        }
+        .alert-compact .alert-badge.critical {
+            background: rgba(229, 62, 62, 0.12);
+            color: var(--danger);
+        }
+        .alert-compact .alert-badge.warning {
+            background: rgba(236, 201, 75, 0.12);
+            color: var(--warning);
+        }
+
+        .quick-minimal {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .quick-minimal .action {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 14px 18px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .quick-minimal .action:hover {
+            background: rgba(255,255,255,0.06);
+            border-color: rgba(214, 158, 46, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .quick-minimal .action i {
+            font-size: 18px;
+            color: var(--gold);
+            width: 32px;
+            text-align: center;
+        }
+
+        .quick-minimal .action .action-label {
+            font-size: 13px;
+            font-weight: 500;
+        }
+        .quick-minimal .action .action-desc {
+            font-size: 11px;
+            color: var(--text-muted);
+        }
+
+        .recent-compact {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            overflow: hidden;
+        }
+
+        .recent-compact .item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 18px;
+            border-bottom: 1px solid var(--border);
+            transition: var(--transition);
+        }
+
+        .recent-compact .item:last-child { border-bottom: none; }
+        .recent-compact .item:hover { background: rgba(255,255,255,0.03); }
+
+        .recent-compact .item .r-icon {
+            font-size: 12px;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .recent-compact .item .r-icon.in {
+            background: rgba(72, 187, 120, 0.12);
+            color: var(--success);
+        }
+        .recent-compact .item .r-icon.out {
+            background: rgba(229, 62, 62, 0.12);
+            color: var(--danger);
+        }
+
+        .recent-compact .item .r-body {
+            flex: 1;
+            min-width: 0;
+        }
+        .recent-compact .item .r-body .r-name {
+            font-size: 13px;
+            font-weight: 500;
+        }
+        .recent-compact .item .r-body .r-detail {
+            font-size: 11px;
+            color: var(--text-muted);
+        }
+
+        .recent-compact .item .r-amount {
+            font-weight: 700;
+            font-size: 14px;
+            flex-shrink: 0;
+        }
+        .recent-compact .item .r-amount.positive { color: var(--success); }
+        .recent-compact .item .r-amount.negative { color: var(--danger); }
+
+        .view-all {
+            font-size: 12px;
+            color: var(--text-muted);
+            text-decoration: none;
+            transition: var(--transition);
+            display: inline-block;
+            margin-top: 8px;
+            cursor: pointer;
+        }
+
+        .view-all:hover { color: var(--gold); }
+
+        /* ============================================================
+           STOCK PAGE
+        ============================================================ */
+        .stock-header {
+            position: relative;
+            z-index: 2;
+            padding: 14px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-shrink: 0;
+            border-bottom: 1px solid var(--border);
+            background: rgba(13, 26, 45, 0.3);
+            backdrop-filter: blur(10px);
+        }
+
+        .stock-header .back-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            font-family: var(--font);
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+            padding: 6px 12px;
+            border-radius: var(--radius);
+        }
+
+        .stock-header .back-btn:hover {
+            color: var(--gold);
+            background: rgba(255,255,255,0.05);
+        }
+
+        .stock-header .header-title {
+            font-size: 16px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .stock-header .header-title i {
+            color: var(--gold);
+        }
+
+        .stock-main {
+            position: relative;
+            z-index: 2;
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px 24px 80px;
+        }
+
+        .stock-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .stock-item {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 16px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: var(--transition);
+        }
+
+        .stock-item:hover {
+            background: rgba(255,255,255,0.06);
+            transform: translateX(4px);
+        }
+
+        .stock-item .name {
+            font-weight: 600;
+        }
+
+        .stock-item .code {
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        .stock-item .qty {
+            font-weight: 700;
+            color: var(--gold);
+        }
+
+        .stock-item .qty.danger {
+            color: var(--danger);
+        }
+
+        .stock-item .qty.warning {
+            color: var(--warning);
+        }
+
+        .stock-item .unit {
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        /* ============================================================
+           REPORTS PAGE - FULL ORIGINAL VERSION STYLES
+        ============================================================ */
+        .reports-header {
+            position: relative;
+            z-index: 2;
+            padding: 14px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-shrink: 0;
+            border-bottom: 1px solid var(--border);
+            background: rgba(13, 26, 45, 0.4);
+            backdrop-filter: blur(15px);
+        }
+
+        .reports-header .back-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            font-family: var(--font);
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+            padding: 6px 12px;
+            border-radius: var(--radius);
+        }
+
+        .reports-header .back-btn:hover {
+            color: var(--gold);
+            background: rgba(255,255,255,0.05);
+        }
+
+        .reports-header .header-title {
+            font-size: 16px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .reports-header .header-title i {
+            color: var(--gold);
+        }
+
+        .reports-main {
+            position: relative;
+            z-index: 2;
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px 24px 80px;
+        }
+
+        .stats-row {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 14px;
+            margin-bottom: 24px;
+        }
+
+        .stat-mini {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 14px 18px;
+            text-align: center;
+            transition: var(--transition);
+        }
+
+        .stat-mini:hover {
+            background: rgba(255,255,255,0.06);
+            transform: translateY(-2px);
+        }
+
+        .stat-mini .num {
+            font-size: 24px;
+            font-weight: 800;
+        }
+
+        .stat-mini .num.gold { color: var(--gold); }
+        .stat-mini .num.green { color: var(--success); }
+        .stat-mini .num.red { color: var(--danger); }
+        .stat-mini .num.blue { color: var(--info); }
+
+        .stat-mini .label {
+            font-size: 11px;
+            color: var(--text-muted);
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+            margin-top: 2px;
+        }
+
+        .date-range {
+            display: flex;
+            gap: 14px;
+            flex-wrap: wrap;
+            align-items: center;
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 12px 18px;
+            margin-bottom: 20px;
+        }
+
+        .date-range .range-label {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+
+        .date-range .date-group {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .date-range .date-group label {
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        .date-range .date-group input {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 6px 12px;
+            color: var(--text);
+            font-family: var(--font);
+            font-size: 12px;
+            outline: none;
+            transition: var(--transition);
+        }
+
+        .date-range .date-group input:focus {
+            border-color: rgba(214, 158, 46, 0.3);
+            box-shadow: 0 0 0 4px rgba(214, 158, 46, 0.05);
+        }
+
+        .date-range .btn-generate {
+            padding: 6px 20px;
+            border: none;
+            border-radius: var(--radius);
+            background: linear-gradient(135deg, var(--gold), var(--gold-light));
+            color: var(--white);
+            font-family: var(--font);
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            margin-left: auto;
+        }
+
+        .date-range .btn-generate:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(214, 158, 46, 0.3);
+        }
+
+        .report-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 14px;
+            margin-bottom: 24px;
+        }
+
+        .report-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 20px 18px;
+            text-align: center;
+            cursor: pointer;
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .report-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle, rgba(214, 158, 46, 0.04) 0%, transparent 70%);
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+
+        .report-card:hover::before {
+            opacity: 1;
+        }
+
+        .report-card:hover {
+            background: rgba(255,255,255,0.06);
+            transform: translateY(-4px);
+            border-color: rgba(214, 158, 46, 0.15);
+            box-shadow: 0 8px 40px rgba(0,0,0,0.2);
+        }
+
+        .report-card .icon {
+            font-size: 32px;
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        .report-card .icon.blue { color: var(--info); }
+        .report-card .icon.green { color: var(--success); }
+        .report-card .icon.orange { color: var(--warning); }
+        .report-card .icon.gold { color: var(--gold); }
+
+        .report-card .name {
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .report-card .desc {
+            font-size: 11px;
+            color: var(--text-muted);
+            margin-top: 2px;
+        }
+
+        .report-card .badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 9px;
+            font-weight: 600;
+            padding: 2px 10px;
+            border-radius: 20px;
+            background: rgba(66, 153, 225, 0.12);
+            color: var(--info);
+        }
+
+        .preview-section {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 20px 24px;
+        }
+
+        .preview-section .preview-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 14px;
+        }
+
+        .preview-section .preview-header h3 {
+            font-size: 15px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .preview-section .preview-header h3 i {
+            color: var(--gold);
+        }
+
+        .preview-section .preview-header .export-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .preview-section .preview-header .export-actions .btn-export {
+            padding: 6px 14px;
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            background: none;
+            color: var(--text-muted);
+            font-family: var(--font);
+            font-size: 11px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .preview-section .preview-header .export-actions .btn-export:hover {
+            background: rgba(255,255,255,0.06);
+            color: var(--white);
+            border-color: rgba(214, 158, 46, 0.2);
+        }
+
+        .preview-section .preview-header .export-actions .btn-export.gold {
+            background: rgba(214, 158, 46, 0.1);
+            border-color: rgba(214, 158, 46, 0.15);
+            color: var(--gold);
+        }
+
+        .preview-section .preview-header .export-actions .btn-export.gold:hover {
+            background: rgba(214, 158, 46, 0.2);
+        }
+
+        .preview-table-wrap {
+            overflow-x: auto;
+        }
+
+        .preview-table-wrap table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 12px;
+        }
+
+        .preview-table-wrap table thead th {
+            background: rgba(255,255,255,0.03);
+            padding: 8px 12px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 10px;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            letter-spacing: 0.3px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .preview-table-wrap table tbody td {
+            padding: 8px 12px;
+            border-bottom: 1px solid var(--border);
+            color: var(--text);
+            font-size: 12px;
+        }
+
+        .preview-table-wrap table tbody tr:hover td {
+            background: rgba(255,255,255,0.02);
+        }
+
+        .preview-table-wrap table .highlight-gold {
+            color: var(--gold);
+            font-weight: 700;
+        }
+        .preview-table-wrap table .highlight-green {
+            color: var(--success);
+            font-weight: 700;
+        }
+        .preview-table-wrap table .highlight-red {
+            color: var(--danger);
+            font-weight: 700;
+        }
+
+        /* ============================================================
+           SETTINGS PAGE
+        ============================================================ */
+        .settings-header {
+            position: relative;
+            z-index: 2;
+            padding: 14px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-shrink: 0;
+            border-bottom: 1px solid var(--border);
+            background: rgba(13, 26, 45, 0.4);
+            backdrop-filter: blur(15px);
+        }
+
+        .settings-header .back-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            font-family: var(--font);
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+            padding: 6px 12px;
+            border-radius: var(--radius);
+        }
+
+        .settings-header .back-btn:hover {
+            color: var(--gold);
+            background: rgba(255,255,255,0.05);
+        }
+
+        .settings-header .header-title {
+            font-size: 16px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .settings-header .header-title i {
+            color: var(--gold);
+        }
+
+        .settings-main {
+            position: relative;
+            z-index: 2;
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px 24px 80px;
+        }
+
+        .profile-section {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 24px 28px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .profile-section .avatar {
+            width: 64px;
+            height: 64px;
+            border-radius: 50%;
+            background: rgba(214, 158, 46, 0.12);
+            border: 2px solid rgba(214, 158, 46, 0.15);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            color: var(--gold);
+            flex-shrink: 0;
+        }
+
+        .profile-section .profile-info .name {
+            font-size: 18px;
+            font-weight: 700;
+        }
+
+        .profile-section .profile-info .role {
+            font-size: 13px;
+            color: var(--text-muted);
+        }
+
+        .profile-section .profile-info .email {
+            font-size: 13px;
+            color: var(--text-muted);
+        }
+
+        .profile-section .edit-btn {
+            margin-left: auto;
+            padding: 8px 20px;
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            background: none;
+            color: var(--text-muted);
+            font-family: var(--font);
+            font-size: 12px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .profile-section .edit-btn:hover {
+            background: rgba(255,255,255,0.06);
+            color: var(--white);
+            border-color: rgba(214, 158, 46, 0.2);
+        }
+
+        .staff-section {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 24px 28px;
+            margin-bottom: 20px;
+        }
+
+        .staff-section .staff-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .staff-section .staff-header .staff-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 16px;
+            font-weight: 700;
+        }
+
+        .staff-section .staff-header .staff-title i {
+            color: var(--gold);
+        }
+
+        .staff-section .staff-header .staff-title .admin-badge {
+            font-size: 10px;
+            font-weight: 600;
+            padding: 2px 12px;
+            border-radius: 20px;
+            background: rgba(214, 158, 46, 0.12);
+            color: var(--gold);
+        }
+
+        .staff-section .staff-header .add-btn {
+            padding: 8px 18px;
+            border: none;
+            border-radius: var(--radius);
+            background: linear-gradient(135deg, var(--gold), var(--gold-light));
+            color: var(--white);
+            font-family: var(--font);
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .staff-section .staff-header .add-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(214, 158, 46, 0.3);
+        }
+
+        .staff-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .staff-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 16px;
+            background: rgba(255,255,255,0.02);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            transition: var(--transition);
+        }
+
+        .staff-item:hover {
+            background: rgba(255,255,255,0.04);
+            border-color: rgba(214, 158, 46, 0.08);
+        }
+
+        .staff-item .staff-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .staff-item .staff-left .staff-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.04);
+            border: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            color: var(--text-muted);
+        }
+
+        .staff-item .staff-left .staff-info .staff-name {
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .staff-item .staff-left .staff-info .staff-email {
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        .staff-item .staff-right {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .staff-item .staff-right .staff-role {
+            font-size: 11px;
+            font-weight: 600;
+            padding: 2px 12px;
+            border-radius: 20px;
+        }
+
+        .staff-item .staff-right .staff-role.admin {
+            background: rgba(214, 158, 46, 0.12);
+            color: var(--gold);
+        }
+        .staff-item .staff-right .staff-role.pharmacist {
+            background: rgba(66, 153, 225, 0.12);
+            color: var(--info);
+        }
+        .staff-item .staff-right .staff-role.technician {
+            background: rgba(72, 187, 120, 0.12);
+            color: var(--success);
+        }
+        .staff-item .staff-right .staff-role.viewer {
+            background: rgba(255,255,255,0.04);
+            color: var(--text-muted);
+        }
+
+        .staff-item .staff-right .staff-status {
+            font-size: 10px;
+            font-weight: 600;
+            padding: 2px 10px;
+            border-radius: 20px;
+        }
+
+        .staff-item .staff-right .staff-status.active {
+            background: rgba(72, 187, 120, 0.12);
+            color: var(--success);
+        }
+        .staff-item .staff-right .staff-status.inactive {
+            background: rgba(229, 62, 62, 0.12);
+            color: var(--danger);
+        }
+
+        .staff-item .staff-right .staff-actions {
+            display: flex;
+            gap: 4px;
+        }
+
+        .staff-item .staff-right .staff-actions button {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            padding: 4px 8px;
+            border-radius: var(--radius);
+            transition: var(--transition);
+            font-size: 13px;
+        }
+
+        .staff-item .staff-right .staff-actions button:hover {
+            background: rgba(255,255,255,0.06);
+            color: var(--white);
+        }
+
+        .staff-item .staff-right .staff-actions button.danger:hover {
+            color: var(--danger);
+        }
+
+        .settings-group {
+            margin-bottom: 20px;
+        }
+
+        .settings-group .group-title {
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--text-muted);
+            margin-bottom: 10px;
+            padding-left: 4px;
+        }
+
+        .settings-group .group-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+        }
+
+        .settings-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 14px 20px;
+            border-bottom: 1px solid var(--border);
+            transition: var(--transition);
+            cursor: pointer;
+        }
+
+        .settings-item:last-child {
+            border-bottom: none;
+        }
+
+        .settings-item:hover {
+            background: rgba(255,255,255,0.03);
+        }
+
+        .settings-item .item-left {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .settings-item .item-left .icon {
+            width: 36px;
+            height: 36px;
+            border-radius: var(--radius);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            flex-shrink: 0;
+        }
+
+        .settings-item .item-left .icon.gold {
+            background: rgba(214, 158, 46, 0.1);
+            color: var(--gold);
+        }
+        .settings-item .item-left .icon.blue {
+            background: rgba(66, 153, 225, 0.1);
+            color: var(--info);
+        }
+        .settings-item .item-left .icon.green {
+            background: rgba(72, 187, 120, 0.1);
+            color: var(--success);
+        }
+        .settings-item .item-left .icon.red {
+            background: rgba(229, 62, 62, 0.1);
+            color: var(--danger);
+        }
+        .settings-item .item-left .icon.purple {
+            background: rgba(159, 122, 234, 0.1);
+            color: #9F7AEA;
+        }
+
+        .settings-item .item-left .item-info .item-title {
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .settings-item .item-left .item-info .item-desc {
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        .settings-item .item-right {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .settings-item .item-right .value {
+            font-size: 13px;
+            color: var(--text-muted);
+        }
+
+        .settings-item .item-right .arrow {
+            color: var(--text-muted);
+            font-size: 14px;
+            opacity: 0.4;
+        }
+
+        .toggle {
+            width: 44px;
+            height: 24px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 30px;
+            position: relative;
+            cursor: pointer;
+            transition: var(--transition);
+            flex-shrink: 0;
+        }
+
+        .toggle.active {
+            background: rgba(214, 158, 46, 0.3);
+        }
+
+        .toggle .toggle-dot {
+            width: 18px;
+            height: 18px;
+            background: var(--text-muted);
+            border-radius: 50%;
+            position: absolute;
+            top: 3px;
+            left: 3px;
+            transition: var(--transition);
+        }
+
+        .toggle.active .toggle-dot {
+            left: 23px;
+            background: var(--gold);
+            box-shadow: 0 0 20px rgba(214, 158, 46, 0.2);
+        }
+
+        /* ============================================================
+           BOTTOM NAV
+        ============================================================ */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(13, 26, 45, 0.95);
+            backdrop-filter: blur(20px);
+            border-top: 1px solid var(--border);
+            display: flex;
+            justify-content: space-around;
+            padding: 8px 0 env(safe-area-inset-bottom, 8px) 0;
+            z-index: 100;
+        }
+
+        .bottom-nav .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 2px;
+            padding: 4px 16px;
+            border: none;
+            background: none;
+            cursor: pointer;
+            color: var(--text-muted);
+            font-family: var(--font);
+            font-size: 10px;
+            font-weight: 500;
+            transition: var(--transition);
+            position: relative;
+            border-radius: 8px;
+        }
+
+        .bottom-nav .nav-item i {
+            font-size: 20px;
+        }
+
+        .bottom-nav .nav-item.active {
+            color: var(--gold);
+        }
+
+        .bottom-nav .nav-item .nav-badge {
+            position: absolute;
+            top: -2px;
+            right: 4px;
+            background: var(--danger);
+            color: #fff;
+            font-size: 8px;
+            font-weight: 700;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* ============================================================
+           RESPONSIVE
+        ============================================================ */
+        @media (max-width: 1024px) {
+            .hero-content h1 { font-size: 36px; }
+            .hero { gap: 30px; }
+            .hero-visual { max-width: 380px; }
+            .stats-row { grid-template-columns: repeat(2, 1fr); }
+            .report-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+
+        @media (max-width: 768px) {
+            #landing .content { padding: 16px 20px; }
+            .landing-nav .nav-links { display: none; }
+            .landing-nav .brand .logo-text { font-size: 16px; }
+            .landing-nav .brand .logo-icon { width: 32px; height: 32px; font-size: 15px; }
+            .btn { padding: 12px 24px; font-size: 13px; }
+            .hero { flex-direction: column; justify-content: center; gap: 20px; padding: 0; }
+            .hero-content { max-width: 100%; text-align: center; }
+            .hero-content p { max-width: 100%; margin-left: auto; margin-right: auto; font-size: 14px; }
+            .hero-content .hero-buttons { justify-content: center; }
+            .hero-content .trust-badge { justify-content: center; flex-wrap: wrap; gap: 12px; }
+            .hero-content h1 { font-size: 30px; }
+            .hero-visual { max-width: 100%; width: 100%; }
+            .hero-visual .visual-card { padding: 20px 22px; }
+            .hero-visual .visual-card .stat-row .stat-box .number { font-size: 22px; }
+            .landing-footer { flex-direction: column; text-align: center; gap: 8px; padding: 12px 0; }
+            .landing-footer .footer-credits { justify-content: center; gap: 12px; }
+            .landing-footer .footer-credits .credit-block { padding: 4px 12px; }
+            .landing-footer .footer-credits .credit-block .credit-info .name { font-size: 12px; }
+            .landing-footer .footer-credits .credit-block .credit-info .title { font-size: 9px; }
+            .landing-footer p { font-size: 11px; }
+            .dashboard-header { padding: 12px 16px; }
+            .dashboard-header .brand .logo-text { font-size: 14px; }
+            .dashboard-main { padding: 16px 16px 80px; }
+            .greeting h1 { font-size: 20px; }
+            .stats-grid { grid-template-columns: repeat(3, 1fr); gap: 10px; }
+            .stat-card { padding: 14px 16px; }
+            .stat-card .stat-number { font-size: 24px; }
+            .two-col { grid-template-columns: 1fr; gap: 16px; }
+            .quick-minimal { grid-template-columns: 1fr 1fr; }
+            .dashboard-header .header-actions .user-info .role { display: none; }
+            .stock-header { padding: 10px 16px; }
+            .stock-main { padding: 12px 16px 80px; }
+            .reports-header { padding: 10px 16px; }
+            .reports-header .header-title { font-size: 14px; }
+            .reports-main { padding: 12px 16px 80px; }
+            .stats-row { grid-template-columns: 1fr 1fr; gap: 10px; }
+            .stat-mini { padding: 12px 14px; }
+            .stat-mini .num { font-size: 20px; }
+            .report-grid { grid-template-columns: 1fr 1fr; gap: 10px; }
+            .report-card { padding: 16px 14px; }
+            .report-card .icon { font-size: 24px; }
+            .date-range { flex-direction: column; align-items: stretch; }
+            .date-range .btn-generate { margin-left: 0; }
+            .date-range .date-group { flex-wrap: wrap; }
+            .preview-section { padding: 14px 16px; }
+            .preview-section .preview-header { flex-direction: column; gap: 10px; align-items: stretch; }
+            .preview-section .preview-header .export-actions { justify-content: center; }
+            .settings-header { padding: 10px 16px; }
+            .settings-header .header-title { font-size: 14px; }
+            .settings-main { padding: 12px 16px 80px; }
+            .profile-section { padding: 18px 20px; flex-wrap: wrap; }
+            .profile-section .edit-btn { margin-left: 0; width: 100%; text-align: center; }
+            .profile-section .avatar { width: 52px; height: 52px; font-size: 22px; }
+            .staff-section { padding: 18px 20px; }
+            .staff-section .staff-header { flex-wrap: wrap; gap: 10px; }
+            .staff-item { flex-wrap: wrap; gap: 8px; }
+            .staff-item .staff-right { flex-wrap: wrap; }
+            .settings-item { padding: 12px 16px; }
+            .settings-item .item-left .item-info .item-title { font-size: 13px; }
+            .settings-item .item-left .item-info .item-desc { font-size: 11px; }
+            .bottom-nav .nav-item { padding: 4px 10px; font-size: 9px; }
+            .bottom-nav .nav-item i { font-size: 18px; }
+            .stock-header .back-btn span { display: none; }
+            .stock-header .back-btn i { font-size: 18px; }
+            .reports-header .back-btn span { display: none; }
+            .reports-header .back-btn i { font-size: 18px; }
+            .settings-header .back-btn span { display: none; }
+            .settings-header .back-btn i { font-size: 18px; }
+        }
+
+        @media (max-width: 480px) {
+            #landing .content { padding: 12px 16px; }
+            .hero-content h1 { font-size: 24px; }
+            .hero-content p { font-size: 13px; }
+            .hero-content .hero-buttons .btn { width: 100%; justify-content: center; padding: 12px 20px; font-size: 13px; }
+            .hero-content .hero-buttons { flex-direction: column; width: 100%; }
+            .hero-visual .visual-card .stat-row { grid-template-columns: 1fr 1fr; }
+            .hero-visual .visual-card .stat-row .stat-box .number { font-size: 20px; }
+            .hero-visual .visual-card .stat-row .stat-box .label { font-size: 10px; }
+            .hero-visual .visual-card .recent-row .info .title { font-size: 11px; }
+            .hero-visual .visual-card .recent-row .info .desc { font-size: 9px; }
+            .hero-visual .visual-card .recent-row .amount { font-size: 12px; }
+            .landing-nav .brand .logo-text { font-size: 14px; }
+            .landing-nav .brand .logo-icon { width: 28px; height: 28px; font-size: 13px; }
+            .btn { padding: 10px 20px; font-size: 12px; }
+            .visual-card .stat-row .stat-box { padding: 10px 12px; }
+            .visual-card { padding: 16px 18px !important; }
+            .landing-footer .footer-credits { flex-direction: column; gap: 6px; width: 100%; }
+            .landing-footer .footer-credits .credit-block { width: 100%; justify-content: center; }
+            .landing-footer .footer-credits .credit-block .credit-info .name { font-size: 11px; }
+            .landing-footer .footer-credits .credit-block .credit-info .title { font-size: 8px; }
+            .stats-grid { grid-template-columns: 1fr 1fr; gap: 8px; }
+            .stat-card { padding: 12px 14px; }
+            .stat-card .stat-number { font-size: 20px; }
+            .quick-minimal { grid-template-columns: 1fr; }
+            .greeting h1 { font-size: 18px; }
+            .dashboard-header .header-actions .user-info .name { font-size: 12px; }
+            .dashboard-header .header-actions .user-info .avatar { width: 30px; height: 30px; font-size: 12px; }
+            .alert-compact { padding: 12px 14px; flex-wrap: wrap; }
+            .alert-compact .alert-text { font-size: 12px; }
+            #loginPage .login-card { padding: 24px 20px; }
+            .stock-item { flex-direction: column; align-items: flex-start; gap: 4px; }
+            .stats-row { grid-template-columns: 1fr 1fr; gap: 8px; }
+            .stat-mini { padding: 10px 12px; }
+            .stat-mini .num { font-size: 18px; }
+            .report-grid { grid-template-columns: 1fr 1fr; gap: 8px; }
+            .report-card { padding: 14px 10px; }
+            .report-card .icon { font-size: 20px; }
+            .report-card .name { font-size: 12px; }
+            .report-card .desc { font-size: 10px; }
+            .preview-table-wrap table { font-size: 10px; }
+            .preview-table-wrap table thead th,
+            .preview-table-wrap table tbody td { padding: 6px 8px; }
+            .profile-section { padding: 14px 16px; gap: 14px; }
+            .profile-section .profile-info .name { font-size: 16px; }
+            .profile-section .profile-info .role { font-size: 12px; }
+            .profile-section .profile-info .email { font-size: 12px; }
+            .staff-section { padding: 14px 16px; }
+            .staff-section .staff-header .staff-title { font-size: 14px; }
+            .staff-item { padding: 10px 12px; }
+            .staff-item .staff-left .staff-info .staff-name { font-size: 13px; }
+            .settings-item { padding: 10px 14px; flex-wrap: wrap; }
+            .settings-item .item-right { margin-top: 4px; margin-left: 50px; }
+            .settings-item .item-left .icon { width: 30px; height: 30px; font-size: 14px; }
+        }
+
+        @media (max-height: 700px) {
+            .reports-main { padding: 10px 16px 70px; }
+            .stats-row { margin-bottom: 14px; }
+            .report-grid { margin-bottom: 14px; }
+            .stat-mini { padding: 10px 12px; }
+            .stat-mini .num { font-size: 18px; }
+            .report-card { padding: 12px 10px; }
+            .report-card .icon { font-size: 20px; }
+            .preview-section { padding: 12px 14px; }
+            .settings-main { padding: 10px 16px 70px; }
+            .profile-section { padding: 14px 18px; margin-bottom: 14px; }
+            .profile-section .avatar { width: 44px; height: 44px; font-size: 18px; }
+            .profile-section .profile-info .name { font-size: 16px; }
+            .staff-section { padding: 14px 18px; margin-bottom: 14px; }
+            .settings-item { padding: 10px 14px; }
+            .settings-group { margin-bottom: 14px; }
+            .dashboard-main { padding: 12px 16px 70px; }
+            .greeting { margin-bottom: 16px; }
+            .greeting h1 { font-size: 20px; }
+            .stats-grid { margin-bottom: 16px; }
+            .stat-card { padding: 12px 16px; }
+            .stat-card .stat-number { font-size: 22px; }
+            .two-col { margin-bottom: 16px; }
+            .stock-main { padding: 10px 16px 70px; }
+        }
+    </style>
+</head>
+<body>
+    <!-- ============================================================
+    LANDING PAGE
+    ============================================================ -->
+    <div class="page active" id="landing">
+        <div class="aura-1"></div>
+        <div class="aura-2"></div>
+        
+        <div class="content">
+            <nav class="landing-nav">
+                <div class="brand">
+                    <div class="logo-icon"><i class="fas fa-prescription-bottle-alt"></i></div>
+                    <div class="logo-text">Medox<span>Pharmacy</span></div>
+                </div>
+                <div class="nav-links">
+                    <a onclick="navigateTo(''landing'')">Home</a>
+                    <a onclick="navigateTo(''dashboard'')">Dashboard</a>
+                    <a onclick="navigateTo(''settings'')">Settings</a>
+                </div>
+                <div>
+                    <button class="btn btn-primary" onclick="navigateTo(''login'')">
+                        <i class="fas fa-lock"></i> Login
+                    </button>
+                </div>
+            </nav>
+
+            <div class="hero">
+                <div class="hero-content">
+                    <div class="badge">
+                        <i class="fas fa-check-circle"></i>
+                        Version 2.0 • Enterprise Ready
+                    </div>
+                    <h1>
+                        Pharmacy Inventory<br />
+                        <span class="highlight">Made Simple</span>
+                    </h1>
+                    <p>
+                        Track stock, manage expiries, and generate reports —
+                        all in one powerful system for modern pharmacies.
+                    </p>
+                    <div class="hero-buttons">
+                        <button class="btn btn-gold" onclick="navigateTo(''login'')">
+                            <i class="fas fa-rocket"></i> Get Started
+                        </button>
+                        <button class="btn btn-outline" onclick="showAbout()">
+                            <i class="fas fa-play-circle"></i> About
+                        </button>
+                    </div>
+                    <div class="trust-badge">
+                        <div class="item"><i class="fas fa-check-circle"></i> 500+ Products</div>
+                        <div class="item"><i class="fas fa-check-circle"></i> Real-time Tracking</div>
+                        <div class="item"><i class="fas fa-check-circle"></i> Automated Alerts</div>
+                    </div>
+                </div>
+
+                <div class="hero-visual">
+                    <div class="aura-glow"></div>
+                    <div class="visual-card">
+                        <div class="shimmer"></div>
+                        <div class="card-header">
+                            <div class="dots"><span></span><span></span><span></span></div>
+                            <span class="badge-text">● Live</span>
+                        </div>
+                        <div class="stat-row">
+                            <div class="stat-box">
+                                <div class="number gold">156 <span class="trend up"><i class="fas fa-arrow-up"></i> 12%</span></div>
+                                <div class="label">Total Products</div>
+                                <div class="pulse-ring gold"></div>
+                            </div>
+                            <div class="stat-box">
+                                <div class="number green">45 <span class="trend up"><i class="fas fa-arrow-up"></i> 8%</span></div>
+                                <div class="label">Today''s Received</div>
+                                <div class="pulse-ring"></div>
+                            </div>
+                        </div>
+                        <div class="recent-row">
+                            <div class="progress-bar"></div>
+                            <div class="icon in"><i class="fas fa-arrow-down"></i></div>
+                            <div class="info">
+                                <div class="title">Paracetamol 500mg</div>
+                                <div class="desc">Received from MediSupply Ltd</div>
+                            </div>
+                            <div class="amount positive">+100</div>
+                        </div>
+                        <div class="recent-row">
+                            <div class="progress-bar"></div>
+                            <div class="icon out"><i class="fas fa-arrow-up"></i></div>
+                            <div class="info">
+                                <div class="title">Amoxicillin 250mg</div>
+                                <div class="desc">Issued to Ward 3</div>
+                            </div>
+                            <div class="amount negative">-20</div>
+                        </div>
+                        <div class="recent-row">
+                            <div class="progress-bar"></div>
+                            <div class="icon alert"><i class="fas fa-exclamation-triangle"></i></div>
+                            <div class="info">
+                                <div class="title">Artemether 20mg</div>
+                                <div class="desc">Expires in 55 days • Batch B-2026-009</div>
+                            </div>
+                            <div class="amount warning">⚠️ 55d</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <footer class="landing-footer">
+                <p>&copy; 2026 Medox Pharmacy. All rights reserved.</p>
+                <div class="footer-credits">
+                    <div class="credit-block">
+                        <i class="fas fa-user-md"></i>
+                        <div class="credit-info">
+                            <span class="name">Jones Ezekiel Chikuni</span>
+                            <span class="title">Pharmacist • Concept Creator</span>
+                        </div>
+                    </div>
+                    <div class="credit-block">
+                        <i class="fas fa-code"></i>
+                        <div class="credit-info">
+                            <span class="name">Kondwani Pax Munta</span>
+                            <span class="title">Pharmacy Technician • <span class="highlight-title">Software Engineer</span></span>
+                        </div>
+                    </div>
+                </div>
+            </footer>
+        </div>
+    </div>
+
+    <!-- ============================================================
+    LOGIN PAGE
+    ============================================================ -->
+    <div class="page" id="loginPage">
+        <div class="login-card">
+            <div class="shimmer"></div>
+
+            <button class="back-btn" onclick="navigateTo(''landing'')">
+                <i class="fas fa-arrow-left"></i> Back
+            </button>
+
+            <div class="logo">
+                <i class="fas fa-prescription-bottle-alt icon"></i>
+                <h2>Medox<span>Pharmacy</span></h2>
+                <p>Sign in to your account</p>
+            </div>
+
+            <div class="login-error" id="loginError">
+                <i class="fas fa-exclamation-circle"></i>
+                <span id="loginErrorText">Invalid email or password.</span>
+            </div>
+
+            <div class="form-group">
+                <label for="loginEmail">Email Address</label>
+                <div class="input-wrap">
+                    <i class="fas fa-envelope"></i>
+                    <input type="email" id="loginEmail" placeholder="john@medox.com" value="demo@medox.com" />
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="loginPassword">Password</label>
+                <div class="input-wrap">
+                    <i class="fas fa-lock"></i>
+                    <input type="password" id="loginPassword" placeholder="••••••••" value="password123" />
+                </div>
+            </div>
+
+            <div class="form-options">
+                <label><input type="checkbox" checked /> Remember me</label>
+                <a href="#">Forgot password?</a>
+            </div>
+
+            <button class="btn-login" onclick="handleLogin()">
+                <i class="fas fa-sign-in-alt"></i> Sign In
+            </button>
+
+            <div class="demo-credentials">
+                <div class="demo-label">🔐 Demo Credentials</div>
+                <div class="demo-details">
+                    <span class="demo-item"><i class="fas fa-envelope"></i> <code>demo@medox.com</code></span>
+                    <span class="demo-divider">|</span>
+                    <span class="demo-item"><i class="fas fa-key"></i> <code>password123</code></span>
+                </div>
+            </div>
+
+            <div class="login-footer">
+                <div class="footer-copy">&copy; 2026 Medox Pharmacy. All rights reserved.</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================================
+    DASHBOARD
+    ============================================================ -->
+    <div class="page" id="dashboardPage">
+        <header class="dashboard-header">
+            <div class="brand">
+                <div class="logo-icon"><i class="fas fa-prescription-bottle-alt"></i></div>
+                <div class="logo-text">Medox<span>Pharmacy</span></div>
+            </div>
+            <div class="header-actions">
+                <div class="user-info">
+                    <div class="avatar"><i class="fas fa-user"></i></div>
+                    <div>
+                        <div class="name">John Banda</div>
+                        <div class="role">Pharmacist</div>
+                    </div>
+                </div>
+                <button class="logout-btn" onclick="logout()"><i class="fas fa-sign-out-alt"></i></button>
+            </div>
+        </header>
+
+        <main class="dashboard-main">
+            <div class="greeting">
+                <h1>Good Morning, John 👋</h1>
+                <p>Here''s your pharmacy inventory summary</p>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-label">Total Products</div>
+                    <div class="stat-number gold">156</div>
+                    <div class="stat-change up"><i class="fas fa-arrow-up"></i> 12%</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Received Today</div>
+                    <div class="stat-number green">45</div>
+                    <div class="stat-change up"><i class="fas fa-arrow-up"></i> 8%</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Active Alerts</div>
+                    <div class="stat-number red">9</div>
+                    <div class="stat-change down"><i class="fas fa-arrow-up"></i> 3 new</div>
+                </div>
+            </div>
+
+            <div class="two-col">
+                <div>
+                    <div class="section-title"><i class="fas fa-bell"></i> Critical Alerts</div>
+                    <div class="alert-compact critical" onclick="alert(''View alert'')">
+                        <span class="alert-dot critical"></span>
+                        <div class="alert-text">
+                            <span class="highlight">Amoxicillin 250mg</span>
+                            <span class="muted">• Expires in 17 days</span>
+                        </div>
+                        <span class="alert-badge critical">CRITICAL</span>
+                    </div>
+                    <div class="alert-compact critical" onclick="alert(''View alert'')">
+                        <span class="alert-dot critical"></span>
+                        <div class="alert-text">
+                            <span class="highlight">Ibuprofen 400mg</span>
+                            <span class="muted">• 5 units left</span>
+                        </div>
+                        <span class="alert-badge critical">CRITICAL</span>
+                    </div>
+                    <div class="alert-compact warning" onclick="alert(''View alert'')">
+                        <span class="alert-dot warning"></span>
+                        <div class="alert-text">
+                            <span class="highlight">Vitamin C 100mg</span>
+                            <span class="muted">• 3 days overdue</span>
+                        </div>
+                        <span class="alert-badge warning">WARNING</span>
+                    </div>
+                    <a class="view-all" onclick="alert(''View all alerts'')">View all alerts →</a>
+                </div>
+
+                <div>
+                    <div class="section-title"><i class="fas fa-bolt"></i> Quick Actions</div>
+                    <div class="quick-minimal">
+                        <div class="action" onclick="alert(''Receive Stock'')">
+                            <i class="fas fa-arrow-down"></i>
+                            <div>
+                                <div class="action-label">Receive Stock</div>
+                                <div class="action-desc">Record incoming goods</div>
+                            </div>
+                        </div>
+                        <div class="action" onclick="alert(''Issue Stock'')">
+                            <i class="fas fa-arrow-up"></i>
+                            <div>
+                                <div class="action-label">Issue Stock</div>
+                                <div class="action-desc">Dispense to customers</div>
+                            </div>
+                        </div>
+                        <div class="action" onclick="alert(''Add Product'')">
+                            <i class="fas fa-plus-circle"></i>
+                            <div>
+                                <div class="action-label">Add Product</div>
+                                <div class="action-desc">New product to inventory</div>
+                            </div>
+                        </div>
+                        <div class="action" onclick="alert(''Search'')">
+                            <i class="fas fa-search"></i>
+                            <div>
+                                <div class="action-label">Search</div>
+                                <div class="action-desc">Find any product</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div>
+                <div class="section-title"><i class="fas fa-history"></i> Recent Transactions</div>
+                <div class="recent-compact">
+                    <div class="item">
+                        <div class="r-icon in"><i class="fas fa-arrow-down"></i></div>
+                        <div class="r-body">
+                            <div class="r-name">Paracetamol 500mg</div>
+                            <div class="r-detail">Received from MediSupply Ltd</div>
+                        </div>
+                        <div class="r-amount positive">+100</div>
+                    </div>
+                    <div class="item">
+                        <div class="r-icon out"><i class="fas fa-arrow-up"></i></div>
+                        <div class="r-body">
+                            <div class="r-name">Amoxicillin 250mg</div>
+                            <div class="r-detail">Issued to Ward 3</div>
+                        </div>
+                        <div class="r-amount negative">-20</div>
+                    </div>
+                    <div class="item">
+                        <div class="r-icon out"><i class="fas fa-arrow-up"></i></div>
+                        <div class="r-body">
+                            <div class="r-name">Ibuprofen 400mg</div>
+                            <div class="r-detail">Issued to Customer</div>
+                        </div>
+                        <div class="r-amount negative">-15</div>
+                    </div>
+                    <div class="item">
+                        <div class="r-icon in"><i class="fas fa-arrow-down"></i></div>
+                        <div class="r-body">
+                            <div class="r-name">Vitamin C 100mg</div>
+                            <div class="r-detail">Received from MediSupply Ltd</div>
+                        </div>
+                        <div class="r-amount positive">+50</div>
+                    </div>
+                </div>
+                <a class="view-all" onclick="alert(''View all transactions'')">View all transactions →</a>
+            </div>
+        </main>
+
+        <nav class="bottom-nav">
+            <button class="nav-item active" onclick="navigateTo(''dashboard'')"><i class="fas fa-home"></i><span>Home</span></button>
+            <button class="nav-item" onclick="navigateTo(''stock'')"><i class="fas fa-boxes"></i><span>Stock</span></button>
+            <button class="nav-item" onclick="navigateTo(''dashboard'')"><i class="fas fa-bell"></i><span class="nav-badge">9</span><span>Alerts</span></button>
+            <button class="nav-item" onclick="navigateTo(''reports'')"><i class="fas fa-chart-bar"></i><span>Reports</span></button>
+            <button class="nav-item" onclick="navigateTo(''settings'')"><i class="fas fa-cog"></i><span>Settings</span></button>
+        </nav>
+    </div>
+
+    <!-- ============================================================
+    STOCK PAGE
+    ============================================================ -->
+    <div class="page" id="stockPage">
+        <header class="stock-header">
+            <button class="back-btn" onclick="navigateTo(''dashboard'')">
+                <i class="fas fa-arrow-left"></i> Back
+            </button>
+            <div class="header-title">
+                <i class="fas fa-boxes"></i> Stock Management
+            </div>
+            <div style="width:60px;"></div>
+        </header>
+
+        <main class="stock-main">
+            <h2 style="margin-bottom:16px;">📦 Product Inventory</h2>
+            <div class="stock-list">
+                <div class="stock-item">
+                    <div><span class="name">Paracetamol 500mg</span> <span class="code">PCM-500-001</span></div>
+                    <div><span class="qty">117</span> <span class="unit">strips</span></div>
+                </div>
+                <div class="stock-item">
+                    <div><span class="name">Amoxicillin 250mg</span> <span class="code">AMX-250-001</span></div>
+                    <div><span class="qty">50</span> <span class="unit">strips</span></div>
+                </div>
+                <div class="stock-item">
+                    <div><span class="name">Ibuprofen 400mg</span> <span class="code">IBU-400-001</span></div>
+                    <div><span class="qty danger">5</span> <span class="unit">strips</span></div>
+                </div>
+                <div class="stock-item">
+                    <div><span class="name">Vitamin C 100mg</span> <span class="code">VTC-100-001</span></div>
+                    <div><span class="qty warning">20</span> <span class="unit">bottles</span></div>
+                </div>
+                <div class="stock-item">
+                    <div><span class="name">Metformin 500mg</span> <span class="code">MET-500-001</span></div>
+                    <div><span class="qty warning">45</span> <span class="unit">strips</span></div>
+                </div>
+                <div class="stock-item">
+                    <div><span class="name">Artemether 20mg</span> <span class="code">ART-020-001</span></div>
+                    <div><span class="qty">80</span> <span class="unit">strips</span></div>
+                </div>
+            </div>
+        </main>
+
+        <nav class="bottom-nav">
+            <button class="nav-item" onclick="navigateTo(''dashboard'')"><i class="fas fa-home"></i><span>Home</span></button>
+            <button class="nav-item active" onclick="navigateTo(''stock'')"><i class="fas fa-boxes"></i><span>Stock</span></button>
+            <button class="nav-item" onclick="navigateTo(''dashboard'')"><i class="fas fa-bell"></i><span class="nav-badge">9</span><span>Alerts</span></button>
+            <button class="nav-item" onclick="navigateTo(''reports'')"><i class="fas fa-chart-bar"></i><span>Reports</span></button>
+            <button class="nav-item" onclick="navigateTo(''settings'')"><i class="fas fa-cog"></i><span>Settings</span></button>
+        </nav>
+    </div>
+    <!-- ============================================================
+    REPORTS PAGE - FULL ORIGINAL VERSION
+    ============================================================ -->
+    <div class="page" id="reportsPage">
+        <!-- Aura -->
+        <div class="aura-layer aura-1" style="position:absolute;top:-20%;right:-10%;width:55%;height:65%;background:radial-gradient(circle,rgba(43,108,176,0.12)0%,transparent 70%);border-radius:50%;pointer-events:none;filter:blur(100px);opacity:0.4;animation:floatAura1 22s ease-in-out infinite;"></div>
+        <div class="aura-layer aura-2" style="position:absolute;bottom:-20%;left:-10%;width:50%;height:60%;background:radial-gradient(circle,rgba(214,158,46,0.06)0%,transparent 70%);border-radius:50%;pointer-events:none;filter:blur(100px);opacity:0.4;animation:floatAura2 26s ease-in-out infinite reverse;"></div>
+        <div class="aura-center" style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:70%;height:70%;background:radial-gradient(circle,rgba(255,255,255,0.015)0%,transparent 70%);border-radius:50%;pointer-events:none;"></div>
+        <div class="grid-overlay" style="position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,0.012)1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.012)1px,transparent 1px);background-size:50px 50px;pointer-events:none;"></div>
+
+        <style>
+            @keyframes floatAura1 {
+                0%, 100% { transform: translate(0, 0) scale(1); }
+                33% { transform: translate(50px, -40px) scale(1.08); }
+                66% { transform: translate(-30px, 35px) scale(0.92); }
+            }
+            @keyframes floatAura2 {
+                0%, 100% { transform: translate(0, 0) scale(1); }
+                33% { transform: translate(-40px, 30px) scale(1.05); }
+                66% { transform: translate(35px, -25px) scale(0.95); }
+            }
+        </style>
+
+        <!-- Header -->
+        <header class="reports-header">
+            <button class="back-btn" onclick="navigateTo('dashboard')">
+                <i class="fas fa-arrow-left"></i>
+                <span>Back</span>
+            </button>
+            <div class="header-title">
+                <i class="fas fa-chart-bar"></i>
+                Reports
+            </div>
+            <div style="width:60px;"></div>
+        </header>
+
+        <!-- Main -->
+        <main class="reports-main">
+
+            <!-- Quick Stats -->
+            <div class="stats-row">
+                <div class="stat-mini">
+                    <div class="num gold">156</div>
+                    <div class="label">Total Products</div>
+                </div>
+                <div class="stat-mini">
+                    <div class="num green">45</div>
+                    <div class="label">Received Today</div>
+                </div>
+                <div class="stat-mini">
+                    <div class="num red">9</div>
+                    <div class="label">Active Alerts</div>
+                </div>
+                <div class="stat-mini">
+                    <div class="num blue">32</div>
+                    <div class="label">Issued Today</div>
+                </div>
+            </div>
+
+            <!-- Date Range -->
+            <div class="date-range">
+                <span class="range-label"><i class="fas fa-calendar-alt"></i> Date Range</span>
+                <div class="date-group">
+                    <label>From</label>
+                    <input type="date" id="dateFrom" value="2026-06-01" />
+                </div>
+                <div class="date-group">
+                    <label>To</label>
+                    <input type="date" id="dateTo" value="2026-06-28" />
+                </div>
+                <button class="btn-generate" onclick="generateReport()">
+                    <i class="fas fa-play"></i> Generate
+                </button>
+            </div>
+
+            <!-- Report Cards -->
+            <div class="report-grid">
+                <div class="report-card" onclick="selectReport('stock')">
+                    <span class="badge">Most Used</span>
+                    <span class="icon blue"><i class="fas fa-boxes"></i></span>
+                    <div class="name">Stock Summary</div>
+                    <div class="desc">Current stock levels by product</div>
+                </div>
+                <div class="report-card" onclick="selectReport('expiry')">
+                    <span class="badge">Urgent</span>
+                    <span class="icon orange"><i class="fas fa-clock"></i></span>
+                    <div class="name">Expiry Report</div>
+                    <div class="desc">Products expiring soon</div>
+                </div>
+                <div class="report-card" onclick="selectReport('movement')">
+                    <span class="icon green"><i class="fas fa-exchange-alt"></i></span>
+                    <div class="name">Movement Report</div>
+                    <div class="desc">All transactions in date range</div>
+                </div>
+                <div class="report-card" onclick="selectReport('valuation')">
+                    <span class="icon gold"><i class="fas fa-money-bill-wave"></i></span>
+                    <div class="name">Valuation Report</div>
+                    <div class="desc">Total value of inventory</div>
+                </div>
+            </div>
+
+            <!-- Preview Section -->
+            <div class="preview-section">
+                <div class="preview-header">
+                    <h3><i class="fas fa-file-alt"></i> <span id="reportTitle">Stock Summary</span></h3>
+                    <div class="export-actions">
+                        <button class="btn-export" onclick="alert('Export as PDF')">
+                            <i class="fas fa-file-pdf"></i> PDF
+                        </button>
+                        <button class="btn-export" onclick="alert('Export as Excel')">
+                            <i class="fas fa-file-excel"></i> Excel
+                        </button>
+                        <button class="btn-export gold" onclick="alert('Print Report')">
+                            <i class="fas fa-print"></i> Print
+                        </button>
+                    </div>
+                </div>
+
+                <div class="preview-table-wrap" id="reportPreview">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Product</th>
+                                <th>Code</th>
+                                <th>Stock</th>
+                                <th>Min</th>
+                                <th>Max</th>
+                                <th>Status</th>
+                                <th>Value (MK)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Paracetamol 500mg</td>
+                                <td>PCM-500-001</td>
+                                <td class="highlight-green">117</td>
+                                <td>50</td>
+                                <td>500</td>
+                                <td><span style="color:var(--success);">✅ OK</span></td>
+                                <td>58,500.00</td>
+                            </tr>
+                            <tr>
+                                <td>Amoxicillin 250mg</td>
+                                <td>AMX-250-001</td>
+                                <td class="highlight-green">50</td>
+                                <td>30</td>
+                                <td>300</td>
+                                <td><span style="color:var(--success);">✅ OK</span></td>
+                                <td>25,000.00</td>
+                            </tr>
+                            <tr>
+                                <td>Ibuprofen 400mg</td>
+                                <td>IBU-400-001</td>
+                                <td class="highlight-red">5</td>
+                                <td>20</td>
+                                <td>200</td>
+                                <td><span style="color:var(--danger);">🔴 CRITICAL</span></td>
+                                <td>2,500.00</td>
+                            </tr>
+                            <tr>
+                                <td>Vitamin C 100mg</td>
+                                <td>VTC-100-001</td>
+                                <td class="highlight-red">20</td>
+                                <td>30</td>
+                                <td>150</td>
+                                <td><span style="color:var(--warning);">🟡 LOW</span></td>
+                                <td>10,000.00</td>
+                            </tr>
+                            <tr>
+                                <td>Metformin 500mg</td>
+                                <td>MET-500-001</td>
+                                <td class="highlight-red">45</td>
+                                <td>50</td>
+                                <td>400</td>
+                                <td><span style="color:var(--warning);">🟡 LOW</span></td>
+                                <td>22,500.00</td>
+                            </tr>
+                            <tr>
+                                <td>Artemether 20mg</td>
+                                <td>ART-020-001</td>
+                                <td class="highlight-green">80</td>
+                                <td>40</td>
+                                <td>250</td>
+                                <td><span style="color:var(--success);">✅ OK</span></td>
+                                <td>40,000.00</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </main>
+
+        <nav class="bottom-nav">
+            <button class="nav-item" onclick="navigateTo('dashboard')"><i class="fas fa-home"></i><span>Home</span></button>
+            <button class="nav-item" onclick="navigateTo('stock')"><i class="fas fa-boxes"></i><span>Stock</span></button>
+            <button class="nav-item" onclick="navigateTo('dashboard')"><i class="fas fa-bell"></i><span class="nav-badge">9</span><span>Alerts</span></button>
+            <button class="nav-item active" onclick="navigateTo('reports')"><i class="fas fa-chart-bar"></i><span>Reports</span></button>
+            <button class="nav-item" onclick="navigateTo('settings')"><i class="fas fa-cog"></i><span>Settings</span></button>
+        </nav>
+    </div>
+    <!-- ============================================================
+    SETTINGS PAGE
+    ============================================================ -->
+    <div class="page" id="settingsPage">
+        <header class="settings-header">
+            <button class="back-btn" onclick="navigateTo(''dashboard'')">
+                <i class="fas fa-arrow-left"></i> Back
+            </button>
+            <div class="header-title">
+                <i class="fas fa-cog"></i> Settings
+            </div>
+            <div style="width:60px;"></div>
+        </header>
+
+        <main class="settings-main">
+            <div class="profile-section">
+                <div class="avatar"><i class="fas fa-user"></i></div>
+                <div class="profile-info">
+                    <div class="name">John Banda</div>
+                    <div class="role">Pharmacist • Admin</div>
+                    <div class="email">john.banda@medoxpharmacy.com</div>
+                </div>
+                <button class="edit-btn" onclick="alert(''Edit Profile'')"><i class="fas fa-edit"></i> Edit</button>
+            </div>
+
+            <div class="staff-section">
+                <div class="staff-header">
+                    <div class="staff-title">
+                        <i class="fas fa-users"></i> Staff Management
+                        <span class="admin-badge"><i class="fas fa-crown"></i> Admin</span>
+                    </div>
+                    <button class="add-btn" onclick="alert(''Add Staff Member - Form would open here'')"><i class="fas fa-plus"></i> Add Staff</button>
+                </div>
+                <div class="staff-list">
+                    <div class="staff-item">
+                        <div class="staff-left">
+                            <div class="staff-avatar"><i class="fas fa-user"></i></div>
+                            <div class="staff-info">
+                                <div class="staff-name">John Banda</div>
+                                <div class="staff-email">john.banda@medoxpharmacy.com</div>
+                            </div>
+                        </div>
+                        <div class="staff-right">
+                            <span class="staff-role admin">Admin</span>
+                            <span class="staff-status active">Active</span>
+                            <div class="staff-actions">
+                                <button onclick="alert(''Edit John Banda'')" title="Edit"><i class="fas fa-edit"></i></button>
+                                <button onclick="alert(''Lock John Banda'')" title="Lock" class="danger"><i class="fas fa-lock"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="staff-item">
+                        <div class="staff-left">
+                            <div class="staff-avatar"><i class="fas fa-user"></i></div>
+                            <div class="staff-info">
+                                <div class="staff-name">Mary Kamanga</div>
+                                <div class="staff-email">mary.kamanga@medoxpharmacy.com</div>
+                            </div>
+                        </div>
+                        <div class="staff-right">
+                            <span class="staff-role pharmacist">Pharmacist</span>
+                            <span class="staff-status active">Active</span>
+                            <div class="staff-actions">
+                                <button onclick="alert(''Edit Mary Kamanga'')" title="Edit"><i class="fas fa-edit"></i></button>
+                                <button onclick="alert(''Lock Mary Kamanga'')" title="Lock" class="danger"><i class="fas fa-lock"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="staff-item">
+                        <div class="staff-left">
+                            <div class="staff-avatar"><i class="fas fa-user"></i></div>
+                            <div class="staff-info">
+                                <div class="staff-name">Peter Mwale</div>
+                                <div class="staff-email">peter.mwale@medoxpharmacy.com</div>
+                            </div>
+                        </div>
+                        <div class="staff-right">
+                            <span class="staff-role technician">Technician</span>
+                            <span class="staff-status active">Active</span>
+                            <div class="staff-actions">
+                                <button onclick="alert(''Edit Peter Mwale'')" title="Edit"><i class="fas fa-edit"></i></button>
+                                <button onclick="alert(''Lock Peter Mwale'')" title="Lock" class="danger"><i class="fas fa-lock"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="staff-item">
+                        <div class="staff-left">
+                            <div class="staff-avatar"><i class="fas fa-user"></i></div>
+                            <div class="staff-info">
+                                <div class="staff-name">Sarah Phiri</div>
+                                <div class="staff-email">sarah.phiri@medoxpharmacy.com</div>
+                            </div>
+                        </div>
+                        <div class="staff-right">
+                            <span class="staff-role viewer">Viewer</span>
+                            <span class="staff-status inactive">Inactive</span>
+                            <div class="staff-actions">
+                                <button onclick="alert(''Edit Sarah Phiri'')" title="Edit"><i class="fas fa-edit"></i></button>
+                                <button onclick="alert(''Activate Sarah Phiri'')" title="Activate" style="color:var(--success);"><i class="fas fa-unlock"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="settings-group">
+                <div class="group-title">General</div>
+                <div class="group-card">
+                    <div class="settings-item" onclick="alert(''Appearance settings'')">
+                        <div class="item-left"><div class="icon gold"><i class="fas fa-palette"></i></div><div class="item-info"><div class="item-title">Appearance</div><div class="item-desc">Theme, colors, and display options</div></div></div>
+                        <div class="item-right"><span class="value">Dark</span><span class="arrow"><i class="fas fa-chevron-right"></i></span></div>
+                    </div>
+                    <div class="settings-item" onclick="alert(''Language settings'')">
+                        <div class="item-left"><div class="icon blue"><i class="fas fa-globe"></i></div><div class="item-info"><div class="item-title">Language</div><div class="item-desc">App language preference</div></div></div>
+                        <div class="item-right"><span class="value">English</span><span class="arrow"><i class="fas fa-chevron-right"></i></span></div>
+                    </div>
+                    <div class="settings-item" onclick="alert(''Notifications settings'')">
+                        <div class="item-left"><div class="icon green"><i class="fas fa-bell"></i></div><div class="item-info"><div class="item-title">Notifications</div><div class="item-desc">Push, email, and in-app alerts</div></div></div>
+                        <div class="item-right"><div class="toggle active" onclick="event.stopPropagation(); toggleSwitch(this)"><div class="toggle-dot"></div></div></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="settings-group">
+                <div class="group-title">Inventory</div>
+                <div class="group-card">
+                    <div class="settings-item" onclick="alert(''Low stock alerts settings'')">
+                        <div class="item-left"><div class="icon red"><i class="fas fa-exclamation-triangle"></i></div><div class="item-info"><div class="item-title">Low Stock Alerts</div><div class="item-desc">Configure thresholds and notifications</div></div></div>
+                        <div class="item-right"><div class="toggle active" onclick="event.stopPropagation(); toggleSwitch(this)"><div class="toggle-dot"></div></div></div>
+                    </div>
+                    <div class="settings-item" onclick="alert(''Expiry alerts settings'')">
+                        <div class="item-left"><div class="icon gold"><i class="fas fa-clock"></i></div><div class="item-info"><div class="item-title">Expiry Alerts</div><div class="item-desc">Set expiry notification timelines</div></div></div>
+                        <div class="item-right"><span class="value">30 days</span><span class="arrow"><i class="fas fa-chevron-right"></i></span></div>
+                    </div>
+                    <div class="settings-item" onclick="alert(''Auto backup settings'')">
+                        <div class="item-left"><div class="icon purple"><i class="fas fa-cloud-upload-alt"></i></div><div class="item-info"><div class="item-title">Auto Backup</div><div class="item-desc">Automatic data backup schedule</div></div></div>
+                        <div class="item-right"><div class="toggle active" onclick="event.stopPropagation(); toggleSwitch(this)"><div class="toggle-dot"></div></div></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="settings-group">
+                <div class="group-title">Security</div>
+                <div class="group-card">
+                    <div class="settings-item" onclick="alert(''Change password'')">
+                        <div class="item-left"><div class="icon red"><i class="fas fa-lock"></i></div><div class="item-info"><div class="item-title">Change Password</div><div class="item-desc">Update your account password</div></div></div>
+                        <div class="item-right"><span class="arrow"><i class="fas fa-chevron-right"></i></span></div>
+                    </div>
+                    <div class="settings-item" onclick="alert(''Two-factor authentication'')">
+                        <div class="item-left"><div class="icon blue"><i class="fas fa-shield-alt"></i></div><div class="item-info"><div class="item-title">Two-Factor Authentication</div><div class="item-desc">Extra security layer for your account</div></div></div>
+                        <div class="item-right"><div class="toggle" onclick="event.stopPropagation(); toggleSwitch(this)"><div class="toggle-dot"></div></div></div>
+                    </div>
+                    <div class="settings-item" onclick="alert(''Active sessions'')">
+                        <div class="item-left"><div class="icon gold"><i class="fas fa-desktop"></i></div><div class="item-info"><div class="item-title">Active Sessions</div><div class="item-desc">Devices currently logged in</div></div></div>
+                        <div class="item-right"><span class="value">2 devices</span><span class="arrow"><i class="fas fa-chevron-right"></i></span></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="settings-group">
+                <div class="group-title">Account</div>
+                <div class="group-card">
+                    <div class="settings-item" onclick="confirmLogout()">
+                        <div class="item-left"><div class="icon red"><i class="fas fa-sign-out-alt"></i></div><div class="item-info"><div class="item-title" style="color:var(--danger);">Logout</div><div class="item-desc">Sign out of your account</div></div></div>
+                        <div class="item-right"><span class="arrow" style="color:var(--danger);"><i class="fas fa-chevron-right"></i></span></div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <nav class="bottom-nav">
+            <button class="nav-item" onclick="navigateTo(''dashboard'')"><i class="fas fa-home"></i><span>Home</span></button>
+            <button class="nav-item" onclick="navigateTo(''stock'')"><i class="fas fa-boxes"></i><span>Stock</span></button>
+            <button class="nav-item" onclick="navigateTo(''dashboard'')"><i class="fas fa-bell"></i><span class="nav-badge">9</span><span>Alerts</span></button>
+            <button class="nav-item" onclick="navigateTo(''reports'')"><i class="fas fa-chart-bar"></i><span>Reports</span></button>
+            <button class="nav-item active" onclick="navigateTo(''settings'')"><i class="fas fa-cog"></i><span>Settings</span></button>
+        </nav>
+    </div>
+
+    <!-- ============================================================
+    JAVASCRIPT
+    ============================================================ -->
+    <script>
+        // ============================================================
+        // NAVIGATION SYSTEM
+        // ============================================================
+        function navigateTo(pageId) {
+            console.log(''🔀 Navigating to:'', pageId);
+            
+            // Hide all pages
+            document.querySelectorAll(''.page'').forEach(p => {
+                p.classList.remove(''active'');
+            });
+            
+            // Map page IDs to element IDs
+            const pageMap = {
+                ''landing'': ''landing'',
+                ''login'': ''loginPage'',
+                ''dashboard'': ''dashboardPage'',
+                ''stock'': ''stockPage'',
+                ''reports'': ''reportsPage'',
+                ''settings'': ''settingsPage''
+            };
+            
+            const targetId = pageMap[pageId];
+            if (targetId) {
+                const target = document.getElementById(targetId);
+                if (target) {
+                    target.classList.add(''active'');
+                    console.log(''✅ Showing:'', targetId);
+                } else {
+                    console.error(''❌ Element not found:'', targetId);
+                    document.getElementById(''landing'').classList.add(''active'');
+                }
+            } else {
+                console.error(''❌ Unknown page:'', pageId);
+                document.getElementById(''landing'').classList.add(''active'');
+            }
+            
+            // Update bottom nav
+            updateNavActive(pageId);
+        }
+
+        function updateNavActive(pageId) {
+            document.querySelectorAll(''.bottom-nav .nav-item'').forEach(item => {
+                item.classList.remove(''active'');
+            });
+            
+            const navMap = {
+                ''dashboard'': 0,
+                ''stock'': 1,
+                ''reports'': 3,
+                ''settings'': 4
+            };
+            
+            const index = navMap[pageId];
+            if (index !== undefined) {
+                const navItems = document.querySelectorAll(''.bottom-nav .nav-item'');
+                if (navItems[index]) {
+                    navItems[index].classList.add(''active'');
+                }
+            }
+        }
+
+        // ============================================================
+        // ABOUT
+        // ============================================================
+        function showAbout() {
+            alert(
+                ''💊 MEDOX PHARMACY\n'' +
+                ''Premium Inventory Management System\n\n'' +
+                ''👨⚕️ Concept & Design:\n'' +
+                ''Jones Ezekiel Chikuni\n'' +
+                ''Pharmacist • Concept Creator\n\n'' +
+                ''👨💻 Engineering:\n'' +
+                ''Kondwani Pax Munta\n'' +
+                ''Pharmacy Technician • Software Engineer\n\n'' +
+                ''© 2026 Medox Pharmacy. All rights reserved.''
+            );
+        }
+
+        // ============================================================
+        // LOGIN
+        // ============================================================
+        function handleLogin() {
+            const email = document.getElementById(''loginEmail'').value.trim();
+            const password = document.getElementById(''loginPassword'').value.trim();
+            const errorBox = document.getElementById(''loginError'');
+            const errorText = document.getElementById(''loginErrorText'');
+
+            if (email === ''demo@medox.com'' && password === ''password123'') {
+                errorBox.classList.remove(''show'');
+                console.log(''✅ Login successful!'');
+                navigateTo(''dashboard'');
+            } else {
+                errorText.textContent = ''Invalid email or password. Please try again.'';
+                errorBox.classList.add(''show'');
+            }
+        }
+
+        // Enter key support for login
+        document.addEventListener(''keydown'', function(e) {
+            if (e.key === ''Enter'') {
+                const loginPage = document.getElementById(''loginPage'');
+                if (loginPage && loginPage.classList.contains(''active'')) {
+                    handleLogin();
+                }
+            }
+        });
+
+        // ============================================================
+        // LOGOUT
+        // ============================================================
+        function logout() {
+            if (confirm(''Are you sure you want to logout?'')) {
+                navigateTo(''login'');
+            }
+        }
+
+        function confirmLogout() {
+            if (confirm(''Are you sure you want to logout?'')) {
+                navigateTo(''login'');
+            }
+        }
+
+        // ============================================================
+        // TOGGLE SWITCH
+        // ============================================================
+        function toggleSwitch(element) {
+            element.classList.toggle(''active'');
+        }
+
+        // ============================================================
+        // REPORTS FUNCTIONS
+        // ============================================================
+        function selectReport(type) {
+            const titles = {
+                ''stock'': ''Stock Summary'',
+                ''expiry'': ''Expiry Report'',
+                ''movement'': ''Movement Report'',
+                ''valuation'': ''Valuation Report''
+            };
+            
+            const titleEl = document.getElementById(''reportTitle'');
+            if (titleEl) {
+                titleEl.textContent = titles[type] || ''Report'';
+            }
+            
+            // Update active state on cards
+            document.querySelectorAll(''.report-card'').forEach(c => {
+                c.style.borderColor = ''var(--border)'';
+                c.style.background = ''var(--card-bg)'';
+            });
+            
+            // Find the clicked card and highlight it
+            const cards = document.querySelectorAll(''.report-card'');
+            const index = [''stock'', ''expiry'', ''movement'', ''valuation''].indexOf(type);
+            if (index !== -1 && cards[index]) {
+                cards[index].style.borderColor = ''rgba(214,158,46,0.3)'';
+                cards[index].style.background = ''rgba(255,255,255,0.06)'';
+            }
+        }
+
+        function generateReport() {
+            const from = document.getElementById(''dateFrom'').value;
+            const to = document.getElementById(''dateTo'').value;
+            alert(`📊 Report Generated!\n\nPeriod: ${from} to ${to}\n\nReport is ready for export.`);
+        }
+
+        // ============================================================
+        // INIT
+        // ============================================================
+        console.log(''💊 Medox Pharmacy System v2.0'');
+        console.log(''👨⚕️ Concept: Jones Ezekiel Chikuni'');
+        console.log(''👨💻 Engineering: Kondwani Pax Munta'');
+        console.log(''🔑 Demo: demo@medox.com / password123'');
+        console.log(''📍 Current page: Landing'');
+
+        // Ensure landing is visible
+        document.querySelectorAll(''.page'').forEach(p => p.classList.remove(''active''));
+        document.getElementById(''landing'').classList.add(''active'');
+
+        console.log(''✅ System ready! All pages work.'');
+        console.log(''📌 Reports page now has full original features (aura, date picker, preview table, export buttons)'');
+
+        // Reports page specific initialization
+        // Set default report title
+        const titleEl = document.getElementById(''reportTitle'');
+        if (titleEl) {
+            titleEl.textContent = ''Stock Summary'';
+        }
+    </script>
+
+</body>
+</html>
