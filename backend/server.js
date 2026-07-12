@@ -51,15 +51,29 @@ app.get('/api/health', (req, res) => {
     res.json({ success: true, message: 'Server is running' });
 });
 
+// Robust MongoDB connection for Render
 console.log('🔍 Checking MONGODB_URI from env:', process.env.MONGODB_URI ? 'SET' : 'NOT SET');
-// Clean the URI - remove any "Value: " prefix that Render might add
+
+// Get the URI from environment or use hardcoded fallback
 let rawUri = process.env.MONGODB_URI || 'mongodb+srv://kmunta600_db_user:j3L6BhZ323b3mIK0@cluster0.m75px6q.mongodb.net/medox_pharmacy?retryWrites=true&w=majority&appName=Cluster0';
-// Remove "Value: " prefix if it exists
-const mongoURI = rawUri.replace(/^Value:\s*/, '');
-console.log('🔍 Cleaned URI:', mongoURI ? mongoURI.substring(0, 30) + '...' : 'EMPTY');
-console.log('🔍 URI starts with mongodb+srv://?', mongoURI ? mongoURI.startsWith('mongodb+srv://') : false);
-console.log('🔍 URI length:', mongoURI ? mongoURI.length : 0);
+
+// Clean up any "Value: " prefix that Render might add
+rawUri = rawUri.replace(/^Value:\s*/, '').trim();
+
+// Ensure the URI starts with the correct scheme
+let mongoURI = rawUri;
+if (!mongoURI.startsWith('mongodb://') && !mongoURI.startsWith('mongodb+srv://')) {
+    console.log('⚠️ URI missing proper scheme. Prepending mongodb+srv://');
+    mongoURI = 'mongodb+srv://' + mongoURI;
+}
+
+console.log('🔍 Final URI starts with:', mongoURI.substring(0, 20) + '...');
+console.log('🔍 URI length:', mongoURI.length);
+
+// Connect with increased timeouts for Render
 mongoose.connect(mongoURI, {
+    serverSelectionTimeoutMS: 30000,
+    socketTimeoutMS: 45000,
     useNewUrlParser: true,
     useUnifiedTopology: true,
 })
@@ -83,6 +97,7 @@ app.use((err, req, res, next) => {
 });
 
 module.exports = app;
+
 
 
 
