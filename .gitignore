@@ -5,9 +5,7 @@ yarn-debug.log*
 yarn-error.log*
 .env
 .env.local
-.env.development.local
-.env.test.local
-.env.production.local
+.env.*.local
 
 # Build files
 dist/
@@ -24,7 +22,7 @@ Thumbs.db
 *.swp
 *.swo
 
-# MongoDB files
+# MongoDB
 data/
 dump/
 
@@ -34,3 +32,13 @@ uploads/
 
 # Backup files
 *.backup
+backups/
+
+# Testing
+*.test.js
+test-*.js
+coverage/
+
+# Old files
+*_old/
+*.backup.*
