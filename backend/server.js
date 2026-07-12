@@ -51,7 +51,7 @@ app.get('/api/health', (req, res) => {
     res.json({ success: true, message: 'Server is running' });
 });
 
-const mongoURI = process.env.MONGODB_URI || 'mongodb://kmunta600_db_user:j3L6BhZ323b3mIK0@ac-vn1mapw-shard-00-00.m75px6q.mongodb.net:27017,ac-vn1mapw-shard-00-01.m75px6q.mongodb.net:27017,ac-vn1mapw-shard-00-02.m75px6q.mongodb.net:27017/medox_pharmacy?ssl=true&replicaSet=atlas-tpe2bp-shard-0&authSource=admin&appName=Cluster0';
+const mongoURI = process.env.MONGODB_URI || 'mongodb+srv://kmunta600_db_user:j3L6BhZ323b3mIK0@cluster0.m75px6q.mongodb.net/medox_pharmacy?retryWrites=true&w=majority&appName=Cluster0';
 console.log('🔍 Connecting to MongoDB...');
 mongoose.connect(mongoURI, {
     useNewUrlParser: true,
@@ -77,3 +77,4 @@ app.use((err, req, res, next) => {
 });
 
 module.exports = app;
+
