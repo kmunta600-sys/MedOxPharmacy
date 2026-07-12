@@ -1,0 +1,230 @@
+﻿import React, { useState, useRef, useEffect } from 'react';
+import { useNavigate, Link } from 'react-router-dom';
+import api from '../services/api';
+import './Login.css';
+
+const Login = () => {
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState('');
+    const [showPassword, setShowPassword] = useState(false);
+    const navigate = useNavigate();
+    const emailRef = useRef(null);
+    const passwordRef = useRef(null);
+
+    useEffect(() => {
+        if (emailRef.current) {
+            emailRef.current.value = '';
+        }
+        if (passwordRef.current) {
+            passwordRef.current.value = '';
+        }
+    }, []);
+
+    const handleLogin = async (e) => {
+        e.preventDefault();
+        setLoading(true);
+        setError('');
+
+        try {
+            const response = await api.post('/auth/login', { email, password });
+            console.log('📋 Login response:', response.data);
+
+            if (response.data.success) {
+                localStorage.setItem('token', response.data.token);
+                localStorage.setItem('user', JSON.stringify(response.data.user));
+                navigate('/dashboard');
+            } else {
+                setError(response.data.message || 'Invalid email or password');
+            }
+        } catch (err) {
+            console.error('❌ Login error:', err);
+            setError(err.response?.data?.message || 'Invalid email or password');
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    // Premium Icons
+    const EmailIcon = () => (
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+            <polyline points="22,6 12,13 2,6"/>
+        </svg>
+    );
+
+    const PasswordIcon = () => (
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+            <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+        </svg>
+    );
+
+    const EyeIcon = () => (
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.3)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+            <circle cx="12" cy="12" r="3"/>
+        </svg>
+    );
+
+    const EyeOffIcon = () => (
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.3)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/>
+            <line x1="1" y1="1" x2="23" y2="23"/>
+        </svg>
+    );
+
+    const ArrowLeftIcon = () => (
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <line x1="19" y1="12" x2="5" y2="12"/>
+            <polyline points="12 19 5 12 12 5"/>
+        </svg>
+    );
+
+    const BrandIcon = () => (
+        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#D69E2E" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+            <path d="M2 17l10 5 10-5"/>
+            <path d="M2 12l10 5 10-5"/>
+        </svg>
+    );
+
+    return (
+        <div className="login-container">
+            {/* Premium Background Effects */}
+            <div className="login-bg-orb-1"></div>
+            <div className="login-bg-orb-2"></div>
+            <div className="login-bg-orb-3"></div>
+            <div className="login-bg-grid"></div>
+            
+            {/* Floating Particles */}
+            <div className="login-particles">
+                <div className="login-particle"></div>
+                <div className="login-particle"></div>
+                <div className="login-particle"></div>
+                <div className="login-particle"></div>
+                <div className="login-particle"></div>
+                <div className="login-particle"></div>
+                <div className="login-particle"></div>
+                <div className="login-particle"></div>
+                <div className="login-particle"></div>
+                <div className="login-particle"></div>
+            </div>
+
+            {/* Back Button */}
+            <Link to="/" className="login-back-btn">
+                <ArrowLeftIcon />
+                Back
+            </Link>
+
+            <div className="login-card">
+                <div className="login-card-glow"></div>
+                
+                <div className="login-brand">
+                    <div className="login-brand-icon">
+                        <BrandIcon />
+                    </div>
+                    <h1>MedOx <span>Pharmacy</span></h1>
+                    <p>Smart Inventory System</p>
+                </div>
+
+                <div className="login-divider">
+                    <span>Sign In</span>
+                </div>
+
+                {error && (
+                    <div className="login-error">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                            <circle cx="12" cy="12" r="10"/>
+                            <line x1="12" y1="8" x2="12" y2="12"/>
+                            <line x1="12" y1="16" x2="12.01" y2="16"/>
+                        </svg>
+                        {error}
+                    </div>
+                )}
+
+                <form className="login-form" onSubmit={handleLogin}>
+                    <div className="login-field">
+                        <div className="login-field-label">
+                            <EmailIcon />
+                            <span>Email Address</span>
+                        </div>
+                        <div className="login-field-input">
+                            <input
+                                ref={emailRef}
+                                type="email"
+                                value={email}
+                                onChange={(e) => setEmail(e.target.value)}
+                                placeholder="Enter your email"
+                                required
+                                disabled={loading}
+                                autoComplete="off"
+                                autoCorrect="off"
+                                autoCapitalize="off"
+                                spellCheck="false"
+                            />
+                        </div>
+                    </div>
+
+                    <div className="login-field">
+                        <div className="login-field-label">
+                            <PasswordIcon />
+                            <span>Password</span>
+                        </div>
+                        <div className="login-field-input">
+                            <input
+                                ref={passwordRef}
+                                type={showPassword ? 'text' : 'password'}
+                                value={password}
+                                onChange={(e) => setPassword(e.target.value)}
+                                placeholder="Enter your password"
+                                required
+                                disabled={loading}
+                                autoComplete="new-password"
+                                autoCorrect="off"
+                                autoCapitalize="off"
+                                spellCheck="false"
+                            />
+                            <button
+                                type="button"
+                                className="login-toggle"
+                                onClick={() => setShowPassword(!showPassword)}
+                                tabIndex="-1"
+                            >
+                                {showPassword ? <EyeOffIcon /> : <EyeIcon />}
+                            </button>
+                        </div>
+                    </div>
+
+                    <button type="submit" className="login-submit" disabled={loading}>
+                        {loading ? (
+                            <>
+                                <span className="login-spinner"></span>
+                                Signing in...
+                            </>
+                        ) : (
+                            'Sign In'
+                        )}
+                    </button>
+
+                    <div className="login-options">
+                        <button
+                            type="button"
+                            onClick={() => navigate('/forgot-password')}
+                            className="login-forgot"
+                        >
+                            Forgot Password?
+                        </button>
+                    </div>
+                </form>
+
+                <div className="login-footer">
+                    <p>Powered by <span>CytochromeRX</span></p>
+                </div>
+            </div>
+        </div>
+    );
+};
+
+export default Login;
