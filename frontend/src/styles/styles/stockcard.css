@@ -1,0 +1,754 @@
+﻿
+/* ============================================================
+   STOCK CARD PAGE - MODERN STYLES
+   ============================================================ */
+
+.stock-card-wrapper {
+    min-height: 100vh;
+    background: #0A0F1E;
+    color: #FFFFFF;
+    display: flex;
+    flex-direction: column;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+/* Header */
+.stock-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 24px;
+    background: rgba(10, 15, 30, 0.95);
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+    flex-shrink: 0;
+    backdrop-filter: blur(10px);
+    z-index: 10;
+}
+
+.stock-card-header-left {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.stock-card-brand {
+    font-size: 16px;
+    font-weight: 600;
+    color: #FFFFFF;
+}
+
+.stock-card-brand .gold {
+    color: #D69E2E;
+}
+
+.stock-card-badge {
+    background: rgba(214, 158, 46, 0.12);
+    color: #D69E2E;
+    padding: 2px 14px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 600;
+    border: 1px solid rgba(214, 158, 46, 0.1);
+}
+
+.stock-card-header-right {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.stock-card-btn-print,
+.stock-card-btn-back {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 14px;
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 8px;
+    background: transparent;
+    color: rgba(255,255,255,0.6);
+    font-size: 12px;
+    font-family: inherit;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.stock-card-btn-print {
+    background: rgba(214, 158, 46, 0.08);
+    border-color: rgba(214, 158, 46, 0.1);
+    color: #D69E2E;
+}
+
+.stock-card-btn-print:hover {
+    background: rgba(214, 158, 46, 0.15);
+    border-color: rgba(214, 158, 46, 0.2);
+}
+
+.stock-card-btn-back:hover {
+    background: rgba(255,255,255,0.04);
+    border-color: rgba(255,255,255,0.1);
+    color: #FFFFFF;
+}
+
+/* Content */
+.stock-card-content {
+    flex: 1;
+    padding: 20px 24px;
+    overflow-y: auto;
+}
+
+.stock-card-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    background: rgba(255,255,255,0.02);
+    border: 1px solid rgba(255,255,255,0.04);
+    border-radius: 12px;
+    padding: 24px;
+}
+
+/* Print Header */
+.stock-card-header-print {
+    text-align: center;
+    padding-bottom: 15px;
+    border-bottom: 2px solid rgba(214, 158, 46, 0.2);
+    margin-bottom: 20px;
+}
+
+.stock-card-header-print h1 {
+    font-size: 24px;
+    font-weight: 700;
+    color: #D69E2E;
+    margin: 0;
+    letter-spacing: 2px;
+}
+
+.stock-card-header-print p {
+    color: rgba(255,255,255,0.4);
+    margin: 4px 0 0 0;
+    font-size: 13px;
+}
+
+/* Facility */
+.stock-card-facility {
+    display: flex;
+    justify-content: space-between;
+    background: rgba(255,255,255,0.02);
+    padding: 12px 16px;
+    border-radius: 8px;
+    margin-bottom: 16px;
+    border: 1px solid rgba(255,255,255,0.04);
+}
+
+.facility-info {
+    display: flex;
+    gap: 8px;
+    font-size: 14px;
+}
+
+.facility-info label {
+    color: rgba(255,255,255,0.4);
+    font-weight: 600;
+}
+
+.facility-info span {
+    color: #FFFFFF;
+}
+
+/* Product Info */
+.stock-card-product {
+    background: rgba(214, 158, 46, 0.03);
+    border: 1px solid rgba(214, 158, 46, 0.06);
+    border-radius: 8px;
+    padding: 16px;
+    margin-bottom: 16px;
+}
+
+.product-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+}
+
+.product-item {
+    display: flex;
+    flex-direction: column;
+}
+
+.product-item label {
+    font-size: 11px;
+    color: rgba(255,255,255,0.3);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-weight: 600;
+}
+
+.product-item span {
+    font-size: 14px;
+    font-weight: 500;
+    color: #FFFFFF;
+    margin-top: 2px;
+}
+
+/* Table */
+.stock-card-table-wrapper {
+    overflow-x: auto;
+    margin-bottom: 20px;
+}
+
+.stock-card-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12px;
+}
+
+.stock-card-table thead {
+    background: rgba(255,255,255,0.03);
+}
+
+.stock-card-table th {
+    padding: 10px 8px;
+    text-align: left;
+    color: rgba(255,255,255,0.5);
+    font-weight: 600;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    border-bottom: 2px solid rgba(255,255,255,0.04);
+    white-space: nowrap;
+}
+
+.stock-card-table td {
+    padding: 8px;
+    border-bottom: 1px solid rgba(255,255,255,0.02);
+    color: rgba(255,255,255,0.8);
+}
+
+.stock-card-table tbody tr:hover td {
+    background: rgba(255,255,255,0.02);
+}
+
+.stock-card-table td strong {
+    color: #D69E2E;
+}
+
+.stock-card-empty-row {
+    text-align: center;
+    padding: 30px;
+    color: rgba(255,255,255,0.2);
+}
+
+/* Footer & Signature */
+.stock-card-footer {
+    padding-top: 16px;
+    border-top: 2px solid rgba(255,255,255,0.04);
+}
+
+.signature-section {
+    display: flex;
+    justify-content: space-between;
+    gap: 40px;
+}
+
+.signature-line {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.signature-line label {
+    font-size: 11px;
+    color: rgba(255,255,255,0.3);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-weight: 600;
+}
+
+.signature-line span {
+    font-size: 14px;
+    color: #FFFFFF;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+    padding-bottom: 4px;
+    min-width: 200px;
+}
+
+/* Actions */
+.stock-card-actions {
+    padding: 12px 24px;
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    border-top: 1px solid rgba(255,255,255,0.04);
+}
+
+.stock-card-action-print {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 30px;
+    background: rgba(214, 158, 46, 0.12);
+    border: 1px solid rgba(214, 158, 46, 0.15);
+    border-radius: 10px;
+    color: #D69E2E;
+    font-size: 14px;
+    font-weight: 600;
+    font-family: inherit;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.stock-card-action-print:hover {
+    background: rgba(214, 158, 46, 0.2);
+    transform: translateY(-2px);
+}
+
+/* Loading & Empty */
+.stock-card-loading,
+.stock-card-empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    color: rgba(255,255,255,0.2);
+}
+
+.stock-card-empty p {
+    margin-top: 12px;
+    font-size: 16px;
+    color: rgba(255,255,255,0.3);
+}
+
+/* Print Styles */
+@media print {
+    .stock-card-header,
+    .stock-card-actions,
+    .no-print {
+        display: none !important;
+    }
+    
+    .stock-card-wrapper {
+        background: #FFFFFF !important;
+        color: #000000 !important;
+    }
+    
+    .stock-card-container {
+        background: #FFFFFF !important;
+        border: none !important;
+        padding: 20px !important;
+    }
+    
+    .stock-card-header-print h1 {
+        color: #D69E2E !important;
+    }
+    
+    .stock-card-header-print p {
+        color: #666 !important;
+    }
+    
+    .facility-info label,
+    .product-item label,
+    .signature-line label {
+        color: #666 !important;
+    }
+    
+    .facility-info span,
+    .product-item span,
+    .signature-line span {
+        color: #000000 !important;
+    }
+    
+    .stock-card-table th {
+        color: #555 !important;
+        border-bottom: 2px solid #ddd !important;
+    }
+    
+    .stock-card-table td {
+        color: #333 !important;
+        border-bottom: 1px solid #eee !important;
+    }
+    
+    .stock-card-table td strong {
+        color: #D69E2E !important;
+    }
+    
+    .stock-card-product {
+        background: #f9f9f9 !important;
+        border-color: #ddd !important;
+    }
+    
+    .stock-card-facility {
+        background: #f5f5f5 !important;
+        border-color: #ddd !important;
+    }
+    
+    .stock-card-footer {
+        border-top-color: #ddd !important;
+    }
+    
+    .signature-line span {
+        border-bottom-color: #999 !important;
+    }
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+    .product-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+    .stock-card-header {
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+    
+    .stock-card-container {
+        padding: 16px;
+    }
+    
+    .product-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+    
+    .stock-card-facility {
+        flex-direction: column;
+        gap: 6px;
+    }
+    
+    .signature-section {
+        flex-direction: column;
+        gap: 16px;
+    }
+    
+    .stock-card-table {
+        font-size: 11px;
+    }
+    
+    .stock-card-table th,
+    .stock-card-table td {
+        padding: 6px 4px;
+        white-space: nowrap;
+    }
+}
+
+@media (max-width: 480px) {
+    .product-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .stock-card-header-right {
+        flex-wrap: wrap;
+        width: 100%;
+    }
+    
+    .stock-card-btn-print,
+    .stock-card-btn-back {
+        flex: 1;
+        justify-content: center;
+    }
+}
+
+/* Updated Signature - Same Line */
+.signature-section {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding-top: 10px;
+}
+
+.signature-line {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.signature-line label {
+    font-size: 12px;
+    color: rgba(255,255,255,0.4);
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.signature-line span {
+    font-size: 14px;
+    color: #FFFFFF;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+    padding-bottom: 4px;
+    min-width: 180px;
+}
+
+.signature-line .signature-field {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-left: 20px;
+}
+
+.signature-line .signature-field label {
+    font-size: 12px;
+    color: rgba(255,255,255,0.4);
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.signature-line .signature-field span {
+    font-size: 14px;
+    color: #FFFFFF;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+    padding-bottom: 4px;
+    min-width: 150px;
+}
+
+/* Print styles for signature */
+@media print {
+    .signature-line label {
+        color: #666 !important;
+    }
+    
+    .signature-line span {
+        color: #000000 !important;
+        border-bottom-color: #999 !important;
+    }
+    
+    .signature-line .signature-field label {
+        color: #666 !important;
+    }
+    
+    .signature-line .signature-field span {
+        color: #000000 !important;
+        border-bottom-color: #999 !important;
+    }
+}
+
+
+/* Signature - Officer and Signature on Same Line */
+.signature-section {
+    padding-top: 10px;
+    border-top: 2px solid rgba(255,255,255,0.04);
+}
+
+.signature-line {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+    padding: 4px 0;
+}
+
+.signature-label {
+    font-size: 12px;
+    color: rgba(255,255,255,0.4);
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.signature-name {
+    font-size: 14px;
+    color: #FFFFFF;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+    padding-bottom: 4px;
+    min-width: 180px;
+}
+
+.signature-field {
+    font-size: 14px;
+    color: #FFFFFF;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+    padding-bottom: 4px;
+    min-width: 150px;
+}
+
+/* Print styles */
+@media print {
+    .signature-label {
+        color: #666 !important;
+    }
+    
+    .signature-name {
+        color: #000000 !important;
+        border-bottom-color: #999 !important;
+    }
+    
+    .signature-field {
+        color: #000000 !important;
+        border-bottom-color: #999 !important;
+    }
+}
+
+
+/* Signature - Officer and Signature on SAME LINE */
+.signature-section {
+    padding-top: 10px;
+    border-top: 2px solid rgba(255,255,255,0.04);
+}
+
+.signature-line {
+    display: flex !important;
+    align-items: center !important;
+    gap: 8px;
+    flex-wrap: nowrap !important;
+    padding: 4px 0;
+}
+
+.signature-label {
+    font-size: 12px;
+    color: rgba(255,255,255,0.4);
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.signature-name {
+    font-size: 14px;
+    color: #FFFFFF;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+    padding-bottom: 4px;
+    min-width: 180px;
+    white-space: nowrap;
+}
+
+.signature-field {
+    font-size: 14px;
+    color: #FFFFFF;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+    padding-bottom: 4px;
+    min-width: 150px;
+    white-space: nowrap;
+}
+
+
+/* Physical Inventory Row */
+.stock-card-table tbody tr.physical-row {
+    background: rgba(239, 68, 68, 0.05) !important;
+    border-bottom: 2px solid #EF4444 !important;
+}
+
+.stock-card-table tbody tr.physical-row td {
+    color: #EF4444 !important;
+    font-weight: 600 !important;
+}
+
+.stock-card-table tbody tr.physical-row .phys-label {
+    font-weight: 700;
+    color: #EF4444;
+}
+
+
+/* Physical Inventory Row */
+.stock-card-table tbody tr.physical-row {
+    background: rgba(239, 68, 68, 0.08) !important;
+    border-bottom: 3px solid #EF4444 !important;
+}
+
+.stock-card-table tbody tr.physical-row td {
+    color: #EF4444 !important;
+    font-weight: 600 !important;
+}
+
+.stock-card-table tbody tr.physical-row .phys-label {
+    font-weight: 700;
+    color: #EF4444;
+}
+
+
+/* Physical Inventory Closing Section */
+.physical-inventory-closing {
+    margin-top: 20px;
+    background: rgba(239, 68, 68, 0.05);
+    border: 2px solid #EF4444;
+    border-radius: 12px;
+    padding: 16px 20px;
+}
+
+.closing-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 10px;
+    border-bottom: 1px solid rgba(239, 68, 68, 0.2);
+    margin-bottom: 12px;
+}
+
+.closing-header h3 {
+    font-size: 15px;
+    font-weight: 700;
+    color: #EF4444;
+    margin: 0;
+}
+
+.closing-date {
+    font-size: 13px;
+    color: rgba(255,255,255,0.4);
+}
+
+.closing-details {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.closing-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 12px;
+}
+
+.closing-item {
+    display: flex;
+    flex-direction: column;
+}
+
+.closing-item.full-width {
+    grid-column: 1 / -1;
+}
+
+.closing-item label {
+    font-size: 10px;
+    color: rgba(255,255,255,0.3);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-weight: 600;
+}
+
+.closing-item span {
+    font-size: 14px;
+    font-weight: 500;
+    color: #FFFFFF;
+    margin-top: 2px;
+}
+
+.closing-item .phys-count {
+    color: #EF4444;
+    font-weight: 700;
+    font-size: 18px;
+}
+
+.closing-item .phys-signature {
+    color: #EF4444;
+    font-weight: 500;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .closing-row {
+        grid-template-columns: 1fr 1fr;
+    }
+    
+    .closing-header {
+        flex-direction: column;
+        gap: 4px;
+        text-align: center;
+    }
+}
+
+@media (max-width: 480px) {
+    .closing-row {
+        grid-template-columns: 1fr;
+    }
+    
+    .physical-inventory-closing {
+        padding: 12px 14px;
+    }
+}
+
