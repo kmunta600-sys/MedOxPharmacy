@@ -194,7 +194,7 @@ const Alerts = () => {
                                         borderColor: alert.color,
                                         animationDelay: `${index * 0.05}s`
                                     }}
-                                    onClick={() => navigate(`/stock-card/${alert.id}`)}
+                                    onClick={() => navigate(`/stockcard/${alert.id}`)}
                                 >
                                     <div className="stunning-alert-left">
                                         <span className="stunning-alert-icon">{alert.icon}</span>
@@ -224,3 +224,4 @@ const Alerts = () => {
 };
 
 export default Alerts;
+

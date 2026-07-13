@@ -5,7 +5,7 @@ import './Dashboard.css';
 
 const Dashboard = () => {
     const navigate = useNavigate();
-    const [collapsed, setCollapsed] = useState(false);
+    const [sidebarOpen, setSidebarOpen] = useState(false);
     const [user, setUser] = useState(null);
     const [stats, setStats] = useState({
         totalProducts: 0,
@@ -168,27 +168,16 @@ const Dashboard = () => {
     };
 
     const toggleSidebar = () => {
-        setCollapsed(!collapsed);
+        setSidebarOpen(!sidebarOpen);
+    };
+
+    const closeSidebar = () => {
+        setSidebarOpen(false);
     };
 
     // ============================================================
-    // SVG ICONS - NO EMOJIS
+    // SVG ICONS - MODERN, NO EMOJIS
     // ============================================================
-
-    const MenuIcon = () => (
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-            <line x1="3" y1="12" x2="21" y2="12"/>
-            <line x1="3" y1="6" x2="21" y2="6"/>
-            <line x1="3" y1="18" x2="21" y2="18"/>
-        </svg>
-    );
-
-    const CloseIcon = () => (
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-            <line x1="18" y1="6" x2="6" y2="18"/>
-            <line x1="6" y1="6" x2="18" y2="18"/>
-        </svg>
-    );
 
     const DashboardIcon = () => (
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
@@ -258,6 +247,7 @@ const Dashboard = () => {
         </svg>
     );
 
+    // Stats Icons
     const ProductsStatIcon = () => (
         <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#D69E2E" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
             <rect x="2" y="7" width="20" height="14" rx="2" ry="2"/>
@@ -289,36 +279,37 @@ const Dashboard = () => {
         </svg>
     );
 
+    // Activity Icons
     const ActivityReceiveIcon = () => (
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#10B981" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#10B981" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
             <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/>
             <polyline points="17 6 23 6 23 12"/>
         </svg>
     );
 
     const ActivityDispenseIcon = () => (
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#3B82F6" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#3B82F6" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
             <polyline points="23 18 13.5 8.5 8.5 13.5 1 6"/>
             <polyline points="17 18 23 18 23 12"/>
         </svg>
     );
 
     const ActivityAdjustIcon = () => (
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#EF4444" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#EF4444" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
             <path d="M12 2v4M12 22v-4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M22 12h-4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/>
         </svg>
     );
 
-    // Navigation items
+    // Navigation items with SVG icons
     const navItems = [
         { id: 'dashboard', icon: <DashboardIcon />, label: 'Dashboard', path: '/dashboard' },
-        { id: 'products', icon: <ProductIcon />, label: 'Add Product', path: '/add-product' },
+        { id: 'products', icon: <ProductIcon />, label: 'Add Product', path: '/products' },
         { id: 'receive', icon: <ReceiveIcon />, label: 'Receive', path: '/receive' },
         { id: 'dispense', icon: <DispenseIcon />, label: 'Dispense', path: '/dispense' },
-        { id: 'adjustment', icon: <AdjustIcon />, label: 'Adjustment', path: '/adjustment' },
+        { id: 'adjustment', icon: <AdjustIcon />, label: 'Adjustment', path: '/adjust' },
         { id: 'search', icon: <SearchIcon />, label: 'Search', path: '/search' },
         { id: 'quarantine', icon: <QuarantineIcon />, label: 'Quarantine', path: '/quarantine' },
-        { id: 'stockcard', icon: <StockCardIcon />, label: 'Stock Card', path: '/stock-card' },
+        { id: 'stockcard', icon: <StockCardIcon />, label: 'Stock Card', path: '/stockcard' },
         { id: 'settings', icon: <SettingsIcon />, label: 'Settings', path: '/settings' },
     ];
 
@@ -342,48 +333,30 @@ const Dashboard = () => {
 
     return (
         <div className="dashboard-container">
-            {/* Sidebar */}
-            <aside className={`dashboard-sidebar ${collapsed ? 'collapsed' : ''}`}>
+            <button className="hamburger-btn" onClick={toggleSidebar}>☰</button>
+
+            <aside className={`dashboard-sidebar ${sidebarOpen ? 'open' : ''}`}>
+                <button className="sidebar-close-btn" onClick={closeSidebar}>✕</button>
                 <div className="sidebar-brand">
-                    <Link to="/dashboard" className="brand">
+                    <Link to="/dashboard" className="brand" onClick={closeSidebar}>
                         <span className="brand-icon">✦</span>
-                        <span className={`brand-name ${collapsed ? 'hidden' : ''}`}>
-                            MedOx <span className="gold">Pharmacy</span>
-                        </span>
+                        <span className="brand-name">MedOx <span className="gold">Pharmacy</span></span>
                     </Link>
-                    <button 
-                        className={`sidebar-toggle ${collapsed ? 'collapsed' : ''}`}
-                        onClick={toggleSidebar}
-                        aria-label="Toggle sidebar"
-                    >
-                        {collapsed ? <MenuIcon /> : <CloseIcon />}
-                    </button>
                 </div>
 
                 <nav className="sidebar-nav">
-                    <div className="sidebar-section">
-                        <div className={`sidebar-section-title ${collapsed ? 'hidden' : ''}`}>
-                            Main Menu
-                        </div>
-                        {navItems.map((item) => (
-                            <Link
-                                key={item.id}
-                                to={item.path}
-                                className="sidebar-item"
-                            >
-                                <span className="icon">{item.icon}</span>
-                                <span className={`label ${collapsed ? 'hidden' : ''}`}>{item.label}</span>
-                            </Link>
-                        ))}
-                    </div>
+                    {navItems.map((item) => (
+                        <Link key={item.id} to={item.path} className="sidebar-item" onClick={closeSidebar}>
+                            <span className="icon">{item.icon}</span>
+                            <span className="label">{item.label}</span>
+                        </Link>
+                    ))}
                 </nav>
 
                 <div className="sidebar-footer">
                     <div className="sidebar-user">
-                        <div className="avatar">
-                            {user?.firstName?.charAt(0) || 'U'}
-                        </div>
-                        <div className={`user-info ${collapsed ? 'hidden' : ''}`}>
+                        <div className="avatar">{user?.firstName?.charAt(0) || 'U'}</div>
+                        <div className="user-info">
                             <div className="name">{user?.firstName || 'User'}</div>
                             <div className="role">{user?.role || 'Pharmacist'}</div>
                         </div>
@@ -391,8 +364,9 @@ const Dashboard = () => {
                 </div>
             </aside>
 
-            {/* Main Content */}
-            <main className={`dashboard-main ${collapsed ? 'expanded' : ''}`}>
+            {sidebarOpen && <div className="sidebar-overlay" onClick={closeSidebar}></div>}
+
+            <main className="dashboard-main">
                 <div className="dashboard-topbar">
                     <div className="page-title">
                         <h1>{greeting}, {user?.firstName || 'User'}</h1>
@@ -400,12 +374,7 @@ const Dashboard = () => {
                     </div>
                     <div className="topbar-actions">
                         <span className="topbar-date">
-                            {new Date().toLocaleDateString('en-US', { 
-                                weekday: 'long', 
-                                month: 'short', 
-                                day: 'numeric', 
-                                year: 'numeric' 
-                            })}
+                            {new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric', year: 'numeric' })}
                         </span>
                         <button className="topbar-logout" onClick={handleLogout}>
                             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -418,7 +387,6 @@ const Dashboard = () => {
                     </div>
                 </div>
 
-                {/* Stats */}
                 <div className="dashboard-stats">
                     <div className="stat-card">
                         <div className="stat-icon"><ProductsStatIcon /></div>
@@ -452,7 +420,6 @@ const Dashboard = () => {
                     </div>
                 </div>
 
-                {/* Content */}
                 <div className="dashboard-content">
                     <div className="dashboard-card">
                         <div className="card-header">
@@ -461,29 +428,18 @@ const Dashboard = () => {
                         </div>
                         <div className="activity-list">
                             {recentActivities.length === 0 ? (
-                                <div style={{ textAlign: 'center', padding: '20px', color: 'rgba(255,255,255,0.1)' }}>
-                                    No recent activity
-                                </div>
+                                <div style={{ textAlign: 'center', padding: '20px', color: 'rgba(255,255,255,0.1)' }}>No recent activity</div>
                             ) : (
                                 recentActivities.map((activity) => (
                                     <div key={activity.id} className="activity-item">
                                         <div className={`activity-icon ${getActivityClass(activity.type)}`}>
                                             {getActivityIcon(activity.type)}
                                         </div>
-                                        <div className="activity-details">
-                                            <div className="activity-title">
-                                                {activity.title}
-                                                {activity.quantity && (
-                                                    <span style={{ fontSize: '12px', color: 'rgba(255,255,255,0.2)', marginLeft: '8px' }}>
-                                                        ({activity.quantity} units)
-                                                    </span>
-                                                )}
-                                            </div>
+                                        <div className="activity-content">
+                                            <div className="activity-title">{activity.title}</div>
                                             <div className="activity-time">{activity.time}</div>
                                         </div>
-                                        <span className={`activity-status ${activity.status}`}>
-                                            {activity.status}
-                                        </span>
+                                        <span className={`activity-status ${activity.status}`}>{activity.status}</span>
                                     </div>
                                 ))
                             )}
@@ -497,16 +453,12 @@ const Dashboard = () => {
                         </div>
                         <div className="alerts-list">
                             {alerts.length === 0 ? (
-                                <div style={{ textAlign: 'center', padding: '20px', color: 'rgba(255,255,255,0.1)' }}>
-                                    No alerts
-                                </div>
+                                <div style={{ textAlign: 'center', padding: '20px', color: 'rgba(255,255,255,0.1)' }}>No alerts</div>
                             ) : (
                                 alerts.map((alert) => (
                                     <div key={alert.id} className={`alert-item ${alert.type}`}>
                                         <span className="alert-dot"></span>
-                                        <span className="alert-text">
-                                            {alert.text}
-                                        </span>
+                                        <span className="alert-text">{alert.text}</span>
                                     </div>
                                 ))
                             )}

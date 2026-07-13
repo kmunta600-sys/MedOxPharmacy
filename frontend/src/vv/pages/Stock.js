@@ -412,7 +412,7 @@ const Stock = () => {
                                                 <td>
                                                     <button
                                                         className="stock-view-card-btn"
-                                                        onClick={() => navigate(`/stock-card/${product._id}`)}
+                                                        onClick={() => navigate(`/stockcard/${product._id}`)}
                                                     >
                                                         View Card
                                                     </button>
@@ -431,3 +431,4 @@ const Stock = () => {
 };
 
 export default Stock;
+

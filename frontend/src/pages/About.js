@@ -75,7 +75,7 @@ const About = () => {
                 <div className="landing-nav-content">
                     <div className="landing-logo">
                         <span className="landing-logo-icon">✦</span>
-                        <span style={{ fontWeight: '700', fontSize: '18px' }}>
+                        <span style={{ fontWeight: '700', fontSize: "12px"' }}>
                             MedOx <span className="landing-gold">Pharmacy</span>
                         </span>
                     </div>
@@ -125,7 +125,7 @@ const About = () => {
                         </p>
                         <p style={{
                             color: 'rgba(255,255,255,0.4)',
-                            fontSize: '16px',
+                            fontSize: "12px"',
                             maxWidth: '600px',
                             margin: '20px auto 0 auto',
                             lineHeight: '1.8'
@@ -145,7 +145,7 @@ const About = () => {
                     <div className="landing-feature-card" style={{ gridColumn: '1 / -1' }}>
                         <h3 style={{ 
                             color: '#FFFFFF', 
-                            fontSize: '18px', 
+                            fontSize: "12px"', 
                             marginBottom: '16px',
                             textAlign: 'center'
                         }}>
@@ -166,7 +166,7 @@ const About = () => {
                                 <div style={{ color: 'rgba(255,255,255,0.3)', fontSize: '12px', marginBottom: '8px' }}>
                                     Concept by
                                 </div>
-                                <div style={{ color: '#FFFFFF', fontSize: '18px', fontWeight: '600' }}>
+                                <div style={{ color: '#FFFFFF', fontSize: "12px"', fontWeight: '600' }}>
                                     Jones Chikuni
                                 </div>
                                 <div style={{ color: 'rgba(255,255,255,0.2)', fontSize: '13px' }}>
@@ -183,7 +183,7 @@ const About = () => {
                                 <div style={{ color: 'rgba(255,255,255,0.3)', fontSize: '12px', marginBottom: '8px' }}>
                                     Brought to life by
                                 </div>
-                                <div style={{ color: '#10B981', fontSize: '18px', fontWeight: '600' }}>
+                                <div style={{ color: '#10B981', fontSize: "12px"', fontWeight: '600' }}>
                                     CytochromeRX
                                 </div>
                                 <div style={{ color: 'rgba(255,255,255,0.2)', fontSize: '13px' }}>
@@ -197,7 +197,7 @@ const About = () => {
                     <div className="landing-feature-card" style={{ gridColumn: '1 / -1' }}>
                         <h3 style={{ 
                             color: '#FFFFFF', 
-                            fontSize: '18px', 
+                            fontSize: "12px"', 
                             marginBottom: '16px',
                             textAlign: 'center'
                         }}>
@@ -271,4 +271,7 @@ const About = () => {
 };
 
 export default About;
+
+
+
 

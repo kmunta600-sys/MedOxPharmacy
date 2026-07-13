@@ -1,0 +1,27 @@
+﻿/* Fallback styles */
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  background: #0a0a0f;
+  color: #ffffff;
+}
+
+.landing-hero {
+  padding: 40px 20px;
+  text-align: center;
+}
+
+.landing-hero h1 {
+  font-size: 2.5rem;
+  color: #D69E2E;
+  margin-bottom: 16px;
+}
+
+.landing-hero p {
+  font-size: 1.2rem;
+  color: rgba(255,255,255,0.7);
+}

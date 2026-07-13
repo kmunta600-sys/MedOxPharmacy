@@ -119,7 +119,7 @@ const PhysicalInventory = () => {
     };
 
     const viewStockCard = (productId) => {
-        navigate(`/stock-card/${productId}?returnTo=/physical`);
+        navigate(`/stockcard/${productId}?returnTo=/physical`);
     };
 
     const submitPhysicalCount = async () => {
@@ -378,6 +378,7 @@ const PhysicalInventory = () => {
 };
 
 export default PhysicalInventory;
+
 
 
 

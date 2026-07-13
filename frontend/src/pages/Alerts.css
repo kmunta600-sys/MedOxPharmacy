@@ -1,0 +1,62 @@
+﻿.alerts-container {
+  padding: 20px;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.alerts-container h2 {
+  color: #D69E2E;
+  margin-bottom: 20px;
+}
+
+.alerts-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.alert-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  border-radius: 8px;
+  border: 1px solid rgba(255,255,255,0.05);
+}
+
+.alert-item.danger {
+  background: rgba(239,68,68,0.08);
+  border-color: rgba(239,68,68,0.15);
+}
+
+.alert-item.warning {
+  background: rgba(245,158,11,0.08);
+  border-color: rgba(245,158,11,0.15);
+}
+
+.alert-item.info {
+  background: rgba(59,130,246,0.08);
+  border-color: rgba(59,130,246,0.15);
+}
+
+.alert-icon {
+  font-size: 20px;
+}
+
+.alert-message {
+  color: rgba(255,255,255,0.8);
+}
+
+.loading, .empty-state {
+  text-align: center;
+  padding: 40px;
+  color: rgba(255,255,255,0.3);
+}
+
+.error {
+  padding: 12px;
+  background: rgba(239,68,68,0.1);
+  border: 1px solid rgba(239,68,68,0.2);
+  border-radius: 6px;
+  color: #EF4444;
+}

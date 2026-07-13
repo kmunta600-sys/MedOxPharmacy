@@ -1,0 +1,90 @@
+﻿.stock-card-container {
+  padding: 20px;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.stock-card-container h2 {
+  color: #D69E2E;
+  margin-bottom: 20px;
+}
+
+.search-section {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.search-input {
+  flex: 1;
+  padding: 10px 12px;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 6px;
+  color: white;
+  font-size: 14px;
+}
+
+.search-input:focus {
+  outline: none;
+  border-color: #D69E2E;
+}
+
+.search-section button {
+  padding: 10px 24px;
+  background: #D69E2E;
+  border: none;
+  border-radius: 6px;
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.search-section button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.transactions-table {
+  overflow-x: auto;
+}
+
+.transactions-table table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.transactions-table th {
+  background: rgba(255,255,255,0.05);
+  color: rgba(255,255,255,0.7);
+  padding: 10px 12px;
+  text-align: left;
+  font-size: 13px;
+}
+
+.transactions-table td {
+  padding: 10px 12px;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+  font-size: 14px;
+}
+
+.error-message {
+  padding: 12px;
+  background: rgba(239, 68, 68, 0.1);
+  border: 1px solid rgba(239, 68, 68, 0.2);
+  border-radius: 6px;
+  color: #EF4444;
+  margin-bottom: 16px;
+}
+
+.loading {
+  text-align: center;
+  padding: 40px;
+  color: rgba(255,255,255,0.5);
+}
+
+.no-data {
+  text-align: center;
+  padding: 40px;
+  color: rgba(255,255,255,0.3);
+}

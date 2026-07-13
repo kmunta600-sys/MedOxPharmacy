@@ -383,7 +383,7 @@
 }
 
 .btn-secondary {
-    padding: 8px 16px;
+    padding: 6px 14px;
     background: rgba(255,255,255,0.04);
     border: 1px solid rgba(255,255,255,0.06);
     border-radius: 8px;
@@ -391,9 +391,16 @@
     cursor: pointer;
     font-family: inherit;
     font-size: 13px;
-    display: flex;
+    display: inline-flex;
     align-items: center;
     gap: 6px;
+    height: 36px;
+    transition: all 0.2s;
+}
+
+.btn-secondary:hover {
+    background: rgba(255,255,255,0.08);
+    color: rgba(255,255,255,0.6);
 }
 
 .btn-secondary:hover {
@@ -732,3 +739,4 @@
         padding: 2px 4px;
     }
 }
+

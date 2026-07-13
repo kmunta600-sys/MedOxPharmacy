@@ -361,3 +361,5 @@ const StockCard = () => {
 };
 
 export default StockCard;
+
+

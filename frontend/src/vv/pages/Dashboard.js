@@ -179,9 +179,9 @@ const Dashboard = () => {
     const quickActions = [
         { icon: <Icons.Receive />, label: 'Receive', path: '/receive' },
         { icon: <Icons.Issue />, label: 'Dispense', path: '/dispense' },
-        { icon: <Icons.Add />, label: 'Add Product', path: '/add-product' },
+        { icon: <Icons.Add />, label: 'Add Product', path: '/products' },
         { icon: <Icons.Search />, label: 'Search', path: '/search' },
-        { icon: <Icons.Adjustment />, label: 'Adjust', path: '/adjustment' }
+        { icon: <Icons.Adjustment />, label: 'Adjust', path: '/adjust' }
     ];
 
     return (
@@ -322,6 +322,8 @@ const Dashboard = () => {
 };
 
 export default Dashboard;
+
+
 
 
 

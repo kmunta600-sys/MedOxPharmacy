@@ -1,4 +1,4 @@
-﻿import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import api from '../services/api';
 import './StockAdjustment.css';
@@ -205,16 +205,16 @@ const StockAdjustment = () => {
         const warning = getExpiryWarning(product.expiryDate);
         
         if (isExpired) {
-            setWarning('â›” This product has EXPIRED. Cannot be dispensed. Use Loss adjustment to remove from stock.');
+            setWarning('⛔ This product has EXPIRED. Cannot be dispensed. Use Loss adjustment to remove from stock.');
             setTimeout(() => setWarning(''), 10000);
         } else if (warning && warning.level === 'urgent') {
-            setWarning(`âš ï¸ ${warning.message} - Please inform the patient and consider alternative medication.`);
+            setWarning(`⚠️ ${warning.message} - Please inform the patient and consider alternative medication.`);
             setTimeout(() => setWarning(''), 10000);
         } else if (warning && warning.level === 'soon') {
-            setWarning(`â° ${warning.message} - Please advise the patient to use before expiry.`);
+            setWarning(`⏰ ${warning.message} - Please advise the patient to use before expiry.`);
             setTimeout(() => setWarning(''), 8000);
         } else if (warning && warning.level === 'warning') {
-            setWarning(`âš ï¸ ${warning.message} - Please be aware of expiry date.`);
+            setWarning(`⚠️ ${warning.message} - Please be aware of expiry date.`);
             setTimeout(() => setWarning(''), 6000);
         }
         
@@ -427,9 +427,9 @@ const StockAdjustment = () => {
                     setFacilityContact('');
                     
                     if (res.data.data?.pdfFileName) {
-                        const pdfDownloadUrl = `https://medox-api.onrender.com/api/stock/download-pdf/${res.data.data.pdfFileName}`;
+                        const pdfDownloadUrl = `http://localhost:5000/api/stock/download-pdf/${res.data.data.pdfFileName}`;
                         setPdfUrl(pdfDownloadUrl);
-                        setSuccess(successMsg + ' ðŸ“„ Picking List generated!');
+                        setSuccess(successMsg + ' 📄 Picking List generated!');
                     }
                     
                     const now = new Date();
@@ -556,7 +556,7 @@ const StockAdjustment = () => {
                                 padding: '4px'
                             }}
                         >
-                            âœ•
+                            ✕
                         </button>
                     </div>
                 )}
@@ -581,7 +581,7 @@ const StockAdjustment = () => {
                                 padding: '4px'
                             }}
                         >
-                            âœ•
+                            ✕
                         </button>
                     </div>
                 )}
@@ -606,7 +606,7 @@ const StockAdjustment = () => {
                                 padding: '4px'
                             }}
                         >
-                            âœ•
+                            ✕
                         </button>
                     </div>
                 )}
@@ -626,7 +626,7 @@ const StockAdjustment = () => {
                         flexWrap: 'wrap'
                     }}>
                         <span style={{ color: 'rgba(255,255,255,0.5)', fontSize: '13px' }}>
-                            ðŸ“„ Picking List Generated!
+                            📄 Picking List Generated!
                         </span>
                         <button
                             onClick={handleDownloadPDF}
@@ -888,26 +888,26 @@ const StockAdjustment = () => {
                                                     <div className="name">{p.name}</div>
                                                     <div className="detail">
                                                         {p.code}
-                                                        {p.strength ? ` â€¢ ${p.strength}` : ''}
+                                                        {p.strength ? ` • ${p.strength}` : ''}
                                                         <span className="tag tag-stock">Stock: {p.quantityOnHand || 0}</span>
                                                         {isExpired && (
                                                             <span style={{ color: '#EF4444', fontSize: '9px', marginLeft: '4px', fontWeight: 'bold' }}>
-                                                                â›” EXPIRED
+                                                                ⛔ EXPIRED
                                                             </span>
                                                         )}
                                                         {!isExpired && warning && warning.level === 'urgent' && (
                                                             <span style={{ color: '#EF4444', fontSize: '9px', marginLeft: '4px', fontWeight: 'bold' }}>
-                                                                âš ï¸ {warning.message}
+                                                                ⚠️ {warning.message}
                                                             </span>
                                                         )}
                                                         {!isExpired && warning && warning.level === 'soon' && (
                                                             <span style={{ color: '#F59E0B', fontSize: '9px', marginLeft: '4px' }}>
-                                                                â° {warning.message}
+                                                                ⏰ {warning.message}
                                                             </span>
                                                         )}
                                                         {!isExpired && warning && warning.level === 'warning' && (
                                                             <span style={{ color: '#D69E2E', fontSize: '9px', marginLeft: '4px' }}>
-                                                                âš ï¸ {warning.message}
+                                                                ⚠️ {warning.message}
                                                             </span>
                                                         )}
                                                     </div>
@@ -962,7 +962,7 @@ const StockAdjustment = () => {
                                                 width: '100%',
                                                 color: '#EF4444'
                                             }}>
-                                                â›” EXPIRED - This product cannot be dispensed
+                                                ⛔ EXPIRED - This product cannot be dispensed
                                             </div>
                                         );
                                     } else if (warning && warning.level === 'urgent') {
@@ -975,7 +975,7 @@ const StockAdjustment = () => {
                                                 width: '100%',
                                                 color: '#EF4444'
                                             }}>
-                                                âš ï¸ {warning.message} - Please advise patient
+                                                ⚠️ {warning.message} - Please advise patient
                                             </div>
                                         );
                                     } else if (warning && warning.level === 'soon') {
@@ -988,7 +988,7 @@ const StockAdjustment = () => {
                                                 width: '100%',
                                                 color: '#F59E0B'
                                             }}>
-                                                â° {warning.message} - Advise patient to use before expiry
+                                                ⏰ {warning.message} - Advise patient to use before expiry
                                             </div>
                                         );
                                     } else if (warning && warning.level === 'warning') {
@@ -1001,7 +1001,7 @@ const StockAdjustment = () => {
                                                 width: '100%',
                                                 color: '#D69E2E'
                                             }}>
-                                                âš ï¸ {warning.message}
+                                                ⚠️ {warning.message}
                                             </div>
                                         );
                                     } else {
@@ -1014,7 +1014,7 @@ const StockAdjustment = () => {
                                                 width: '100%',
                                                 color: '#10B981'
                                             }}>
-                                                âœ… {warning ? warning.message : 'Valid product'}
+                                                ✅ {warning ? warning.message : 'Valid product'}
                                             </div>
                                         );
                                     }

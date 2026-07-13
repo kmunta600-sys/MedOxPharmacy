@@ -77,7 +77,7 @@ const TestDropdown = () => {
                         border: '1px solid rgba(255,255,255,0.06)',
                         borderRadius: '8px',
                         color: '#FFFFFF',
-                        fontSize: '14px',
+                        fontSize: "14px",
                         outline: 'none'
                     }}
                 />
@@ -134,3 +134,5 @@ const TestDropdown = () => {
 };
 
 export default TestDropdown;
+
+
