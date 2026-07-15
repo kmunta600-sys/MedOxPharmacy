@@ -22,6 +22,8 @@ const createTransporter = () => {
         connectionTimeout: 30000,
         greetingTimeout: 30000,
         socketTimeout: 30000,
+        // Force IPv4 to avoid ENETUNREACH errors
+        family: 4,
     });
 };
 
@@ -143,3 +145,4 @@ If you didn't request this, please ignore this email.
 };
 
 module.exports = { sendResetEmail };
+
