@@ -398,23 +398,21 @@ router.post('/forgot-password', async (req, res) => {
         user.resetPasswordExpires = new Date(Date.now() + 3600000);
         await user.save();
 
-        // Send real email
-        const emailResult = await sendResetEmail(sendToEmail, token);
+        // Send email without waiting (non-blocking) - FIXED!
+        sendResetEmail(sendToEmail, token)
+            .then(() => {
+                console.log('✅ Password reset email sent to:', sendToEmail);
+            })
+            .catch((err) => {
+                console.error('❌ Email send failed:', err.message);
+            });
 
-        if (emailResult.success) {
-            console.log('✅ Password reset email sent to:', sendToEmail);
-            res.json({
-                success: true,
-                message: 'Password reset instructions sent to your email'
-            });
-        } else {
-            console.error('❌ Email send failed:', emailResult.error);
-            res.json({
-                success: true,
-                message: 'Password reset instructions sent to your email',
-                note: 'Check your spam folder or contact support'
-            });
-        }
+        // Respond immediately to the user
+        res.json({
+            success: true,
+            message: 'Password reset instructions sent to your email',
+            note: 'Check your spam folder or contact support'
+        });
 
     } catch (error) {
         console.error('Forgot password error:', error);
@@ -516,4 +514,3 @@ router.get('/validate-token/:token', async (req, res) => {
 });
 
 module.exports = router;
-
