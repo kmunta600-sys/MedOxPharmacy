@@ -10,8 +10,8 @@ const createTransporter = () => {
 
     return nodemailer.createTransport({
         host: process.env.EMAIL_HOST || 'smtp.gmail.com',
-        port: parseInt(process.env.EMAIL_PORT) || 587,
-        secure: false,
+        port: parseInt(process.env.EMAIL_PORT) || 465,
+        secure: true, // Use SSL
         auth: {
             user: process.env.EMAIL_USER,
             pass: process.env.EMAIL_PASSWORD,
@@ -22,7 +22,6 @@ const createTransporter = () => {
         connectionTimeout: 30000,
         greetingTimeout: 30000,
         socketTimeout: 30000,
-        // Force IPv4 to avoid ENETUNREACH errors
         family: 4,
     });
 };
@@ -145,4 +144,5 @@ If you didn't request this, please ignore this email.
 };
 
 module.exports = { sendResetEmail };
+
 
