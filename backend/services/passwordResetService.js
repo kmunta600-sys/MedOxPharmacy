@@ -6,6 +6,8 @@ const generateResetToken = () => {
 };
 
 const sendResetEmail = async (email, token) => {
+    console.log('📧 Sending reset email to:', email);
+    console.log('🔑 Token:', token.substring(0, 20) + '...');
     try {
         const resetLink = `http://localhost:3000/reset-password/${token}`;
         
@@ -78,3 +80,4 @@ const sendResetEmail = async (email, token) => {
 };
 
 module.exports = { generateResetToken, sendResetEmail };
+
