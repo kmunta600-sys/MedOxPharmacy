@@ -19,9 +19,9 @@ const createTransporter = () => {
         tls: {
             rejectUnauthorized: false,
         },
-        connectionTimeout: 30000,
-        greetingTimeout: 30000,
-        socketTimeout: 30000,
+        connectionTimeout: 300000,
+greetingTimeout: 300000,
+socketTimeout: 300000,
         family: 4,
     });
 };
@@ -144,5 +144,6 @@ If you didn't request this, please ignore this email.
 };
 
 module.exports = { sendResetEmail };
+
 
 
