@@ -19,14 +19,14 @@ const createTransporter = () => {
         tls: {
             rejectUnauthorized: false,
         },
-        connectionTimeout: 300000,
-greetingTimeout: 300000,
-socketTimeout: 300000,
-        family: 4,
+        connectionTimeout: 300000, // 5 minutes
+        greetingTimeout: 300000,   // 5 minutes
+        socketTimeout: 300000,     // 5 minutes
+        family: 4, // Force IPv4
     });
 };
 
-// Send reset email - NON-BLOCKING version
+// Send reset email - NON-BLOCKING version with 5 minute timeout
 const sendResetEmail = (email, token) => {
     console.log('📧 Sending reset email to:', email);
     console.log('🔑 Token:', token ? token.substring(0, 20) + '...' : 'No token');
@@ -121,16 +121,15 @@ If you didn't request this, please ignore this email.
                     });
                 });
 
-            // Set a timeout in case the email takes too long
+            // Set a timeout in case the email takes too long (5 minutes)
             setTimeout(() => {
-                // If the promise hasn't resolved yet, resolve with a timeout error
-                console.log('⏰ Email send timeout after 20 seconds');
+                console.log('⏰ Email send timeout after 5 minutes');
                 resolve({
                     success: false,
                     error: 'Timeout waiting for email to send',
                     message: 'Password reset email could not be sent. Please try again later or contact support.'
                 });
-            }, 20000);
+            }, 300000);
 
         } catch (error) {
             console.error('❌ Email send error:', error.message);
@@ -144,6 +143,3 @@ If you didn't request this, please ignore this email.
 };
 
 module.exports = { sendResetEmail };
-
-
-
